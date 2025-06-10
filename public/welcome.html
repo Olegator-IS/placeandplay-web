@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Place&Play – удобная платформа для поиска спортивных партнеров и бронирования площадок.">
+    <meta name="keywords" content="Place&Play, спорт, бронирование площадок, спортивные партнеры">
+    <meta name="author" content="Place&Play">
+    <title>Place&Play - Где рождаются игры и дружба</title>
+    <!-- Standard favicon -->
+    <link rel="icon" href="/logo.ico" type="image/x-icon" sizes="512x512">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        /* Обновленный фон и общие стили */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: url('https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80') fixed;
+            background-size: cover;
+            background-position: center;
+            color: #333;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(247, 198, 199, 0.85), rgba(161, 196, 253, 0.85));
+            backdrop-filter: blur(8px);
+            z-index: -1;
+        }
+
+        /* Обновленные стили для контейнеров */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            flex: 1;
+        }
+
+        /* Обновленные стили для слайдов */
+        .slide > div {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .slide > div:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Обновленные стили для заголовков */
+        h2, h3 {
+            color: #113366;
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after, h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, #113366, transparent);
+            border-radius: 2px;
+        }
+
+        /* Обновленные стили для партнеров */
+        .partners-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 10px 30px rgba(17, 51, 102, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .partner-item {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(17, 51, 102, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(17, 51, 102, 0.1);
+        }
+
+        .partner-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(17, 51, 102, 0.15);
+            background: white;
+        }
+
+        /* Обновленные стили для кнопок навигации */
+        .nav-button {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 12px 25px;
+            border: 2px solid #113366;
+            border-radius: 30px;
+            color: #113366;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .nav-button.active {
+            background: #113366;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(17, 51, 102, 0.2);
+        }
+
+        /* Обновленные стили для формы обратной связи */
+        .contact-form {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(17, 51, 102, 0.1);
+            backdrop-filter: blur(10px);
+            margin-top: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-form form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: calc(100% - 30px); /* Учитываем padding */
+            padding: 15px;
+            border: 2px solid rgba(17, 51, 102, 0.1);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            box-sizing: border-box; /* Важно для правильного расчета ширины */
+        }
+
+        .contact-form textarea {
+            resize: vertical; /* Позволяет изменять только высоту */
+            min-height: 120px;
+            max-height: 300px;
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: #113366;
+            outline: none;
+            box-shadow: 0 0 15px rgba(17, 51, 102, 0.1);
+        }
+
+        .contact-form button {
+            background: #113366;
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            align-self: center;
+            width: auto;
+        }
+
+        .contact-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(17, 51, 102, 0.2);
+            background: #1a4c8f;
+        }
+
+        /* Обновленный футер */
+        footer {
+            background: rgba(17, 51, 102, 0.9);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            margin-top: 60px;
+        }
+
+        /* Обновленные стили для шапки */
+        .header-container {
+            background: linear-gradient(135deg, rgba(247, 198, 199, 0.95), rgba(161, 196, 253, 0.95));
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1;
+        }
+
+        .logo-place {
+            color: #113366;
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .logo-and {
+            color: #113366;
+            font-size: 20px;
+            font-weight: 400;
+            margin: 4px 0;
+            opacity: 0.8;
+        }
+
+        .logo-play {
+            color: #113366;
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .header-slogan {
+            color: #113366;
+            font-size: 18px;
+            font-style: italic;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .header-slogan::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2px;
+            height: 40px;
+            background: linear-gradient(to bottom, transparent, #113366, transparent);
+        }
+
+        /* Анимация при наведении */
+        .logo-text:hover .logo-place {
+            transform: translateY(-2px);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-text:hover .logo-play {
+            transform: translateY(2px);
+            transition: transform 0.3s ease;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .logo {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .header-slogan {
+                padding-left: 0;
+                padding-top: 15px;
+                font-size: 16px;
+            }
+
+            .header-slogan::before {
+                left: 50%;
+                top: 0;
+                transform: translateX(-50%);
+                width: 40px;
+                height: 2px;
+                background: linear-gradient(to right, transparent, #113366, transparent);
+            }
+        }
+
+        .container h1 {
+            font-size: 3em; /* Увеличенный размер шрифта */
+            color: #113366; /* Глубокий синий цвет для заголовка */
+            text-align: center; /* Выравнивание по центру */
+            margin-top: 40px; /* Отступ сверху */
+            margin-bottom: 20px; /* Отступ снизу */
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2); /* Легкая тень для текста */
+            font-family: 'Arial', sans-serif; /* Шрифт */
+            opacity: 0; /* Исходная прозрачность для анимации */
+        }
+
+        h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .about {
+            background-color: #f7f7f7; /* светлый фон */
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+        }
+
+        .story {
+            background-color: #e6e6fa; /* Лавандовый */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            margin: 0 auto;
+            font-family: Arial, sans-serif;
+            color: #333; /* Темный цвет текста для контраста */
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        .story {
+            margin-top: 30px; /* Отступ сверху для разделения */
+        }
+
+        .about h2 {
+            font-size: 2.5em;
+            color: #113366;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Легкая тень для текста */
+            opacity: 0;
+        }
+
+        /* Анимация плавного появления */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .story p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .about p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .about strong {
+            color: #f39c12; /* акцент на название */
+        }
+
+        .story strong {
+            color: #f39c12; /* акцент на название */
+        }
+
+        .about p:last-child {
+            margin-bottom: 0;
+        }
+
+        .roadmap, .download, .social, .contact-form {
+            margin-top: 40px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        .goal {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 0;
+        }
+
+        .goal h2 {
+            color: #113366;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .goal p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        /* Убираем конфликтующие стили */
+        .slide .goal {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .roadmap {
+            animation-delay: 0.3s;
+        }
+
+        .download {
+            animation-delay: 0.6s;
+        }
+
+        .contact-form {
+            animation-delay: 0.9s;
+        }
+
+        .contact-button, .download-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            font-size: 18px;
+            color: #ff758c;
+            background: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .contact-button:hover, .download-button:hover {
+            background: #ffeb3b;
+            color: #ff758c;
+        }
+
+        .contact-form input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .contact-form button {
+            padding: 12px 20px;
+            font-size: 18px;
+            background: #ffeb3b;
+            color: #ff758c;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .contact-form button:hover {
+            background: #ffd700;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 30px;
+            }
+
+            .container {
+                padding: 20px 10px;
+            }
+
+            .contact-form input {
+                width: 100%;
+            }
+
+            .contact-button, .download-button {
+                width: 100%;
+                margin-top: 10px;
+            }
+            #map {
+                height: 300px;
+            }
+        }
+
+        #map {
+            width: 100%;
+            height: 400px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            #map {
+                height: 300px;
+            }
+        }
+        .social a {
+            margin: 0 15px;
+            color: #fff;
+            font-size: 24px;
+            text-decoration: none;
+            background-color: #007bff; /* Синий фон */
+            padding: 10px 20px; /* Отступы внутри кнопки */
+            border-radius: 25px; /* Округлые углы */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Плавные переходы */
+        }
+        
+        .social a:hover {
+            color: #ffeb3b;
+        }
+        /* Контейнер карты */
+        .map-container {
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        /* Заголовок */
+        .map-container h2 {
+            font-size: 2em;
+            text-align: center;
+            color: #113366;
+            margin-bottom: 20px;
+        }
+
+        /* Подсказка */
+        .map-tip {
+            background-color: #f7f7f7;
+            padding: 15px;
+            font-size: 1.1em;
+            text-align: center;
+            color: #555;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Информация о клиентах */
+        .clients-info {
+            margin-top: 30px;
+        }
+
+        .clients-info h3 {
+            font-size: 1.8em;
+            color: #113366;
+            margin-bottom: 10px;
+        }
+
+        /* Список клиентов */
+        .clients-info ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .clients-info li {
+            background-color: #ffffff;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            font-size: 1.1em;
+            color: #333;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Эффект при наведении */
+        .clients-info li:hover {
+            background-color: #f0f8ff;
+            cursor: pointer;
+        }
+
+        /* Стилизация карты */
+        #map {
+            width: 100%;
+            height: 400px;
+            background-color: #eaeaea;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        /* Обновленные стили для слайдера */
+        .slider-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slider {
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 60px;
+        }
+
+        .slide {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .slide.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Стили для заголовков в слайдах */
+        .about h2, .story h3, .goal h2 {
+            display: block !important;
+            color: #113366;
+            font-size: 2.2em;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 20px;
+            width: 100%;
+        }
+
+        .about h2::after, .story h3::after, .goal h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #113366, transparent);
+            border-radius: 2px;
+        }
+
+        /* Стили для текста в слайдах */
+        .slide p {
+            color: #333;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .slide strong {
+            color: #113366;
+            font-weight: 600;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .slide > div {
+                padding: 30px 20px;
+            }
+
+            .slide .about h2,
+            .slide .story h3,
+            .slide .goal h2 {
+                font-size: 1.8em;
+            }
+
+            .slide p {
+                font-size: 1em;
+                padding: 0 10px;
+            }
+        }
+
+        /* Стили для блока партнеров */
+        .partners-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 10px 30px rgba(17, 51, 102, 0.1);
+        }
+
+        .partners-section h2 {
+            color: #113366;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .partners-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, #113366, #4a90e2);
+            border-radius: 2px;
+        }
+
+        .map-tip {
+            background: rgba(17, 51, 102, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 30px 0;
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #113366;
+            border-left: 4px solid #113366;
+        }
+
+        .partners-info {
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(17, 51, 102, 0.03);
+            border-radius: 15px;
+        }
+
+        .partners-info h3 {
+            color: #113366;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .partners-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .partner-name {
+            color: #113366;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .partner-address {
+            color: #666;
+            font-size: 1em;
+            line-height: 1.4;
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            .contact-form {
+                padding: 30px 20px;
+                margin: 40px 15px;
+            }
+
+            .contact-form input,
+            .contact-form textarea {
+                width: 100%;
+                font-size: 15px;
+            }
+
+            .contact-form button {
+                width: 100%;
+                padding: 12px 20px;
+            }
+        }
+        /* Общие стили для мобильной версии */
+        @media (max-width: 768px) {
+            /* Фиксим шапку */
+            .header-container {
+                width: 100%;
+                padding: 15px 0;
+            }
+
+            .header-content {
+                width: 100%;
+                padding: 0 15px;
+                box-sizing: border-box;
+            }
+
+            /* Центрирование слайдера */
+            .slider-container {
+                width: 100%;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+
+            .container {
+                width: 100%;
+                padding: 20px 0;
+                box-sizing: border-box;
+            }
+
+            .slide > div {
+                width: calc(100% - 20px);
+                margin: 0 10px;
+                padding: 25px 15px;
+                box-sizing: border-box;
+                background: rgba(255, 255, 255, 0.95);
+            }
+
+            /* Фиксим футер */
+            footer {
+                width: 100%;
+                padding: 20px 15px;
+                box-sizing: border-box;
+                margin-top: 30px;
+            }
+
+            /* Улучшаем навигацию */
+            .dots {
+                width: 100%;
+                padding: 0 10px;
+                box-sizing: border-box;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                margin-top: 20px;
+            }
+
+            .nav-button {
+                flex: 1 1 auto;
+                min-width: 140px;
+                max-width: calc(50% - 10px);
+                margin: 5px;
+                white-space: nowrap;
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            /* Фиксим отступы для контента */
+            .partners-section {
+                width: calc(100% - 20px);
+                margin: 20px 10px;
+                padding: 25px 15px;
+                box-sizing: border-box;
+            }
+
+            .contact-form {
+                width: calc(100% - 20px);
+                margin: 20px 10px;
+                padding: 25px 15px;
+                box-sizing: border-box;
+            }
+
+            /* Улучшаем читаемость */
+            .slide h2, .slide h3 {
+                font-size: 1.8em;
+                padding: 0 10px;
+                margin-bottom: 20px;
+            }
+
+            .slide p {
+                font-size: 0.95em;
+                line-height: 1.5;
+                padding: 0 10px;
+                margin-bottom: 15px;
+            }
+        }
+
+        /* Дополнительные стили для очень маленьких экранов */
+        @media (max-width: 360px) {
+            .nav-button {
+                min-width: calc(100% - 10px);
+                margin: 5px;
+            }
+
+            .slide h2, .slide h3 {
+                font-size: 1.6em;
+            }
+
+            .header-slogan {
+                font-size: 14px;
+            }
+        }
+
+        /* Добавляем плавность для всех изменений */
+        * {
+            transition: all 0.3s ease;
+        }
+
+        /* Добавляем стили для кнопки партнерства */
+        .business-button {
+            background: #113366;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(17, 51, 102, 0.2);
+        }
+
+        .business-button:hover {
+            background: #1a4c8f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(17, 51, 102, 0.3);
+        }
+
+        /* Добавляем адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+                padding: 15px;
+            }
+
+            .business-button {
+                width: 100%;
+                text-align: center;
+                margin-top: 10px;
+            }
+        }
+
+        /* Стили для секции социальных сетей */
+        .social {
+            margin: 40px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(17, 51, 102, 0.1);
+            max-width: 600px;
+        }
+
+        .social h2 {
+            margin-bottom: 25px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #113366;
+            border-radius: 30px;
+            text-decoration: none;
+            color: #113366;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(17, 51, 102, 0.08);
+        }
+
+        .social-link:hover {
+            background: #113366;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(17, 51, 102, 0.15);
+        }
+
+        .social-icon {
+            width: 24px;
+            height: 24px;
+            transition: all 0.3s ease;
+        }
+
+        /* При наведении иконка становится белой */
+        .social-link:hover .social-icon {
+            filter: brightness(0) invert(1);
+        }
+
+        /* Удаляем специфичные стили для разных соцсетей */
+        .social-link[href*="telegram"],
+        .social-link[href*="instagram"] {
+            background: rgba(255, 255, 255, 0.95);
+            color: #113366;
+        }
+
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            .social {
+                margin: 30px 15px;
+                padding: 20px;
+            }
+
+            .social-links {
+                gap: 15px;
+            }
+
+            .social-link {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        #scrollTopBtn {
+            display: none; /* Скрыта по умолчанию */
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background: #113366;
+            color: white;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        #scrollTopBtn:hover {
+            background: #1a4c8f;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .cta-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Добавляем стили для выделенного партнера */
+        .featured-partner {
+            background: linear-gradient(135deg, #ffffff, #f0f8ff) !important;
+            border: 2px solid #113366 !important;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(17, 51, 102, 0.2) !important;
+        }
+
+        .featured-partner .partner-name {
+            color: #113366;
+            font-weight: 700;
+            font-size: 1.3em;
+        }
+
+        .featured-partner:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 20px rgba(17, 51, 102, 0.3) !important;
+        }
+
+    </style>
+</head>
+<body>
+    <header class="header-container">
+        <div class="header-content">
+            <div class="logo">
+                <a href="#" class="logo-text">
+                    <span class="logo-place">PLACE</span>
+                    <span class="logo-and">and</span>
+                    <span class="logo-play">PLAY</span>
+                </a>
+                <span class="header-slogan">Где рождаются игры и дружба</span>
+            </div>
+            <a href="/business.html" class="business-button">Стать партнёром</a>
+        </div>
+    </header>
+    <main class="container">
+        <section class="slider-container">
+            <div class="slider">
+                <div class="slide" id="slide-1" role="tabpanel" aria-labelledby="nav-button-1">
+                    <div class="about">
+                        <h3>О проекте <strong>Place&Play</strong></h3>
+                        <p><strong>Place&Play</strong> – это инновационная платформа, объединяющая любителей спорта и спортивные площадки в одном месте.</p>
+                        <p>Мы создаем удобную экосистему, где каждый может легко найти партнера для игры, забронировать площадку и организовать спортивное мероприятие.</p>
+                        <p>С <strong>Place&Play</strong> вы получаете доступ к широкой сети спортивных объектов: теннисным кортам, футбольным полям, спортзалам и многому другому.</p>
+                    </div>
+                </div>
+
+                <div class="slide" id="slide-2" role="tabpanel" aria-labelledby="nav-button-2">
+                    <div class="story">
+                        <h3>История создания <strong>Place&Play</strong></h3>
+                        <p>Идея создания <strong>Place&Play</strong> родилась из личного опыта, когда поиск партнеров для игры в теннис становился настоящим испытанием.</p>
+                        <p>Мы поняли, что эта проблема актуальна для многих видов спорта, и решили создать универсальное решение, которое объединит спортивное сообщество.</p>
+                        <p>Сегодня <strong>Place&Play</strong> – это не просто платформа для бронирования, а целое комьюнити единомышленников, увлеченных спортом и активным образом жизни.</p>
+                    </div>
+                </div>
+
+                <div class="slide" id="slide-3" role="tabpanel" aria-labelledby="nav-button-3">
+                    <div class="goal">
+                        <h2>Цели <strong>Place&Play</strong></h2>
+                        <p>Наша главная миссия – сделать спорт доступнее и удобнее для каждого. <strong>Place&Play</strong> стремится создать крупнейшую в регионе экосистему для организации спортивного досуга.</p>
+                        <p>Мы работаем над тем, чтобы объединить спортсменов-любителей, профессиональные клубы и спортивные площадки на одной платформе, создавая удобную среду для взаимодействия.</p>
+                        <p>В ближайшем будущем <strong>Place&Play</strong> планирует внедрить систему умного подбора партнеров, основанную на уровне игры, расписании и предпочтениях пользователей.</p>
+                        <p>Мы верим, что <strong>Place&Play</strong> станет неотъемлемой частью спортивной жизни города, помогая людям находить единомышленников и заниматься любимым спортом.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dots" role="tablist">
+                <button class="nav-button" id="nav-button-1" role="tab" aria-controls="slide-1" onclick="currentSlide(1)">О проекте</button>
+                <button class="nav-button" id="nav-button-2" role="tab" aria-controls="slide-2" onclick="currentSlide(2)">История создания</button>
+                <button class="nav-button" id="nav-button-3" role="tab" aria-controls="slide-3" onclick="currentSlide(3)">Цель создания</button>
+            </div>
+        </section>
+
+        <section class="partners-section">
+            <h2>Наши бизнес-партнёры</h2>
+            <div id="map"></div>
+
+            <div class="map-tip">
+                На карте отображены все наши активные партнёры, которые помогают нам развивать спортивную инфраструктуру и делать спортивную жизнь в Узбекистане более разнообразной и удобной.
+            </div>
+
+            <div class="partners-info">
+                <h3>Спортивные комплексы-партнёры</h3>
+                <ul class="partners-list">
+                    <li class="partner-item featured-partner">
+                        <span class="partner-name">Tennis City</span>
+                        <span class="partner-address">Ул.Ислама Каримова,дом.98А</span>
+                    </li>
+                    <li class="partner-item">
+                        <span class="partner-name">Black Pool</span>
+                        <span class="partner-address">ул. Истикбол, 8</span>
+                    </li>
+                    <li class="partner-item">
+                        <span class="partner-name">Diamond Ball</span>
+                        <span class="partner-address">Юнусабадский район, ул.Осиё, 372</span>
+                    </li>
+                    <li class="partner-item">
+                        <span class="partner-name">Dinamo Tennis</span>
+                        <span class="partner-address">ул. Мирзо Улугбека, 10</span>
+                    </li>
+                    <li class="partner-item">
+                        <span class="partner-name">Теннисные корты на МХСК</span>
+                        <span class="partner-address">ул. Буюк Ипак Йули, 113Б</span>
+                    </li>
+                    <li class="partner-item">
+                        <span class="partner-name">Ping-Pong Master</span>
+                        <span class="partner-address">ул. Богишамол, 260А3-этаж, ТРЦ Сампи</span>
+                    </li>
+                    <li class="partner-item">
+                        <span class="partner-name">Ping-Pong X pro</span>
+                        <span class="partner-address">Сергелийский район, ул. Мирзы Турсунзаде, 1</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="contact-form">
+            <h2>Обратная связь</h2>
+            <form id="contactForm" onsubmit="sendForm(event)">
+                <input type="text" name="name" placeholder="Ваше имя" required>
+                <input type="email" name="email" placeholder="Ваш email" required>
+                <input type="tel" name="phone" placeholder="Ваш телефон" required>
+                <textarea name="message" rows="5" placeholder="Ваше сообщение" required></textarea>
+                <button type="submit">Отправить</button>
+            </form>
+        </section>
+        <section class="social">
+            <h2>Мы в социальных сетях</h2>
+            <div class="social-links">
+                <a href="https://t.me/placeandplay" target="_blank" class="social-link">
+                    <img src="/icons/telegram.svg" alt="Telegram" class="social-icon">
+                    <span>Telegram</span>
+                </a>
+                <a href="https://instagram.com/placeandplay.uz" target="_blank" class="social-link">
+                    <img src="/icons/instagram.svg" alt="Instagram" class="social-icon">
+                    <span>Instagram</span>
+                </a>
+            </div>
+        </section>
+    </main>
+<button id="scrollTopBtn" onclick="scrollToTop()">⬆ Наверх</button>
+
+<script>
+window.onscroll = function() {
+    document.getElementById("scrollTopBtn").style.display = window.scrollY > 300 ? "block" : "none";
+};
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+</script>
+    <script>
+    function initMap() {
+        const map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: 41.307716, lng: 69.282764 }, // Центр карты (Ташкент)
+            zoom: 12,
+styles: [
+    {
+        "elementType": "geometry",
+        "stylers": [
+            { "color": "#f5f5f5" } // Светлый фон карты
+        ]
+    },
+    {
+        "elementType": "labels.text.fill",
+        "stylers": [
+            { "color": "#113366" } // Тёмно-синий текст
+        ]
+    },
+    {
+        "elementType": "labels.text.stroke",
+        "stylers": [
+            { "color": "#ffffff" } // Белый контур текста
+        ]
+    },
+    {
+        "featureType": "administrative.land_parcel",
+        "elementType": "labels",
+        "stylers": [
+            { "visibility": "off" } // Убираем мелкие подписи
+        ]
+    },
+    {
+        "featureType": "administrative.neighborhood",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            { "color": "#858585" } // Серый текст районов
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "geometry",
+        "stylers": [
+            { "color": "#e0e0e0" } // Светлый цвет для точек интереса (кафе, магазины и т.д.)
+        ]
+    },
+    {
+        "featureType": "poi.park",
+        "elementType": "geometry",
+        "stylers": [
+            { "color": "#c8e6c9" } // Светло-зелёные парки
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "geometry",
+        "stylers": [
+            { "color": "#ffffff" } // Белые дороги
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            { "color": "#bdbdbd" } // Серые границы дорог
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry",
+        "stylers": [
+            { "color": "#ffeb3b" } // Жёлтые трассы
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "geometry.stroke",
+        "stylers": [
+            { "color": "#ffa000" } // Оранжевые обводки трасс
+        ]
+    },
+    {
+        "featureType": "transit",
+        "elementType": "geometry",
+        "stylers": [
+            { "color": "#e0e0e0" } // Светло-серый транспорт
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [
+            { "color": "#90caf9" } // Голубая вода
+        ]
+    }
+]
+
+        });
+
+        const places = [
+            {
+                name: "Tennis city",
+                latitude: 41.315416,
+                longitude: 69.262542,
+                description: "Теннисные корты(Бывший Пахтакор)",
+                address: "Ул.Ислама Каримова,дом.98А",
+                phone: "+998903331151",
+                typeId: 1
+            },
+            {
+                name: "Diamond Ball",
+                latitude: 41.327236,
+                longitude: 69.289364,
+                description: "Бильярд, ни разу не был там, но должно быть ОК!",
+                address: "Юнусабадский район, ул.Осиё, 372",
+                phone: "+998712346798",
+                typeId: 6
+            },
+            {
+                name: "Dinamo Tennis",
+                latitude: 41.332954,
+                longitude: 69.330485,
+                description: "Большие теннисные ракетки, большие теннисные мячи",
+                address: "ул. Мирзо Улугбека, 10",
+                phone: "+998935078999",
+                typeId: 1
+            },
+            {
+                name: "Теннисные корты на МХСК",
+                latitude: 41.330284,
+                longitude: 69.340359,
+                description: "Сегодня теннисист, завтра программист!",
+                address: "ул. Буюк Ипак Йули, 113Б",
+                phone: "+998935646880",
+                typeId: 1
+            },
+            {
+                name: "Ping-Pong Master",
+                latitude: 41.355358,
+                longitude: 69.333396,
+                description: "Один раз был там, понравилось!",
+                address: "ул. Богишамол, 260А3-этаж, ТРЦ Сампи",
+                phone: "+998935078999",
+                typeId: 4
+            },
+            {
+                name: "Ping-Pong X pro",
+                latitude: 41.214106,
+                longitude: 69.212963,
+                description: "Ни разу не был там, потому что Сергели :(",
+                address: "Сергелийский район, ул. Мирзы Турсунзаде, 1",
+                phone: "+998953423000",
+                typeId: 4
+            }
+        ];
+
+        const typeStyles = {
+            1: { // Теннис
+                icon: 'icons/tennisball.svg',
+            },
+            4: { // Пинг-понг
+                icon: 'icons/ping-pong.svg',
+            },
+            6: { // Бильярд
+                icon: 'icons/billiards.svg',
+            },
+        };
+
+        let activeInfoWindow = null; // Глобальная переменная для хранения открытого окна
+
+
+places.forEach(place => {
+    const typeId = place.typeId || 'default';
+    const style = typeStyles[typeId] || { icon: 'icons/default.png' };
+
+    const marker = new google.maps.Marker({
+        position: { lat: place.latitude, lng: place.longitude },
+        map,
+        title: place.name,
+        icon: {
+            url: style.icon,  // Используем кастомную иконку
+            scaledSize: new google.maps.Size(40, 40), // Фиксируем размер (можно подогнать)
+            anchor: new google.maps.Point(20, 40) // Центрируем иконку
+        },
+        animation: google.maps.Animation.DROP
+    });
+
+    // Выделяем маркер Tennis City анимацией подпрыгивания
+    if (place.name === "Tennis city") {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+
+    const infoWindow = new google.maps.InfoWindow({
+        content: `
+            <div style="
+                padding: 10px;
+                max-width: 250px;
+                font-family: 'Arial', sans-serif;
+                color: #333;">
+                <h3 style="margin: 5px 0; color: #113366;">${place.name}</h3>
+                <p style="font-size: 14px; margin: 5px 0;">${place.description}</p>
+                <p style="font-size: 13px; color: #555;">
+                    <strong>Адрес:</strong> ${place.address}<br>
+                    <strong>Телефон:</strong> 
+                    <a href="tel:${place.phone}" style="color: #ff9800; text-decoration: none;">
+                        ${place.phone}
+                    </a>
+                </p>
+                <a href="https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}"
+                   target="_blank" style="
+                    display: inline-block;
+                    padding: 5px 10px;
+                    margin-top: 5px;
+                    font-size: 14px;
+                    color: white;
+                    background: #113366;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    transition: background 0.3s ease;">
+                    📍 Открыть в Google Maps
+                </a>
+            </div>
+        `
+    });
+
+    marker.addListener("click", () => {
+        if (activeInfoWindow) {
+            activeInfoWindow.close();
+        }
+        infoWindow.open(map, marker);
+        activeInfoWindow = infoWindow;
+    });
+
+    map.addListener("dragstart", () => {
+        if (activeInfoWindow) {
+            activeInfoWindow.close();
+            activeInfoWindow = null;
+        }
+    });
+});
+    }
+
+</script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACXRuPpUCJnF_r_tIbkuJxNV_G9JOuSzc&callback=initMap&libraries=marker&v=weekly" async></script>
+
+    <footer>Place&Play – 2025</footer>
+
+    <script>
+    let slideIndex = 1;
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    // Добавляем слушатели событий для клавиатуры и тач-событий
+    document.addEventListener('keydown', handleKeyPress);
+    document.querySelector('.slider').addEventListener('touchstart', handleTouchStart, false);
+    document.querySelector('.slider').addEventListener('touchmove', handleTouchMove, false);
+    document.querySelector('.slider').addEventListener('touchend', handleTouchEnd, false);
+
+    // Обработка нажатий клавиш
+    function handleKeyPress(e) {
+        if (e.key === "ArrowLeft") {
+            changeSlide(-1);
+        } else if (e.key === "ArrowRight") {
+            changeSlide(1);
+        }
+    }
+
+    // Обработка тач-событий
+    function handleTouchStart(e) {
+        touchStartX = e.touches[0].clientX;
+    }
+
+    function handleTouchMove(e) {
+        touchEndX = e.touches[0].clientX;
+    }
+
+    function handleTouchEnd() {
+        const swipeThreshold = 50; // Минимальное расстояние для свайпа
+        const swipeLength = touchEndX - touchStartX;
+        
+        if (Math.abs(swipeLength) > swipeThreshold) {
+            if (swipeLength > 0) {
+                // Свайп вправо - предыдущий слайд
+                changeSlide(-1);
+            } else {
+                // Свайп влево - следующий слайд
+                changeSlide(1);
+            }
+        }
+    }
+
+    // Функция изменения слайда
+    function changeSlide(direction) {
+        showSlides(slideIndex += direction);
+    }
+
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        let slides = document.getElementsByClassName("slide");
+        let buttons = document.getElementsByClassName("nav-button");
+        
+        if (n > slides.length) {slideIndex = 1}
+        if (n < 1) {slideIndex = slides.length}
+        
+        // Скрываем все слайды и деактивируем кнопки
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+            slides[i].classList.remove("active");
+            buttons[i].classList.remove("active");
+        }
+        
+        // Показываем текущий слайд и активируем соответствующую кнопку
+        slides[slideIndex-1].style.display = "block";
+        buttons[slideIndex-1].classList.add("active");
+        
+        // Добавляем класс active с небольшой задержкой для анимации
+        setTimeout(() => {
+            slides[slideIndex-1].classList.add("active");
+        }, 10);
+    }
+
+    // Инициализация слайдера при загрузке страницы
+    document.addEventListener('DOMContentLoaded', () => {
+        showSlides(1);
+    });
+    </script>
+
+    <script>
+    emailjs.init("YOUR_PUBLIC_KEY");
+
+    async function sendForm(event) {
+        event.preventDefault();
+        
+        const form = event.target;
+        const formData = new FormData(form);
+        const templateParams = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            phone: formData.get('phone'),
+            message: formData.get('message')
+        };
+
+        try {
+            await emailjs.send(
+                'YOUR_SERVICE_ID',
+                'YOUR_TEMPLATE_ID',
+                templateParams
+            );
+            
+            alert('Спасибо! Ваша заявка отправлена.');
+            form.reset();
+        } catch (error) {
+            alert('Произошла ошибка при отправке формы. Пожалуйста, попробуйте позже.');
+            console.error('Error:', error);
+        }
+    }
+    </script>
+</body>
+</html>
+
