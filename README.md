@@ -1,75 +1,62 @@
-<<<<<<< HEAD
-# placeandplay-web
-Web version of place&amp;play for the sport organizations
-=======
-# Getting Started with Create React App
+# Place&Play Web
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Place&Play Web** — современное веб-приложение для спортивных организаций, созданное на React.  
+Система позволяет автоматизировать работу спорт-объектов, упростить взаимодействие с клиентами и повысить эффективность управления событиями.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🚀 Основные возможности
 
-### `npm start`
+- **Регистрация и авторизация**  
+  Удобная форма регистрации и входа для представителей спортивных организаций с современным UI и валидацией.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Информация об организации**  
+  Просмотр и редактирование профиля организации, контактных данных, расписания, услуг и других атрибутов.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Список событий**  
+  Получение и отображение актуальных событий (мероприятий, матчей, тренировок) через WebSocket — обновления происходят в реальном времени.
 
-### `npm test`
+- **Детальный просмотр события**  
+  Вся информация о событии доступна в модальном окне: описание, дата, место, участники, статус, контакты организатора и действия с событием.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Уведомления и статусы**  
+  Красивые всплывающие уведомления о действиях, изменениях статусов, новых событиях и ошибках.
 
-### `npm run build`
+- **Адаптивный дизайн**  
+  Интерфейс отлично смотрится на любых устройствах: от мобильных до десктопов.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 🛠️ Технологии
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **React** — современный фронтенд-фреймворк
+- **WebSocket** — для мгновенного получения событий
+- **HTML5/CSS3** — адаптивная и современная верстка
+- **Vanilla JS** — для интерактивных элементов и логики
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 📦 Быстрый старт
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+git clone https://github.com/Olegator-IS/placeandplay-web.git
+cd placeandplay-web
+npm install
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 💡 Для кого этот проект?
 
-## Learn More
+- Владельцы и администраторы спортивных объектов
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 📬 Обратная связь
 
-### Code Splitting
+Если у вас есть предложения или вопросы — создайте issue или напишите на [business@placeandplay.uz](mailto:business@placeandplay.uz).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
->>>>>>> 17ef00f (Initialize project using Create React App)
+**Place&Play Web** — ваш цифровой помощник для спортивного бизнеса!
