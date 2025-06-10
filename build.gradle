@@ -1,0 +1,9 @@
+dependencies {
+    // ... existing dependencies ...
+    
+    // WebSocket dependencies
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework:spring-messaging'
+    
+    // ... other dependencies ...
+} 
