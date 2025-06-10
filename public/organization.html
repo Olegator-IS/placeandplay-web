@@ -132,39 +132,59 @@
         .schedule-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            padding: 10px;
+            gap: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin-bottom: 30px;
         }
 
         .schedule-day {
             background: white;
-            padding: 15px;
+            padding: 20px;
             border-radius: 12px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
         }
 
         .schedule-day:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
         }
 
         .schedule-day.working {
             background: linear-gradient(45deg, #d4edda, #c3e6cb);
+            border-color: #28a745;
         }
 
         .schedule-day.non-working {
             background: linear-gradient(45deg, #f8d7da, #f5c6cb);
+            border-color: #dc3545;
         }
 
         .working-hours {
             color: #155724;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .non-working-day {
             color: #721c24;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+
+        .day-icon {
+            font-size: 1.8em;
+            margin-bottom: 10px;
         }
 
         .info-card p {
@@ -184,30 +204,45 @@
         }
 
         .badge {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 25px;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 15px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .badge:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
         }
 
         .badge.standard {
-            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            background: linear-gradient(45deg, #4a90e2, #357abd);
+            color: white;
         }
 
         .badge.premium {
-            background: linear-gradient(45deg, #fff3cd, #ffeeba);
+            background: linear-gradient(45deg, #ffd700, #ffa500);
+            color: #000;
         }
 
         .badge.luxury {
-            background: linear-gradient(45deg, #e9d8fd, #d6bcfa);
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            color: white;
+        }
+
+        .badge-icon {
+            font-size: 18px;
+        }
+
+        .badge-text {
+            font-weight: 600;
         }
 
         .account-info {
@@ -286,47 +321,61 @@
 
         .price-slot {
             background: white;
-            padding: 15px;
+            padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             display: grid;
             grid-template-columns: 1fr 1fr 2fr;
             gap: 20px;
             align-items: center;
-            transition: transform 0.2s;
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
         }
 
         .price-slot:hover {
-            transform: scale(1.02);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
         }
 
         .time-range {
-            background: #f8f9fa;
-            padding: 8px 15px;
+            background: #e9ecef;
+            padding: 10px 15px;
             border-radius: 20px;
             font-weight: 600;
             color: #495057;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .price-value {
-            background: #d4edda;
-            padding: 8px 15px;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            padding: 10px 15px;
             border-radius: 20px;
-            color: #155724;
+            color: white;
             font-weight: 600;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        .price-icon {
-            font-size: 1.5em;
+        .price-description {
+            color: #495057;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .time-icon, .price-icon, .desc-icon {
+            font-size: 1.2em;
         }
 
         .desc-icon {
-            font-size: 1.5em;
-        }
-
-        .day-icon {
             font-size: 1.5em;
         }
 
@@ -1416,6 +1465,72 @@
                 opacity: 1;
             }
         }
+
+        .price-schedule {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .price-slot {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: grid;
+            grid-template-columns: 1fr 1fr 2fr;
+            gap: 20px;
+            align-items: center;
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+        }
+
+        .price-slot:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+
+        .time-range {
+            background: #e9ecef;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #495057;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .price-value {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            padding: 10px 15px;
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .price-description {
+            color: #495057;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .time-icon, .price-icon, .desc-icon {
+            font-size: 1.2em;
+        }
     </style>
 </head>
 <body>
@@ -1755,10 +1870,22 @@
             return statuses[status] || status;
         }
 
-        function formatDate(dateString) {
-            if (!dateString) return 'Нет данных';
-            const date = new Date(dateString);
-            return date.toLocaleString('ru-RU', {
+        function formatDate(dateValue) {
+            if (!dateValue) return 'Нет данных';
+            // Если это массив (например, [2025, 5, 27, 19, 55, 36, ...])
+            if (Array.isArray(dateValue)) {
+                const [year, month, day, hour, minute, second] = dateValue;
+                return new Date(year, month - 1, day, hour, minute, second).toLocaleString('ru-RU', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+            // Если это строка
+            const date = new Date(dateValue);
+            return isNaN(date) ? 'Нет данных' : date.toLocaleString('ru-RU', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
