@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Place&Play — MVP Demo</title>
+  <link rel="icon" href="logo.png">
+  <style>
+    :root {
+      --main-bg: #f7f5fa;
+      --main-purple: #7b2ff2;
+      --main-pink: #f357a8;
+      --main-dark: #2d1a4a;
+      --main-white: #fff;
+      --main-gray: #e5e1ef;
+      --main-gradient: linear-gradient(90deg, #7b2ff2 0%, #f357a8 100%);
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--main-bg);
+      color: var(--main-dark);
+      font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+      min-height: 100vh;
+      scroll-behavior: smooth;
+    }
+    a { color: var(--main-purple); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .demo-container {
+      max-width: 540px;
+      margin: 40px auto 0 auto;
+      background: var(--main-white);
+      border-radius: 18px;
+      box-shadow: 0 4px 32px rgba(123,47,242,0.08);
+      padding: 32px 24px 28px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeInUp 0.7s;
+    }
+    .demo-logo {
+      width: 72px;
+      height: 72px;
+      margin-bottom: 18px;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(123,47,242,0.10);
+      background: var(--main-bg);
+      object-fit: contain;
+      animation: fadeIn 1s;
+    }
+    .demo-lang-switch {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      align-items: center;
+      justify-content: flex-end;
+      width: 100%;
+    }
+    .demo-lang-btn {
+      background: none;
+      border: none;
+      color: var(--main-purple);
+      font-weight: 600;
+      font-size: 1em;
+      cursor: pointer;
+      padding: 4px 10px;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+    .demo-lang-btn.active, .demo-lang-btn:hover {
+      background: var(--main-gradient);
+      color: #fff;
+    }
+    .demo-title {
+      font-size: 1.35em;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-align: center;
+      letter-spacing: 0.01em;
+      animation: fadeInUp 0.8s;
+    }
+    .demo-desc {
+      font-size: 1.05em;
+      color: #4a3b5e;
+      margin-bottom: 32px;
+      text-align: center;
+      line-height: 1.6;
+      animation: fadeInUp 1s;
+    }
+    .demo-btn {
+      background: var(--main-gradient);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1em;
+      font-weight: 600;
+      padding: 14px 36px;
+      cursor: pointer;
+      box-shadow: 0 2px 12px rgba(123,47,242,0.10);
+      transition: box-shadow 0.2s, transform 0.15s;
+      margin-bottom: 0;
+      animation: fadeInUp 1.2s;
+    }
+    .demo-btn:hover {
+      box-shadow: 0 6px 24px rgba(123,47,242,0.18);
+      transform: translateY(-2px) scale(1.03);
+    }
+    /* Преимущества */
+    .demo-benefits {
+      margin: 38px 0 32px 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      animation: fadeInUp 1.3s;
+    }
+    .demo-benefit {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      background: linear-gradient(90deg, #f7f5fa 60%, #f357a81a 100%);
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: 0 2px 10px rgba(123,47,242,0.04);
+    }
+    .demo-benefit-icon {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7em;
+      background: var(--main-gradient);
+      color: #fff;
+      border-radius: 50%;
+      box-shadow: 0 2px 8px rgba(123,47,242,0.10);
+    }
+    .demo-benefit-text {
+      font-size: 1.04em;
+      color: #3a295a;
+      line-height: 1.5;
+    }
+    /* Слайдер скриншотов */
+    .demo-screens {
+      margin: 36px 0 32px 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeInUp 1.4s;
+    }
+    .demo-screens-title {
+      font-weight: 600;
+      color: var(--main-purple);
+      margin-bottom: 12px;
+      font-size: 1.1em;
+      text-align: center;
+    }
+    .demo-screens-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      width: 100%;
+      margin: 0 auto 0 auto;
+      justify-items: center;
+      align-items: end;
+    }
+    .demo-screens-thumb-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.18s, box-shadow 0.18s;
+      border-radius: 14px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(123,47,242,0.06);
+      padding: 10px 8px 8px 8px;
+      position: relative;
+      min-width: 0;
+    }
+    .demo-screens-thumb-wrap:hover .demo-screens-thumb {
+      transform: scale(1.13);
+      box-shadow: 0 8px 32px rgba(123,47,242,0.18);
+      z-index: 2;
+    }
+    .demo-screens-thumb {
+      width: 260px;
+      height: 520px;
+      object-fit: cover;
+      border-radius: 10px;
+      background: #f7f5fa;
+      margin-bottom: 8px;
+      box-shadow: 0 2px 8px rgba(123,47,242,0.08);
+      transition: box-shadow 0.18s, transform 0.18s;
+      border: 2px solid #ede3fa;
+    }
+    .demo-screens-thumb-caption {
+      font-size: 0.93em;
+      color: #4a3b5e;
+      text-align: center;
+      max-width: 120px;
+      min-height: 32px;
+      line-height: 1.3;
+      word-break: break-word;
+      opacity: 0.92;
+    }
+    /* Модальное окно */
+    .demo-modal-bg {
+      position: fixed;
+      left: 0; top: 0; right: 0; bottom: 0;
+      background: rgba(44, 18, 70, 0.65);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.2s;
+    }
+    .demo-modal {
+      background: var(--main-white);
+      border-radius: 18px;
+      box-shadow: 0 8px 40px rgba(123,47,242,0.18);
+      padding: 0 0 18px 0;
+      max-width: 98vw;
+      width: 420px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      animation: fadeInUp 0.25s;
+    }
+    .demo-modal video {
+      width: 100%;
+      max-height: 60vh;
+      border-radius: 16px 16px 0 0;
+      background: #000;
+      display: block;
+    }
+    .demo-modal-close {
+      position: absolute;
+      top: 10px;
+      right: 18px;
+      font-size: 2em;
+      color: var(--main-purple);
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+      transition: color 0.2s;
+    }
+    .demo-modal-close:hover {
+      color: var(--main-pink);
+    }
+    /* FAQ */
+    .demo-faq {
+      margin: 38px 0 32px 0;
+      width: 100%;
+      animation: fadeInUp 1.5s;
+    }
+    .demo-faq-title {
+      font-weight: 600;
+      color: var(--main-purple);
+      margin-bottom: 12px;
+      font-size: 1.1em;
+      text-align: center;
+    }
+    .demo-faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .demo-faq-item {
+      background: #f7f5fa;
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: #3a295a;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.18s;
+      box-shadow: 0 1px 6px rgba(123,47,242,0.04);
+    }
+    .demo-faq-item.active {
+      background: #ede3fa;
+    }
+    .demo-faq-q {
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .demo-faq-a {
+      font-size: 0.97em;
+      color: #5a4a7a;
+      margin-top: 2px;
+      display: none;
+    }
+    .demo-faq-item.active .demo-faq-a {
+      display: block;
+      animation: fadeIn 0.3s;
+    }
+    /* Контакты и QR */
+    .demo-contacts {
+      margin: 40px 0 0 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      animation: fadeInUp 1.6s;
+    }
+    .demo-contacts-row {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .demo-contact-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--main-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.3em;
+      margin-right: 8px;
+    }
+    .demo-qr {
+      width: 90px;
+      height: 90px;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(123,47,242,0.10);
+      object-fit: contain;
+      margin-top: 8px;
+    }
+    .demo-presentation {
+      margin: 0 0 18px 0;
+      text-align: center;
+      animation: fadeInUp 1.45s;
+    }
+    .demo-presentation-link {
+      display: inline-block;
+      background: var(--main-gradient);
+      color: #fff;
+      font-weight: 600;
+      border-radius: 10px;
+      padding: 10px 28px;
+      font-size: 1em;
+      margin-top: 8px;
+      box-shadow: 0 2px 8px rgba(123,47,242,0.10);
+      transition: background 0.2s, transform 0.15s;
+    }
+    .demo-presentation-link:hover {
+      background: linear-gradient(90deg, #f357a8, #7b2ff2);
+      transform: scale(1.04);
+    }
+    @media (max-width: 900px) {
+      .demo-screens-gallery {
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+      }
+      .demo-screens-thumb { width: 180px; height: 360px; }
+      .demo-screens-thumb-caption { max-width: 120px; }
+      .modal-screens-img-fade { max-height: 50vh; }
+      .modal-screens-caption-wrap { max-height: 60px; }
+    }
+    @media (max-width: 600px) {
+      .demo-container {
+        max-width: 98vw;
+        padding: 18px 4vw 18px 4vw;
+      }
+      .demo-modal {
+        width: 98vw;
+        padding: 0 0 10px 0;
+      }
+      .demo-logo {
+        width: 54px;
+        height: 54px;
+      }
+      .demo-screens-gallery {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 10px;
+        width: 100%;
+        padding-bottom: 8px;
+      }
+      .demo-screens-thumb { width: 140px; height: 280px; flex: 0 0 auto; }
+      .demo-screens-thumb-caption { font-size: 0.85em; max-width: 120px; }
+      .modal-screens-img-fade { max-height: 38vh; }
+      .modal-screens-caption-wrap { max-height: 40px; }
+      .modal-screens-arrow { width: 36px; height: 36px; font-size: 1.1em; }
+      .modal-screens-counter { font-size: 0.95em; right: 10px; bottom: 10px; padding: 2px 8px; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: none; }
+    }
+    .modal-screens-modal {
+      padding-bottom: 32px;
+      min-width: 0;
+    }
+    .modal-screens-img-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 160px;
+      position: relative;
+      background: #fff;
+    }
+    .modal-screens-img-fade {
+      width: 100%;
+      max-width: 95vw;
+      max-height: 80vh;
+      transition: opacity 0.45s;
+      opacity: 1;
+      background: #fff;
+      box-shadow: 0 4px 24px rgba(123,47,242,0.13);
+      border-radius: 16px 16px 0 0;
+      display: block;
+    }
+    .fadein { animation: fadeInModalImg 0.45s; }
+    .fadeout { animation: fadeOutModalImg 0.32s; }
+    @keyframes fadeInModalImg { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeOutModalImg { from { opacity: 1; } to { opacity: 0; } }
+    .modal-screens-caption-wrap {
+      max-height: 80px;
+      overflow-y: auto;
+      margin: 0 auto;
+      width: 100%;
+      background: #fff;
+      border-radius: 0 0 12px 12px;
+      box-shadow: 0 2px 8px rgba(123,47,242,0.04);
+      padding-bottom: 2px;
+    }
+    .modal-screens-caption {
+      color: #4a3b5e;
+      font-size: 1.08em;
+      text-align: center;
+      padding: 12px 10px 6px 10px;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+    .modal-screens-counter {
+      position: absolute;
+      bottom: 18px;
+      right: 28px;
+      color: #7b2ff2;
+      font-size: 1.08em;
+      font-weight: 600;
+      background: #fff;
+      border-radius: 8px;
+      padding: 4px 14px;
+      box-shadow: 0 2px 8px rgba(123,47,242,0.08);
+      opacity: 0.92;
+      z-index: 2;
+    }
+    .modal-screens-arrow {
+      width: 48px;
+      height: 48px;
+      font-size: 1.5em;
+      border-radius: 50%;
+      background: var(--main-gradient);
+      color: #fff;
+      border: none;
+      box-shadow: 0 2px 8px rgba(123,47,242,0.10);
+      opacity: 0.92;
+      transition: background 0.2s, transform 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-screens-arrow:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    .modal-screens-arrow:hover:not(:disabled) {
+      background: linear-gradient(90deg, #f357a8, #7b2ff2);
+      transform: scale(1.08);
+    }
+    .demo-github {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin: 32px 0 0 0;
+      animation: fadeInUp 1.7s;
+    }
+    .demo-github-link {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px 24px;
+      font-size: 1.08em;
+      font-weight: 600;
+      color: #7b2ff2;
+      box-shadow: 0 2px 8px rgba(123,47,242,0.08);
+      border: 2px solid #ede3fa;
+      transition: background 0.2s, color 0.2s, border 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+    .demo-github-link:hover {
+      background: #f7f5fa;
+      color: #f357a8;
+      border: 2px solid #f357a8;
+      transform: scale(1.04);
+    }
+    .demo-screens-toggle-btn {
+      display: block;
+      margin: 0 auto 18px auto;
+      background: var(--main-gradient);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.08em;
+      font-weight: 600;
+      padding: 12px 32px;
+      box-shadow: 0 2px 8px rgba(123,47,242,0.08);
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+      cursor: pointer;
+    }
+    .demo-screens-toggle-btn:hover {
+      background: linear-gradient(90deg, #f357a8, #7b2ff2);
+      color: #fff;
+      transform: scale(1.04);
+    }
+    .demo-screens-gallery-wrap {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height 0.5s cubic-bezier(.4,0,.2,1), opacity 0.4s;
+      will-change: max-height, opacity;
+      height: auto;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+    .demo-screens-gallery-wrap.visible {
+      max-height: 2000px;
+      opacity: 1;
+      transition: max-height 0.7s cubic-bezier(.4,0,.2,1), opacity 0.5s;
+    }
+    @media (max-width: 900px) {
+      .demo-screens-gallery-wrap {
+        max-height: 50vh;
+      }
+    }
+    .demo-screens-hint {
+      color: #7b2ff2;
+      background: #f7f5fa;
+      border-radius: 8px;
+      padding: 7px 16px;
+      font-size: 1em;
+      font-weight: 500;
+      margin: 0 auto 10px auto;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 420px;
+      box-shadow: 0 1px 6px rgba(123,47,242,0.04);
+      opacity: 0.92;
+    }
+    .demo-download-app {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 38px 0 18px 0;
+      animation: fadeInUp 1.6s;
+    }
+    .demo-download-app-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--main-gradient);
+      color: #fff;
+      font-size: 1.18em;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      padding: 18px 44px;
+      box-shadow: 0 4px 24px rgba(123,47,242,0.13);
+      text-decoration: none;
+      margin-bottom: 8px;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      outline: none;
+    }
+    .demo-download-app-btn:hover {
+      background: linear-gradient(90deg, #f357a8, #7b2ff2);
+      color: #fff;
+      transform: scale(1.04);
+      box-shadow: 0 8px 32px rgba(123,47,242,0.18);
+    }
+    .demo-download-app-note {
+      color: #888;
+      font-size: 0.98em;
+      margin-top: 2px;
+      margin-left: 2px;
+      text-align: center;
+      display: block;
+    }
+    /* Кнопка скачать приложение возле QR */
+    .demo-download-app-btn-qr {
+      font-size: 1em;
+      padding: 10px 22px;
+      margin-left: 18px;
+      margin-bottom: 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(123,47,242,0.10);
+    }
+    .demo-download-app-note-qr {
+      color: #888;
+      font-size: 0.97em;
+      margin-top: 6px;
+      margin-left: 0;
+      text-align: left;
+      display: block;
+      max-width: 320px;
+    }
+    .download-arrow {
+      display: inline-block;
+      margin-left: 10px;
+      font-size: 1.25em;
+      color: #fff;
+      transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+      vertical-align: middle;
+      font-weight: bold;
+      text-shadow: 0 2px 8px rgba(123,47,242,0.18);
+    }
+    .demo-download-app-btn-qr:hover .download-arrow {
+      transform: translateX(10px) scale(1.18);
+      color: #f357a8;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo-container">
+    <img src="logoMVP.jpg" alt="Place&Play logo" class="demo-logo">
+    <div class="demo-lang-switch">
+      <button class="demo-lang-btn active" id="lang-ru">RU</button>
+      <button class="demo-lang-btn" id="lang-en">EN</button>
+    </div>
+    <div class="demo-title" id="demo-title"></div>
+    <div class="demo-desc" id="demo-desc"></div>
+    <button class="demo-btn" id="demo-video-btn"></button>
+    <div class="demo-presentation" id="demo-presentation"></div>
+    <div class="demo-benefits" id="demo-benefits"></div>
+    <div class="demo-screens" id="demo-screens"></div>
+    <div class="demo-faq" id="demo-faq"></div>
+    <div class="demo-contacts" id="demo-contacts"></div>
+    <div class="demo-github" id="demo-github"></div>
+  </div>
+  <div id="demo-modal-root"></div>
+  <script>
+    // Мультиязычные тексты и данные
+    const DEMO_TEXTS = {
+      ru: {
+        title: 'Уважаемая аттестационная комиссия!',
+        desc: 'Рады представить вашему вниманию MVP проекта Place&Play — современного мобильного приложения, которое объединяет людей через спорт.<br><br>С помощью Place&Play пользователи могут:<br>— находить спортивные площадки рядом,<br>— присоединяться к уже созданным играм,<br>— организовывать собственные мероприятия,<br>— знакомиться с единомышленниками по интересам и уровню подготовки.<br><br>Помимо этого, платформа ориентирована и на спортивные заведения — залы, клубы, площадки и т.п.<br><br>Place&Play помогает им привлекать новых клиентов, управлять бронированиями, продвигать мероприятия и анализировать активность.<br><br>Наша цель — сделать спорт доступным и удобным как для игроков, так и для бизнеса.<br><br>Ниже вы можете ознакомиться с видеодемонстрацией основных возможностей MVP.',
+        btn: 'Смотреть демо',
+        videoAlt: 'Демонстрация Place&Play',
+        presentation: 'Скачать презентацию (PDF)',
+        benefits: [
+          { icon: '⚡', text: 'Быстрый поиск и бронирование спортивных площадок' },
+          { icon: '🤝', text: 'Лёгкое создание и организация игр' },
+          { icon: '👥', text: 'Сообщество единомышленников и новые знакомства' },
+          { icon: '🔒', text: 'Безопасные и прозрачные бронирования' },
+        ],
+        screensTitle: 'Скриншоты приложения',
+        screens: [
+          { src: 'assets/screen1.png', caption: 'Приветственный экран' },
+          { src: 'assets/screen2.png', caption: 'Экран профиля' },
+          { src: 'assets/screen3.png', caption: 'Редактирование профиля' },
+          { src: 'assets/screen4.png', caption: 'Карта спортивных площадок' },
+          { src: 'assets/screen5.png', caption: 'События выбранной площадки' },
+          { src: 'assets/screen6.png', caption: 'Информация о выбранной площадке' },
+          { src: 'assets/screen7.png', caption: 'Создание события' },
+          { src: 'assets/screen8.png', caption: 'Предпросмотр созданного события' },
+          { src: 'assets/screen9.png', caption: 'Успешно созданное событие' },
+          { src: 'assets/screen10.png', caption: 'Просмотр созданного события' },
+
+          { src: 'assets/screen11.png', caption: 'Возможности управления событием' },
+          { src: 'assets/screen12.png', caption: 'Подтверждение регистрации' },
+          { src: 'assets/screen13.png', caption: 'Смена статуса в режиме онлайн' },
+          { src: 'assets/screen14.png', caption: 'Просмотр мои события' },
+          { src: 'assets/screen15.png', caption: 'Чат внутри события между участниками' },
+          { src: 'assets/screen16.png', caption: 'Ознакомительный экран 1' },
+          { src: 'assets/screen17.png', caption: 'Ознакомительный экран 2' },
+          { src: 'assets/screen18.png', caption: 'Ознакомительный экран 3' },
+          { src: 'assets/screen19.png', caption: 'Страница авторизации' },
+          { src: 'assets/screen20.png', caption: 'Страница регистрации' },
+          { src: 'assets/screen21.png', caption: 'Гостевой режим' },
+        ],
+        faqTitle: 'Частые вопросы',
+        faq: [
+          { q: '✅ Для кого предназначено приложение?', a: `
+            <div style='margin-bottom:10px;'>Place&Play предназначено как для обычных пользователей, так и для спортивных организаций.</div>
+            <div style='margin-bottom:7px;'><span style='color:#7b2ff2;font-size:1.2em;margin-right:6px;'>🔹</span><b>Для людей</b> — кто хочет заниматься спортом, находить площадки, участвовать в играх и знакомиться с единомышленниками.</div>
+            <div style='margin-bottom:7px;'><span style='color:#7b2ff2;font-size:1.2em;margin-right:6px;'>🔹</span><b>Для организаций</b> — спортивных залов, площадок, клубов и арен, которые хотят привлекать новых клиентов, продвигать мероприятия, управлять бронированиями и получать аналитику по активности.</div>
+            <div style='margin-top:10px;'>Place&Play объединяет игроков и бизнес — создавая единое спортивное сообщество.</div>
+          ` },
+          { q: '✅ Как начать пользоваться?', a: `
+            Скачайте приложение Place&Play на свой смартфон (Android).<br><br>
+            Пройдите быструю регистрацию — укажите имя, интересующие виды спорта и местоположение.<br><br>
+            Настройте профиль: добавьте фото, выберите уровень подготовки и предпочтительное время для игр.<br><br>
+            Выберите вид спорта — и найдите ближайшие игры, мероприятия или спортивные площадки.<br><br>
+            Присоединяйтесь к событиям или создайте своё собственное.<br><br>
+            Общайтесь с участниками, формируйте команду, ставьте цели и развивайтесь вместе.<br><br>
+            <b>Place&Play</b> — это не просто поиск игры, это путь к новым знакомствам, активности и спортивному образу жизни.
+          ` },
+          { q: '📥 Где можно скачать Place&Play?', a: `
+            <b>Скоро в App Store и Google Play.</b><br>
+            На данный момент приложение доступно для тестирования — просто отсканируйте QR-код ниже или скачайте APK по ссылке.<br><br>
+            <span style='color:#7b2ff2;'>🔹</span> Поддерживается Android (версии 7.0 и выше)<br>
+            <span style='color:#7b2ff2;'>🔹</span> Установка занимает меньше минуты
+          ` },
+        ],
+        contacts: {
+          email: 'business@placeandplay.uz',
+          telegram: '@placeandplay',
+          qr: 'assets/qr-demo.png',
+          qrLabel: 'Скачать приложение',
+        },
+        presentationUrl: 'assets/ru-presentation.pdf',
+        github: {
+          url: 'https://github.com/Olegator-IS/',
+          label: 'Исходный код на GitHub',
+        },
+        downloadApp: {
+          url: '',
+          label: 'Скачать приложение',
+          note: 'Скачать можно только по QR-коду выше',
+        },
+      },
+      en: {
+        title: 'Dear Evaluation Committee,',
+        desc: 'We are pleased to present the MVP of Place&Play — a modern mobile application that connects people through sports.<br><br>With Place&Play, users can:<br>– discover local sports venues,<br>– join existing games,<br>– organize their own events,<br>– and connect with like-minded players based on interests and skill level.<br><br>At the same time, Place&Play is also built for sports venues — gyms, clubs, courts, and activity centers.<br><br>We help them attract new clients, manage bookings, promote events, and gain useful analytics on user engagement.<br><br>Our mission is to make sports more accessible, engaging, and efficient — for both players and businesses.<br><br>Please find below a short video demonstration of the MVP\'s core features.',
+        btn: 'Watch demo',
+        videoAlt: 'Place&Play demonstration',
+        presentation: 'Download presentation (PDF)',
+        benefits: [
+          { icon: '⚡', text: 'Fast search and booking of sports venues' },
+          { icon: '🤝', text: 'Easy creation and organization of games' },
+          { icon: '👥', text: 'Community of like-minded people and new friends' },
+          { icon: '🔒', text: 'Safe and transparent bookings' },
+        ],
+        screensTitle: 'App screenshots',
+        screens: [
+          { src: 'assets/screen1.png', caption: 'Main screen: venue search' },
+          { src: 'assets/screen2.png', caption: 'Create an event' },
+          { src: 'assets/screen3.png', caption: 'Games and participants list' },
+        ],
+        faqTitle: 'FAQ',
+        faq: [
+          { q: '✅ Who is Place&Play for?', a: `
+            <div style='margin-bottom:10px;'>Place&Play is designed for both regular users and sports organizations.</div>
+            <div style='margin-bottom:7px;'><span style='color:#7b2ff2;font-size:1.2em;margin-right:6px;'>🔹</span><b>For individuals</b> — who want to do sports, find venues, join games, and meet like-minded people.</div>
+            <div style='margin-bottom:7px;'><span style='color:#7b2ff2;font-size:1.2em;margin-right:6px;'>🔹</span><b>For organizations</b> — gyms, venues, clubs, and arenas that want to attract new clients, promote events, manage bookings, and get analytics on activity.</div>
+            <div style='margin-top:10px;'>Place&Play brings together players and businesses — creating a unified sports community.</div>
+          ` },
+          { q: '✅ How to get started?', a: `
+            Download the Place&Play app to your smartphone (Android).<br><br>
+            Complete a quick registration — enter your name, preferred sports, and location.<br><br>
+            Set up your profile: add a photo, select your skill level and preferred time for games.<br><br>
+            Choose a sport — and find nearby games, events, or sports venues.<br><br>
+            Join events or create your own.<br><br>
+            Chat with participants, form a team, set goals, and grow together.<br><br>
+            <b>Place&Play</b> is not just about finding a game — it's a way to new connections, activity, and a sporty lifestyle.
+          ` },
+          { q: '📥 Where can I download Place&Play?', a: `
+            <b>Coming soon to App Store and Google Play.</b><br>
+            For now, the app is available for testing — just scan the QR code below or download the APK via the link.<br><br>
+            <span style='color:#7b2ff2;'>🔹</span> Supported on Android (version 7.0 and above)<br>
+            <span style='color:#7b2ff2;'>🔹</span> Installation takes less than a minute
+          ` },
+        ],
+        contacts: {
+          email: 'info@placeandplay.com',
+          telegram: '@placeandplay',
+          qr: 'assets/qr-demo.png',
+          qrLabel: 'Download the app',
+        },
+        presentationUrl: 'assets/en-presentation.pdf',
+        github: {
+          url: 'https://github.com/your-org/your-repo',
+          label: 'Source code on GitHub',
+        },
+        downloadApp: {
+          url: '',
+          label: 'Download the app',
+          note: 'Available only via QR code above',
+        },
+      }
+    };
+    let currentLang = 'ru';
+    function setLang(lang) {
+      currentLang = lang;
+      document.getElementById('demo-title').textContent = DEMO_TEXTS[lang].title;
+      document.getElementById('demo-desc').innerHTML = DEMO_TEXTS[lang].desc;
+      document.getElementById('demo-video-btn').textContent = DEMO_TEXTS[lang].btn;
+      document.getElementById('lang-ru').classList.toggle('active', lang === 'ru');
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+      // Презентация с fallback
+      setPresentationLink(lang);
+      // Преимущества
+      document.getElementById('demo-benefits').innerHTML = DEMO_TEXTS[lang].benefits.map(b => `<div class='demo-benefit'><span class='demo-benefit-icon'>${b.icon}</span><span class='demo-benefit-text'>${b.text}</span></div>`).join('');
+      // Скриншоты
+      renderScreens();
+      // FAQ
+      renderFAQ();
+      // Контакты
+      renderContacts();
+      // GitHub
+      document.getElementById('demo-github').innerHTML = `<a class='demo-github-link' href='${DEMO_TEXTS[lang].github.url}' target='_blank'><svg width='28' height='28' viewBox='0 0 24 24' fill='none' style='vertical-align:middle;margin-right:8px;'><path d='M12 2C6.48 2 2 6.58 2 12.26c0 4.48 2.87 8.28 6.84 9.63.5.09.68-.22.68-.48 0-.24-.01-.87-.01-1.7-2.78.62-3.37-1.36-3.37-1.36-.45-1.18-1.1-1.5-1.1-1.5-.9-.63.07-.62.07-.62 1 .07 1.53 1.05 1.53 1.05.89 1.56 2.34 1.11 2.91.85.09-.66.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.3.1-2.7 0 0 .84-.28 2.75 1.05A9.38 9.38 0 0 1 12 6.84c.85.004 1.71.12 2.51.35 1.91-1.33 2.75-1.05 2.75-1.05.55 1.4.2 2.44.1 2.7.64.72 1.03 1.63 1.03 2.75 0 3.94-2.34 4.81-4.57 5.07.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.58.69.48A10.01 10.01 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z' fill='#7b2ff2'/></svg>${DEMO_TEXTS[lang].github.label}</a>`;
+      // Кнопка скачать приложение
+      const downloadBtnHtml = `<a class='demo-download-app-btn' style='pointer-events:none;opacity:0.6;cursor:not-allowed;' tabindex='-1'>
+        <svg width='26' height='26' viewBox='0 0 24 24' fill='none' style='vertical-align:middle;margin-right:10px;'><path d='M12 3v12m0 0l-4-4m4 4l4-4M4 21h16' stroke='#fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>${DEMO_TEXTS[lang].downloadApp.label}
+      </a>
+      <span class='demo-download-app-note'>${DEMO_TEXTS[lang].downloadApp.note}</span>`;
+      document.getElementById('demo-download-app').innerHTML = downloadBtnHtml;
+    }
+    document.getElementById('lang-ru').onclick = () => setLang('ru');
+    document.getElementById('lang-en').onclick = () => setLang('en');
+
+    // Модальное окно с видео
+    const VIDEO_SRC = '/assets/demo.mp4'; // Легко заменить путь
+    function openDemoModal() {
+      const root = document.getElementById('demo-modal-root');
+      root.innerHTML = `<div class='demo-modal-bg'><div class='demo-modal'><button class='demo-modal-close'>&times;</button><video id='demo-modal-video' src='${VIDEO_SRC}' controls poster='logo.png' title='${DEMO_TEXTS[currentLang].videoAlt}'></video></div></div>`;
+      root.querySelector('.demo-modal-close').onclick = () => root.innerHTML = '';
+      root.querySelector('.demo-modal-bg').onclick = e => { if (e.target === root.querySelector('.demo-modal-bg')) root.innerHTML = ''; };
+      document.addEventListener('keydown', function escClose(e) {
+        if (e.key === 'Escape') { root.innerHTML = ''; document.removeEventListener('keydown', escClose); }
+      });
+
+      const videoEl = root.querySelector('#demo-modal-video');
+      if (videoEl) {
+        // 1. Автоматически запускать видео
+        setTimeout(() => {
+          videoEl.play().catch(()=>{});
+        }, 100);
+
+        // 2. На Android — fullscreen и центрирование
+        const ua = navigator.userAgent || navigator.vendor || window.opera;
+        const isAndroid = /android/i.test(ua);
+        if (isAndroid) {
+          setTimeout(() => {
+            // Fullscreen
+            if (videoEl.requestFullscreen) videoEl.requestFullscreen();
+            else if (videoEl.webkitRequestFullscreen) videoEl.webkitRequestFullscreen();
+            else if (videoEl.msRequestFullscreen) videoEl.msRequestFullscreen();
+            // Центрирование модалки (если не fullscreen)
+            const modal = root.querySelector('.demo-modal');
+            if (modal && !document.fullscreenElement) {
+              modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+          }, 300);
+        }
+      }
+    }
+    document.getElementById('demo-video-btn').onclick = openDemoModal;
+
+    // Слайдер скриншотов
+    let screensVisible = false;
+    function renderScreens() {
+      const screens = DEMO_TEXTS[currentLang].screens;
+      const screensTitle = DEMO_TEXTS[currentLang].screensTitle;
+      const showBtnText = currentLang === 'ru' ? 'Показать скриншоты приложения' : 'Show app screenshots';
+      const hideBtnText = currentLang === 'ru' ? 'Скрыть скриншоты' : 'Hide screenshots';
+      const hintText = currentLang === 'ru' ? 'Наведите или нажмите на миниатюру, чтобы посмотреть' : 'Hover or tap a thumbnail to view';
+      const el = document.getElementById('demo-screens');
+      if (!screens || !screens.length) { el.innerHTML = ''; return; }
+      el.innerHTML = `<button class='demo-screens-toggle-btn' id='demo-screens-toggle-btn'>${screensVisible ? hideBtnText : showBtnText}</button>
+        <div class='demo-screens-gallery-wrap${screensVisible ? ' visible' : ''}' id='demo-screens-gallery-wrap'>
+          <div class='demo-screens-hint'><svg width='18' height='18' style='vertical-align:middle;margin-right:6px;opacity:0.7;' viewBox='0 0 24 24'><path d='M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16zm-1-7h2v5h-2v-5zm0-6h2v2h-2V7z' fill='#7b2ff2'/></svg>${hintText}</div>
+          <div class='demo-screens-title'>${screensTitle}</div>
+          <div class='demo-screens-gallery'>
+            ${screens.map((s, i) => `<div class='demo-screens-thumb-wrap'><img src='${s.src}' alt='' class='demo-screens-thumb' data-idx='${i}'><div class='demo-screens-thumb-caption'>${s.caption}</div></div>`).join('')}
+          </div>
+        </div>`;
+      document.getElementById('demo-screens-toggle-btn').onclick = function() {
+        screensVisible = !screensVisible;
+        renderScreens();
+      };
+      if (screensVisible) {
+        el.querySelectorAll('.demo-screens-thumb').forEach(img => {
+          img.onclick = function() {
+            openScreenModal(parseInt(this.dataset.idx));
+          };
+          img.ontouchstart = function() {
+            openScreenModal(parseInt(this.dataset.idx));
+          };
+        });
+      }
+    }
+
+    // Модальное окно для скриншота с галереей и плавной анимацией
+    function openScreenModal(idx) {
+      const screens = DEMO_TEXTS[currentLang].screens;
+      const root = document.getElementById('demo-modal-root');
+      let currentIdx = idx;
+      let animating = false;
+      function renderModal(direction) {
+        const isMobile = window.innerWidth < 700;
+        root.innerHTML = `<div class='demo-modal-bg'><div class='demo-modal modal-screens-modal' style='max-width:${isMobile ? '100vw' : '900px'};width:${isMobile ? '100vw' : 'auto'};position:relative;'>
+          <button class='demo-modal-close'>&times;</button>
+          <button class='demo-screens-arrow modal-screens-arrow' id='modal-screen-prev' style='left:10px;top:50%;transform:translateY(-50%);z-index:2;' ${currentIdx===0?'disabled':''}>&lt;</button>
+          <button class='demo-screens-arrow modal-screens-arrow' id='modal-screen-next' style='right:10px;top:50%;transform:translateY(-50%);z-index:2;' ${currentIdx===screens.length-1?'disabled':''}>&gt;</button>
+          <div class='modal-screens-img-wrap' style='width:100vw;max-width:100vw;display:flex;justify-content:center;align-items:center;'>
+            <img src='${screens[currentIdx].src}' alt='' class='modal-screens-img-fade${direction ? ' anim-'+direction : ''}' style='max-width:98vw;max-height:${isMobile ? '90vh' : '80vh'};object-fit:contain;border-radius:16px 16px 0 0;'>
+          </div>
+          <div class='modal-screens-caption-wrap'><div class='modal-screens-caption'>${screens[currentIdx].caption}</div></div>
+          <div class='modal-screens-counter'>${currentIdx+1} / ${screens.length}</div>
+        </div></div>`;
+        root.querySelector('.demo-modal-close').onclick = () => root.innerHTML = '';
+        root.querySelector('.demo-modal-bg').onclick = e => { if (e.target === root.querySelector('.demo-modal-bg')) root.innerHTML = ''; };
+        root.querySelector('#modal-screen-prev').onclick = () => { if(currentIdx>0 && !animating){switchScreen(-1);} };
+        root.querySelector('#modal-screen-next').onclick = () => { if(currentIdx<screens.length-1 && !animating){switchScreen(1);} };
+        setTimeout(()=>{
+          const cap = root.querySelector('.modal-screens-caption-wrap');
+          if(cap) cap.scrollTop = 0;
+        }, 50);
+      }
+      function switchScreen(dir) {
+        animating = true;
+        const imgWrap = root.querySelector('.modal-screens-img-wrap');
+        const img = imgWrap.querySelector('img');
+        img.classList.add('fadeout');
+        setTimeout(() => {
+          currentIdx += dir;
+          renderModal();
+          const newImg = root.querySelector('.modal-screens-img-fade');
+          newImg.classList.add('fadein');
+          setTimeout(()=>{ animating = false; }, 400);
+        }, 320);
+      }
+      renderModal();
+      function escAndArrows(e) {
+        if (e.key === 'Escape') { root.innerHTML = ''; document.removeEventListener('keydown', escAndArrows); }
+        if (e.key === 'ArrowLeft' && currentIdx>0 && !animating) { switchScreen(-1); }
+        if (e.key === 'ArrowRight' && currentIdx<screens.length-1 && !animating) { switchScreen(1); }
+      }
+      document.addEventListener('keydown', escAndArrows);
+    }
+
+    // FAQ
+    function renderFAQ() {
+      const faq = DEMO_TEXTS[currentLang].faq;
+      const faqTitle = DEMO_TEXTS[currentLang].faqTitle;
+      const el = document.getElementById('demo-faq');
+      if (!faq || !faq.length) { el.innerHTML = ''; return; }
+      el.innerHTML = `<div class='demo-faq-title'>${faqTitle}</div>
+        <div class='demo-faq-list'>
+          ${faq.map((item,i) => `<div class='demo-faq-item' data-i='${i}'><div class='demo-faq-q'>${item.q}</div><div class='demo-faq-a'>${item.a}</div></div>`).join('')}
+        </div>`;
+      el.querySelectorAll('.demo-faq-item').forEach(item => {
+        item.onclick = function() {
+          el.querySelectorAll('.demo-faq-item').forEach(i => i.classList.remove('active'));
+          this.classList.add('active');
+        }
+      });
+    }
+
+    // Контакты и QR
+    function renderContacts() {
+      const c = DEMO_TEXTS[currentLang].contacts;
+      const el = document.getElementById('demo-contacts');
+      let mobileLink = '';
+      if (isMobile()) {
+        mobileLink = `
+          <a href="https://drive.google.com/file/d/1St6P02O3OtCCUYMRLOqVwYCzQ4mMYyUN/view?usp=sharing"
+             class="demo-mobile-apk-link"
+             target="_blank"
+             style="display:inline-block;margin-top:10px;font-weight:600;color:#fff;background:linear-gradient(90deg,#7b2ff2,#f357a8);padding:12px 24px;border-radius:10px;text-align:center;text-decoration:none;">
+            ${currentLang === 'ru' ? 'Скачать APK для Android' : 'Download APK for Android'}
+          </a>
+          <div style="font-size:0.95em;color:#7b2ff2;margin-top:4px;">${currentLang === 'ru' ? 'Файл размещён на Google Drive' : 'File is hosted on Google Drive'}</div>
+        `;
+      }
+      el.innerHTML = `<div class='demo-contacts-row'>
+        <span class='demo-contact-icon'>📧</span><a href='mailto:${c.email}'>${c.email}</a>
+        <span class='demo-contact-icon'>
+          <svg width='22' height='22' viewBox='0 0 240 240' fill='none' style='vertical-align:middle;'>
+            <circle cx='120' cy='120' r='120' fill='#37AEE2'/>
+            <path d='M180.5 74.5L156.5 178.5C154.5 186.5 149.5 188.5 142.5 184.5L110.5 160.5L95.5 175.5C93.5 177.5 91.5 179.5 88.5 179.5L91.5 146.5L157.5 87.5C160.5 85 157.5 84 153.5 86.5L75.5 132.5L43.5 122.5C36.5 120.5 36.5 115.5 45.5 112.5L171.5 69.5C177.5 67.5 182.5 71.5 180.5 74.5Z' fill='#fff'/>
+          </svg>
+        </span><a href='https://t.me/${c.telegram.replace('@','')}' target='_blank'>${c.telegram}</a>
+      </div>
+      <div class='demo-contacts-row'>
+        <img src='${c.qr}' alt='QR' class='demo-qr'>
+        <a class='demo-download-app-btn demo-download-app-btn-qr' style='pointer-events:none;cursor:not-allowed;' tabindex='-1'>
+          <span class='download-arrow' style='transform:rotate(180deg);margin-right:10px;margin-left:0;'>&rarr;</span>
+          ${DEMO_TEXTS[currentLang].downloadApp.label}
+        </a>
+        <div class='demo-download-app-note demo-download-app-note-qr'>${DEMO_TEXTS[currentLang].downloadApp.note} <span style='color:#f357a8;font-size:0.98em;'>&#9888;</span> ${currentLang==='ru' ? 'Файл размещён на Google Drive и может быть помечен как непроверенный.' : 'File is hosted on Google Drive and may be marked as unverified.'}</div>
+      </div>` + mobileLink;
+    }
+
+    // Презентация с fallback
+    function setPresentationLink(lang) {
+      const link = document.createElement('a');
+      link.className = 'demo-presentation-link';
+      link.target = '_blank';
+      link.textContent = DEMO_TEXTS[lang].presentation;
+      const urlPrimary = DEMO_TEXTS[lang].presentationUrl;
+      const urlFallback = lang === 'ru' ? DEMO_TEXTS['en'].presentationUrl : DEMO_TEXTS['ru'].presentationUrl;
+      function setLink(url, isFallback) {
+        link.href = url;
+        link.onclick = null;
+        link.style.pointerEvents = '';
+        link.style.opacity = '';
+        link.textContent = DEMO_TEXTS[lang].presentation + (isFallback ? (lang === 'ru' ? ' (EN)' : ' (RU)') : '');
+      }
+      function setNotFound() {
+        link.href = '#';
+        link.textContent = lang === 'ru' ? 'Файл не найден' : 'File not found';
+        link.style.pointerEvents = 'none';
+        link.style.opacity = '0.6';
+      }
+      fetch(urlPrimary, {method: 'HEAD'}).then(r => {
+        if (r.ok) setLink(urlPrimary, false);
+        else fetch(urlFallback, {method: 'HEAD'}).then(r2 => {
+          if (r2.ok) setLink(urlFallback, true);
+          else setNotFound();
+        }).catch(setNotFound);
+      }).catch(setNotFound);
+      const presDiv = document.getElementById('demo-presentation');
+      presDiv.innerHTML = '';
+      presDiv.appendChild(link);
+    }
+
+    // Добавить функцию определения мобильного устройства
+    function isMobile() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+
+    // Инициализация
+    document.addEventListener('DOMContentLoaded', function() {
+      setLang('ru');
+    });
+  </script>
+</body>
+</html> 
