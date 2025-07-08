@@ -210,12 +210,16 @@
 
         /* Обновленные стили для шапки */
         .header-container {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
             background: linear-gradient(135deg, rgba(247, 198, 199, 0.95), rgba(161, 196, 253, 0.95));
-            padding: 20px 0;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            position: relative;
-            overflow: hidden;
             backdrop-filter: blur(10px);
+            transition: box-shadow 0.25s;
+        }
+        .header-container.sticky-shadow {
+            box-shadow: 0 6px 24px rgba(17, 51, 102, 0.18);
         }
 
         .header-content {
@@ -1074,6 +1078,698 @@
             box-shadow: 0 8px 20px rgba(17, 51, 102, 0.3) !important;
         }
 
+        .partner-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 18px rgba(17,51,102,0.08);
+            padding: 24px 20px 18px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            position: relative;
+            border: 2px solid transparent;
+            transition: box-shadow 0.25s, border 0.25s, transform 0.18s, background 0.25s;
+            min-height: 170px;
+        }
+        .partner-card:hover, .partner-card:focus {
+            box-shadow: 0 8px 32px rgba(17,51,102,0.18);
+            border: 2px solid #4a90e2;
+            transform: translateY(-4px) scale(1.05);
+            background: #f7faff;
+        }
+        .partner-card .sport-icon {
+            width: 36px;
+            height: 36px;
+            margin-bottom: 2px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .partner-card .verified-badge {
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            background: linear-gradient(90deg,#4a90e2 60%,#90caf9 100%);
+            color: #fff;
+            font-size: 0.85em;
+            font-weight: 600;
+            border-radius: 10px;
+            padding: 2px 10px 2px 7px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 1px 4px rgba(74,144,226,0.10);
+            letter-spacing: 0.2px;
+            z-index: 2;
+        }
+        .partner-card .verified-badge .verified-icon {
+            font-size: 1em;
+            margin-right: 2px;
+        }
+        .partner-card .partner-title {
+            font-size: 1.25em;
+            font-weight: 700;
+            color: #113366;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .partner-card .partner-address {
+            color: #666;
+            font-size: 1em;
+            margin-bottom: 2px;
+        }
+        .partner-card .partner-desc {
+            color: #444;
+            font-size: 0.98em;
+            margin-bottom: 2px;
+        }
+        .partner-card .partner-phone {
+            color: #007bff;
+            font-size: 1em;
+            text-decoration: none;
+            margin-bottom: 2px;
+            display: inline-block;
+        }
+        .partner-card .partner-phone:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            .partner-card .verified-badge {
+                font-size: 0.75em;
+                padding: 1px 7px 1px 5px;
+                top: 7px;
+                right: 7px;
+            }
+        }
+        .lang-switcher {
+            position: relative;
+            display: inline-block;
+            z-index: 1002;
+        }
+        .lang-btn {
+            background: #fff;
+            color: #113366;
+            border: 1.5px solid #113366;
+            border-radius: 8px;
+            padding: 5px 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            outline: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .lang-dropdown {
+            display: none;
+            position: absolute;
+            top: 110%;
+            left: 0;
+            background: #fff;
+            border: 1px solid #113366;
+            border-radius: 8px;
+            min-width: 160px;
+            box-shadow: 0 8px 32px rgba(17,51,102,0.18);
+            z-index: 1003;
+            animation: fadeInLang 0.18s;
+        }
+        @keyframes fadeInLang {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .lang-dropdown .lang-option {
+            padding: 10px 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            color: #113366;
+            background: #fff;
+            border: none;
+            width: 100%;
+            text-align: left;
+            transition: background 0.18s;
+        }
+        .lang-dropdown .lang-option:hover {
+            background: #e3f2fd;
+        }
+        .lang-flag {
+            width: 22px;
+            height: 16px;
+            border-radius: 2px;
+        }
+        .promo-banner {
+            background: linear-gradient(90deg, #4a90e2 60%, #90caf9 100%);
+            color: #fff;
+            border-radius: 18px;
+            box-shadow: 0 6px 32px rgba(74,144,226,0.10);
+            margin: 36px 0 32px 0;
+            padding: 38px 20px 32px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 1s;
+        }
+        .promo-banner .promo-content h2 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        .promo-banner .promo-content p {
+            font-size: 1.2em;
+            margin-bottom: 18px;
+            color: #e3f2fd;
+        }
+        .promo-banner .cta-button {
+            background: #fff;
+            color: #113366;
+            font-weight: 700;
+            border-radius: 30px;
+            padding: 14px 36px;
+            font-size: 1.1em;
+            text-decoration: none;
+            box-shadow: 0 2px 10px rgba(17,51,102,0.10);
+            transition: background 0.2s, color 0.2s;
+            border: none;
+            display: inline-block;
+        }
+        .promo-banner .cta-button:hover {
+            background: #113366;
+            color: #fff;
+        }
+        .why-us {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 18px rgba(17,51,102,0.08);
+            margin: 32px 0 32px 0;
+            padding: 36px 20px 28px 20px;
+            text-align: center;
+            animation: fadeIn 1.2s;
+        }
+        .why-us h2 {
+            color: #113366;
+            font-size: 2em;
+            margin-bottom: 24px;
+        }
+        .advantages {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 32px 40px;
+            margin-top: 10px;
+        }
+        .advantage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f7faff;
+            border-radius: 12px;
+            padding: 18px 22px 14px 22px;
+            min-width: 160px;
+            max-width: 220px;
+            box-shadow: 0 2px 8px rgba(74,144,226,0.06);
+            font-size: 1.08em;
+            color: #113366;
+            font-weight: 600;
+            transition: transform 0.18s, box-shadow 0.18s;
+        }
+        .advantage:hover {
+            transform: translateY(-4px) scale(1.04);
+            box-shadow: 0 6px 18px rgba(74,144,226,0.13);
+        }
+        .adv-icon {
+            width: 38px;
+            height: 38px;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 700px) {
+            .advantages {
+                flex-direction: column;
+                gap: 18px;
+            }
+            .why-us, .promo-banner {
+                padding: 18px 6px 16px 6px;
+            }
+        }
+        .extended-footer {
+            background: rgba(17, 51, 102, 0.95);
+            color: white;
+            padding: 60px 0 20px;
+            margin-top: 60px;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            padding: 0 20px;
+        }
+        .footer-section {
+            text-align: left;
+        }
+        .footer-section h4 {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            position: relative;
+            font-weight: 700;
+        }
+        .footer-section h4::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: white;
+        }
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .footer-section ul li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 1em;
+        }
+        .footer-section ul li img {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+        }
+        .footer-social {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: flex-start;
+        }
+        .footer-social a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: white;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+            font-weight: 400;
+        }
+        .footer-social img {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            /* Не применять фильтры! */
+        }
+        .footer-bottom {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1em;
+        }
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .footer-section {
+                text-align: center;
+            }
+            .footer-section h4::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .footer-section ul li {
+                justify-content: center;
+            }
+            .footer-social {
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        .header-cta-btn {
+            background: linear-gradient(90deg, #4a90e2 0%, #00e6d0 100%);
+            color: #fff;
+            padding: 13px 32px;
+            border-radius: 32px;
+            font-size: 1.08em;
+            font-weight: 700;
+            text-decoration: none;
+            margin-left: 24px;
+            transition: background 0.25s, color 0.2s, box-shadow 0.25s, transform 0.18s;
+            box-shadow: 0 0 16px 0 rgba(74, 144, 226, 0.25), 0 2px 10px rgba(0,230,208,0.10);
+            display: inline-block;
+            border: none;
+            letter-spacing: 0.01em;
+            position: relative;
+            overflow: hidden;
+        }
+        .header-cta-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 32px;
+            box-shadow: 0 0 32px 8px #00e6d0;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .header-cta-btn:hover, .header-cta-btn:focus {
+            background: linear-gradient(90deg, #00e6d0 0%, #4a90e2 100%);
+            color: #fff;
+            box-shadow: 0 0 32px 8px #00e6d0, 0 6px 24px rgba(74,144,226,0.18);
+            transform: translateY(-2px) scale(1.04);
+        }
+        .header-cta-btn:hover::after, .header-cta-btn:focus::after {
+            opacity: 0.5;
+        }
+        @media (max-width: 700px) {
+            .header-cta-btn {
+                margin-left: 0;
+                margin-top: 12px;
+                width: 100%;
+                text-align: center;
+                font-size: 1em;
+            }
+        }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .header-cta-desc {
+            color: #113366;
+            font-size: 1.13em;
+            font-weight: 600;
+            margin: 6px 0 0 0;
+            letter-spacing: 0.01em;
+            opacity: 0.92;
+            text-align: left;
+            padding-left: 2px;
+        }
+        @media (max-width: 900px) {
+            .header-cta-desc {
+                font-size: 1em;
+                text-align: center;
+                padding-left: 0;
+            }
+        }
+        @media (max-width: 700px) {
+            .header-actions {
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 10px;
+            }
+            .header-cta-desc {
+                margin: 0 0 4px 0;
+                text-align: right;
+                max-width: 100%;
+                font-size: 0.98em;
+            }
+        }
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+        }
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: none;
+        }
+        .faq-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(17,51,102,0.10);
+            margin: 40px 0;
+            padding: 40px 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .faq-list {
+            margin-top: 30px;
+        }
+        .faq-item {
+            border-radius: 12px;
+            background: #f7faff;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 10px rgba(74,144,226,0.06);
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+        .faq-question {
+            width: 100%;
+            background: none;
+            border: none;
+            outline: none;
+            font-size: 1.13em;
+            font-weight: 600;
+            color: #113366;
+            padding: 20px 24px;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.18s;
+        }
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5em;
+            color: #4a90e2;
+            transition: transform 0.3s;
+        }
+        .faq-item.active .faq-question {
+            background: #e3f2fd;
+        }
+        .faq-item.active .faq-question::after {
+            content: '-';
+            transform: rotate(180deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            background: #fff;
+            color: #333;
+            font-size: 1em;
+            padding: 0 24px;
+            transition: max-height 0.35s cubic-bezier(.4,0,.2,1), padding 0.25s;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 400px;
+            padding: 16px 24px 24px 24px;
+        }
+        @media (max-width: 700px) {
+            .faq-section {
+                padding: 24px 6px;
+            }
+            .faq-question, .faq-answer {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+        }
+        .how-it-works-steps-faq {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            justify-content: center;
+            margin-top: 18px;
+            max-width: 100%;
+        }
+        .how-step-faq {
+            background: #f7faff;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(74,144,226,0.06);
+            padding: 18px 12px 12px 12px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: box-shadow 0.22s, transform 0.18s;
+        }
+        
+        .how-step-desc-faq {
+            color: #333;
+            font-size: 0.98em;
+            margin: 0 0 15px 0;
+            text-align: center;
+            line-height: 1.5;
+        }
+        .how-step-faq:hover {
+            box-shadow: 0 8px 32px rgba(74,144,226,0.13);
+            transform: translateY(-4px) scale(1.04);
+        }
+        .how-step-img-faq {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .how-step-img-faq:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .how-step-img-faq:active {
+            transform: scale(0.98);
+        }
+        
+        .how-step-img-faq.clicked {
+            animation: pulse 0.6s ease;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        @media (max-width: 900px) {
+            .how-it-works-steps-faq {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+            .how-step-faq {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .how-it-works-steps-faq {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+        
+        /* Стили для модального окна */
+        .image-modal {
+            display: flex;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .image-modal-content {
+            position: relative;
+            margin: auto;
+            max-width: 90%;
+            max-height: 90%;
+            text-align: center;
+        }
+        
+        .image-modal-img {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .image-modal-caption {
+            color: white;
+            margin-top: 15px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .image-modal-text {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .image-modal-description {
+            color: white;
+            margin-top: 10px;
+            font-size: 14px;
+            line-height: 1.5;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.9;
+        }
+        
+        .image-modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .image-modal-close:hover {
+            color: #4A90E2;
+        }
+        
+        .image-modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #333;
+            z-index: 10001;
+        }
+        
+        .image-modal-nav:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .image-modal-nav:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        .image-modal-prev {
+            left: -70px;
+        }
+        
+        .image-modal-next {
+            right: -70px;
+        }
+        
+        .image-modal-counter {
+            position: absolute;
+            bottom: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -1087,116 +1783,112 @@
                 </a>
                 <span class="header-slogan">Где рождаются игры и дружба</span>
             </div>
-            <a href="/business.html" class="business-button">Стать партнёром</a>
+            <div class="header-actions">
+                <div class="lang-switcher">
+                    <button class="lang-btn" id="current-lang"><img src="/icons/ru-flag.svg" class="lang-flag">RU</button>
+                    <div class="lang-dropdown" id="lang-dropdown">
+                        <button class="lang-option" data-lang="ru"><img src="/icons/ru-flag.svg" class="lang-flag">Русский</button>
+                        <button class="lang-option" data-lang="uz"><img src="/icons/uz-flag.svg" class="lang-flag">O'zbekcha</button>
+                        <button class="lang-option" data-lang="en"><img src="/icons/en-flag.svg" class="lang-flag">English</button>
+                    </div>
+                </div>
+                <a href="https://drive.google.com/file/d/1St6P02O3OtCCUYMRLOqVwYCzQ4mMYyUN/view?usp=sharing" class="header-cta-btn" id="header-cta" target="_blank">Скачать приложение</a>
+            </div>
         </div>
     </header>
     <main class="container">
-        <section class="slider-container">
+        <!-- PROMO BANNER -->
+        <section class="promo-banner animate-on-scroll">
+          <div class="promo-content">
+            <h2 id="promo-title">Хотите стать партнёром?</h2>
+            <p id="promo-desc">Оставьте заявку и присоединяйтесь к экосистеме Place&Play!</p>
+            <a href="/business.html" class="cta-button" id="promo-cta">Оставить заявку</a>
+          </div>
+        </section>
+        <section class="hero-block animate-on-scroll">
+            <div class="hero-content">
+                <h1 id="hero-title">Place&Play</h1>
+            </div>
+        </section>
+        <section class="slider-container animate-on-scroll">
             <div class="slider">
                 <div class="slide" id="slide-1" role="tabpanel" aria-labelledby="nav-button-1">
                     <div class="about">
-                        <h3>О проекте <strong>Place&Play</strong></h3>
-                        <p><strong>Place&Play</strong> – это инновационная платформа, объединяющая любителей спорта и спортивные площадки в одном месте.</p>
-                        <p>Мы создаем удобную экосистему, где каждый может легко найти партнера для игры, забронировать площадку и организовать спортивное мероприятие.</p>
-                        <p>С <strong>Place&Play</strong> вы получаете доступ к широкой сети спортивных объектов: теннисным кортам, футбольным полям, спортзалам и многому другому.</p>
+                        <h3 id="about-title">О проекте <strong>Place&Play</strong></h3>
+                        <p id="about-1"><strong>Place&Play</strong> – это инновационная платформа, объединяющая любителей спорта и спортивные площадки в одном месте.</p>
+                        <p id="about-2">Мы создаем удобную экосистему, где каждый может легко найти партнера для игры, забронировать площадку и организовать спортивное мероприятие.</p>
+                        <p id="about-3">С <strong>Place&Play</strong> вы получаете доступ к широкой сети спортивных объектов: теннисным кортам, футбольным полям, спортзалам и многому другому.</p>
                     </div>
                 </div>
 
                 <div class="slide" id="slide-2" role="tabpanel" aria-labelledby="nav-button-2">
                     <div class="story">
-                        <h3>История создания <strong>Place&Play</strong></h3>
-                        <p>Идея создания <strong>Place&Play</strong> родилась из личного опыта, когда поиск партнеров для игры в теннис становился настоящим испытанием.</p>
-                        <p>Мы поняли, что эта проблема актуальна для многих видов спорта, и решили создать универсальное решение, которое объединит спортивное сообщество.</p>
-                        <p>Сегодня <strong>Place&Play</strong> – это не просто платформа для бронирования, а целое комьюнити единомышленников, увлеченных спортом и активным образом жизни.</p>
+                        <h3 id="story-title">История создания <strong>Place&Play</strong></h3>
+                        <p id="story-1">Идея создания <strong>Place&Play</strong> родилась из личного опыта, когда поиск партнеров для игры в теннис становился настоящим испытанием.</p>
+                        <p id="story-2">Мы поняли, что эта проблема актуальна для многих видов спорта, и решили создать универсальное решение, которое объединит спортивное сообщество.</p>
+                        <p id="story-3">Сегодня <strong>Place&Play</strong> – это не просто платформа для бронирования, а целое комьюнити единомышленников, увлеченных спортом и активным образом жизни.</p>
                     </div>
                 </div>
 
                 <div class="slide" id="slide-3" role="tabpanel" aria-labelledby="nav-button-3">
                     <div class="goal">
-                        <h2>Цели <strong>Place&Play</strong></h2>
-                        <p>Наша главная миссия – сделать спорт доступнее и удобнее для каждого. <strong>Place&Play</strong> стремится создать крупнейшую в регионе экосистему для организации спортивного досуга.</p>
-                        <p>Мы работаем над тем, чтобы объединить спортсменов-любителей, профессиональные клубы и спортивные площадки на одной платформе, создавая удобную среду для взаимодействия.</p>
-                        <p>В ближайшем будущем <strong>Place&Play</strong> планирует внедрить систему умного подбора партнеров, основанную на уровне игры, расписании и предпочтениях пользователей.</p>
-                        <p>Мы верим, что <strong>Place&Play</strong> станет неотъемлемой частью спортивной жизни города, помогая людям находить единомышленников и заниматься любимым спортом.</p>
+                        <h2 id="goal-title">Цели <strong>Place&Play</strong></h2>
+                        <p id="goal-1">Наша главная миссия – сделать спорт доступнее и удобнее для каждого. <strong>Place&Play</strong> стремится создать крупнейшую в регионе экосистему для организации спортивного досуга.</p>
+                        <p id="goal-2">Мы работаем над тем, чтобы объединить спортсменов-любителей, профессиональные клубы и спортивные площадки на одной платформе, создавая удобную среду для взаимодействия.</p>
+                        <p id="goal-3">В ближайшем будущем <strong>Place&Play</strong> планирует внедрить систему умного подбора партнеров, основанную на уровне игры, расписании и предпочтениях пользователей.</p>
+                        <p id="goal-4">Мы верим, что <strong>Place&Play</strong> станет неотъемлемой частью спортивной жизни города, помогая людям находить единомышленников и заниматься любимым спортом.</p>
                     </div>
                 </div>
             </div>
             
             <div class="dots" role="tablist">
-                <button class="nav-button" id="nav-button-1" role="tab" aria-controls="slide-1" onclick="currentSlide(1)">О проекте</button>
-                <button class="nav-button" id="nav-button-2" role="tab" aria-controls="slide-2" onclick="currentSlide(2)">История создания</button>
-                <button class="nav-button" id="nav-button-3" role="tab" aria-controls="slide-3" onclick="currentSlide(3)">Цель создания</button>
+                <button class="nav-button" id="nav-about" role="tab" aria-controls="slide-1" onclick="currentSlide(1)">О проекте</button>
+                <button class="nav-button" id="nav-story" role="tab" aria-controls="slide-2" onclick="currentSlide(2)">История создания</button>
+                <button class="nav-button" id="nav-goal" role="tab" aria-controls="slide-3" onclick="currentSlide(3)">Цель создания</button>
             </div>
         </section>
 
-        <section class="partners-section">
-            <h2>Наши бизнес-партнёры</h2>
+        <section class="partners-section animate-on-scroll">
+            <h2 id="partners-title">Наши бизнес-партнёры</h2>
             <div id="map"></div>
-
-            <div class="map-tip">
+            <div class="map-tip" id="map-tip">
                 На карте отображены все наши активные партнёры, которые помогают нам развивать спортивную инфраструктуру и делать спортивную жизнь в Узбекистане более разнообразной и удобной.
             </div>
-
             <div class="partners-info">
-                <h3>Спортивные комплексы-партнёры</h3>
-                <ul class="partners-list">
-                    <li class="partner-item featured-partner">
-                        <span class="partner-name">Tennis City</span>
-                        <span class="partner-address">Ул.Ислама Каримова,дом.98А</span>
-                    </li>
-                    <li class="partner-item">
-                        <span class="partner-name">Black Pool</span>
-                        <span class="partner-address">ул. Истикбол, 8</span>
-                    </li>
-                    <li class="partner-item">
-                        <span class="partner-name">Diamond Ball</span>
-                        <span class="partner-address">Юнусабадский район, ул.Осиё, 372</span>
-                    </li>
-                    <li class="partner-item">
-                        <span class="partner-name">Dinamo Tennis</span>
-                        <span class="partner-address">ул. Мирзо Улугбека, 10</span>
-                    </li>
-                    <li class="partner-item">
-                        <span class="partner-name">Теннисные корты на МХСК</span>
-                        <span class="partner-address">ул. Буюк Ипак Йули, 113Б</span>
-                    </li>
-                    <li class="partner-item">
-                        <span class="partner-name">Ping-Pong Master</span>
-                        <span class="partner-address">ул. Богишамол, 260А3-этаж, ТРЦ Сампи</span>
-                    </li>
-                    <li class="partner-item">
-                        <span class="partner-name">Ping-Pong X pro</span>
-                        <span class="partner-address">Сергелийский район, ул. Мирзы Турсунзаде, 1</span>
-                    </li>
-                </ul>
+                <h3 id="partners-list-title">Спортивные комплексы-партнёры</h3>
+                <ul class="partners-list" id="partnersList"></ul>
             </div>
         </section>
 
-        <section class="contact-form">
-            <h2>Обратная связь</h2>
+        <section class="contact-form animate-on-scroll">
+            <h2 id="contact-title">Обратная связь</h2>
             <form id="contactForm" onsubmit="sendForm(event)">
-                <input type="text" name="name" placeholder="Ваше имя" required>
-                <input type="email" name="email" placeholder="Ваш email" required>
-                <input type="tel" name="phone" placeholder="Ваш телефон" required>
-                <textarea name="message" rows="5" placeholder="Ваше сообщение" required></textarea>
-                <button type="submit">Отправить</button>
+                <input type="text" name="name" id="contact-name" placeholder="Ваше имя" required>
+                <input type="email" name="email" id="contact-email" placeholder="Ваш email" required>
+                <input type="tel" name="phone" id="contact-phone" placeholder="Ваш телефон" required>
+                <textarea name="message" rows="5" id="contact-message" placeholder="Ваше сообщение" required></textarea>
+                <button type="submit" id="contact-submit">Отправить</button>
             </form>
         </section>
-        <section class="social">
-            <h2>Мы в социальных сетях</h2>
+        <section class="social animate-on-scroll">
+            <h2 id="social-title">Мы в социальных сетях</h2>
             <div class="social-links">
                 <a href="https://t.me/placeandplay" target="_blank" class="social-link">
                     <img src="/icons/telegram.svg" alt="Telegram" class="social-icon">
-                    <span>Telegram</span>
+                    <span id="social-telegram">Telegram</span>
                 </a>
                 <a href="https://instagram.com/placeandplay.uz" target="_blank" class="social-link">
                     <img src="/icons/instagram.svg" alt="Instagram" class="social-icon">
-                    <span>Instagram</span>
+                    <span id="social-instagram">Instagram</span>
                 </a>
             </div>
         </section>
+        <section class="faq-section animate-on-scroll" id="faq">
+          <h2 id="faq-title">Часто задаваемые вопросы</h2>
+          <div class="faq-list" id="faq-list"></div>
+        </section>
     </main>
-<button id="scrollTopBtn" onclick="scrollToTop()">⬆ Наверх</button>
+<button id="scrollTopBtn" onclick="scrollToTop()">⬆ <span id="scroll-top">Наверх</span></button>
 
 <script>
 window.onscroll = function() {
@@ -1207,250 +1899,158 @@ function scrollToTop() {
 }
 </script>
     <script>
-    function initMap() {
-        const map = new google.maps.Map(document.getElementById("map"), {
-            center: { lat: 41.307716, lng: 69.282764 }, // Центр карты (Ташкент)
-            zoom: 12,
-styles: [
-    {
-        "elementType": "geometry",
-        "stylers": [
-            { "color": "#f5f5f5" } // Светлый фон карты
-        ]
-    },
-    {
-        "elementType": "labels.text.fill",
-        "stylers": [
-            { "color": "#113366" } // Тёмно-синий текст
-        ]
-    },
-    {
-        "elementType": "labels.text.stroke",
-        "stylers": [
-            { "color": "#ffffff" } // Белый контур текста
-        ]
-    },
-    {
-        "featureType": "administrative.land_parcel",
-        "elementType": "labels",
-        "stylers": [
-            { "visibility": "off" } // Убираем мелкие подписи
-        ]
-    },
-    {
-        "featureType": "administrative.neighborhood",
-        "elementType": "labels.text.fill",
-        "stylers": [
-            { "color": "#858585" } // Серый текст районов
-        ]
-    },
-    {
-        "featureType": "poi",
-        "elementType": "geometry",
-        "stylers": [
-            { "color": "#e0e0e0" } // Светлый цвет для точек интереса (кафе, магазины и т.д.)
-        ]
-    },
-    {
-        "featureType": "poi.park",
-        "elementType": "geometry",
-        "stylers": [
-            { "color": "#c8e6c9" } // Светло-зелёные парки
-        ]
-    },
-    {
-        "featureType": "road",
-        "elementType": "geometry",
-        "stylers": [
-            { "color": "#ffffff" } // Белые дороги
-        ]
-    },
-    {
-        "featureType": "road",
-        "elementType": "geometry.stroke",
-        "stylers": [
-            { "color": "#bdbdbd" } // Серые границы дорог
-        ]
-    },
-    {
-        "featureType": "road.highway",
-        "elementType": "geometry",
-        "stylers": [
-            { "color": "#ffeb3b" } // Жёлтые трассы
-        ]
-    },
-    {
-        "featureType": "road.highway",
-        "elementType": "geometry.stroke",
-        "stylers": [
-            { "color": "#ffa000" } // Оранжевые обводки трасс
-        ]
-    },
-    {
-        "featureType": "transit",
-        "elementType": "geometry",
-        "stylers": [
-            { "color": "#e0e0e0" } // Светло-серый транспорт
-        ]
-    },
-    {
-        "featureType": "water",
-        "elementType": "geometry",
-        "stylers": [
-            { "color": "#90caf9" } // Голубая вода
-        ]
+    async function loadPartnersAndMap() {
+        try {
+            const response = await fetch('/PlaceAndPlay/api/private/places/allByCityForWeb?currentCity=1');
+            const places = await response.json();
+            renderPartnersList(places);
+            renderPartnersMap(places);
+        } catch (e) {
+            document.getElementById('partnersList').innerHTML = '<li>Ошибка загрузки партнёров</li>';
+        }
     }
-]
 
-        });
-
-        const places = [
-            {
-                name: "Tennis city",
-                latitude: 41.315416,
-                longitude: 69.262542,
-                description: "Теннисные корты(Бывший Пахтакор)",
-                address: "Ул.Ислама Каримова,дом.98А",
-                phone: "+998903331151",
-                typeId: 1
-            },
-            {
-                name: "Diamond Ball",
-                latitude: 41.327236,
-                longitude: 69.289364,
-                description: "Бильярд, ни разу не был там, но должно быть ОК!",
-                address: "Юнусабадский район, ул.Осиё, 372",
-                phone: "+998712346798",
-                typeId: 6
-            },
-            {
-                name: "Dinamo Tennis",
-                latitude: 41.332954,
-                longitude: 69.330485,
-                description: "Большие теннисные ракетки, большие теннисные мячи",
-                address: "ул. Мирзо Улугбека, 10",
-                phone: "+998935078999",
-                typeId: 1
-            },
-            {
-                name: "Теннисные корты на МХСК",
-                latitude: 41.330284,
-                longitude: 69.340359,
-                description: "Сегодня теннисист, завтра программист!",
-                address: "ул. Буюк Ипак Йули, 113Б",
-                phone: "+998935646880",
-                typeId: 1
-            },
-            {
-                name: "Ping-Pong Master",
-                latitude: 41.355358,
-                longitude: 69.333396,
-                description: "Один раз был там, понравилось!",
-                address: "ул. Богишамол, 260А3-этаж, ТРЦ Сампи",
-                phone: "+998935078999",
-                typeId: 4
-            },
-            {
-                name: "Ping-Pong X pro",
-                latitude: 41.214106,
-                longitude: 69.212963,
-                description: "Ни разу не был там, потому что Сергели :(",
-                address: "Сергелийский район, ул. Мирзы Турсунзаде, 1",
-                phone: "+998953423000",
-                typeId: 4
-            }
-        ];
-
-        const typeStyles = {
-            1: { // Теннис
-                icon: 'icons/tennisball.svg',
-            },
-            4: { // Пинг-понг
-                icon: 'icons/ping-pong.svg',
-            },
-            6: { // Бильярд
-                icon: 'icons/billiards.svg',
-            },
+    function renderPartnersList(places) {
+        const list = document.getElementById('partnersList');
+        list.innerHTML = '';
+        // Сортируем: сначала verified, потом остальные
+        const sorted = [...places].sort((a, b) => (b.verified === true) - (a.verified === true));
+        const typeIcons = {
+            1: 'icons/tennisball.svg',
+            4: 'icons/ping-pong.svg',
+            5: 'icons/billiards.svg',
+            6: 'icons/billiards.svg',
         };
-
-        let activeInfoWindow = null; // Глобальная переменная для хранения открытого окна
-
-
-places.forEach(place => {
-    const typeId = place.typeId || 'default';
-    const style = typeStyles[typeId] || { icon: 'icons/default.png' };
-
-    const marker = new google.maps.Marker({
-        position: { lat: place.latitude, lng: place.longitude },
-        map,
-        title: place.name,
-        icon: {
-            url: style.icon,  // Используем кастомную иконку
-            scaledSize: new google.maps.Size(40, 40), // Фиксируем размер (можно подогнать)
-            anchor: new google.maps.Point(20, 40) // Центрируем иконку
-        },
-        animation: google.maps.Animation.DROP
-    });
-
-    // Выделяем маркер Tennis City анимацией подпрыгивания
-    if (place.name === "Tennis city") {
-        marker.setAnimation(google.maps.Animation.BOUNCE);
+        sorted.forEach(place => {
+            const li = document.createElement('li');
+            li.className = 'partner-card';
+            // Иконка спорта
+            let icon = typeIcons[place.typeId] || 'icons/default.png';
+            if (place.typeId === 1 && place.verified) {
+                icon = 'icons/tennisball_verified.png';
+            }
+            // Verified badge
+            const verifiedBadge = place.verified ? `<span class=\"verified-badge\"><span class=\"verified-icon\">✔️</span>Верифицировано</span>` : '';
+            li.innerHTML = `
+                ${verifiedBadge}
+                <div class=\"partner-title\"><img src=\"${icon}\" class=\"sport-icon\" alt=\"icon\">${place.name}</div>
+                <div class=\"partner-address\">${place.address}</div>
+                <div class=\"partner-desc\">${place.description ? place.description : ''}</div>
+                <a class=\"partner-phone\" href=\"tel:${place.phone}\">${place.phone}</a>
+            `;
+            list.appendChild(li);
+        });
     }
 
-    const infoWindow = new google.maps.InfoWindow({
-        content: `
-            <div style="
-                padding: 10px;
-                max-width: 250px;
-                font-family: 'Arial', sans-serif;
-                color: #333;">
-                <h3 style="margin: 5px 0; color: #113366;">${place.name}</h3>
-                <p style="font-size: 14px; margin: 5px 0;">${place.description}</p>
-                <p style="font-size: 13px; color: #555;">
-                    <strong>Адрес:</strong> ${place.address}<br>
-                    <strong>Телефон:</strong> 
-                    <a href="tel:${place.phone}" style="color: #ff9800; text-decoration: none;">
-                        ${place.phone}
-                    </a>
-                </p>
-                <a href="https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}"
-                   target="_blank" style="
-                    display: inline-block;
-                    padding: 5px 10px;
-                    margin-top: 5px;
-                    font-size: 14px;
-                    color: white;
-                    background: #113366;
-                    text-decoration: none;
-                    border-radius: 5px;
-                    transition: background 0.3s ease;">
-                    📍 Открыть в Google Maps
-                </a>
-            </div>
-        `
-    });
-
-    marker.addListener("click", () => {
-        if (activeInfoWindow) {
-            activeInfoWindow.close();
-        }
-        infoWindow.open(map, marker);
-        activeInfoWindow = infoWindow;
-    });
-
-    map.addListener("dragstart", () => {
-        if (activeInfoWindow) {
-            activeInfoWindow.close();
-            activeInfoWindow = null;
-        }
-    });
-});
+    function renderPartnersMap(places) {
+        const map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: 41.307716, lng: 69.282764 },
+            zoom: 12,
+            styles: [
+                { "elementType": "geometry", "stylers": [{ "color": "#f5f5f5" }] },
+                { "elementType": "labels.text.fill", "stylers": [{ "color": "#113366" }] },
+                { "elementType": "labels.text.stroke", "stylers": [{ "color": "#ffffff" }] },
+                { "featureType": "administrative.land_parcel", "elementType": "labels", "stylers": [{ "visibility": "off" }] },
+                { "featureType": "administrative.neighborhood", "elementType": "labels.text.fill", "stylers": [{ "color": "#858585" }] },
+                { "featureType": "poi", "elementType": "geometry", "stylers": [{ "color": "#e0e0e0" }] },
+                { "featureType": "poi.park", "elementType": "geometry", "stylers": [{ "color": "#c8e6c9" }] },
+                { "featureType": "road", "elementType": "geometry", "stylers": [{ "color": "#ffffff" }] },
+                { "featureType": "road", "elementType": "geometry.stroke", "stylers": [{ "color": "#bdbdbd" }] },
+                { "featureType": "road.highway", "elementType": "geometry", "stylers": [{ "color": "#ffeb3b" }] },
+                { "featureType": "road.highway", "elementType": "geometry.stroke", "stylers": [{ "color": "#ffa000" }] },
+                { "featureType": "transit", "elementType": "geometry", "stylers": [{ "color": "#e0e0e0" }] },
+                { "featureType": "water", "elementType": "geometry", "stylers": [{ "color": "#90caf9" }] }
+            ]
+        });
+        const typeStyles = {
+            1: { icon: 'icons/tennisball.svg' },
+            4: { icon: 'icons/ping-pong.svg' },
+            5: { icon: 'icons/billiards.svg' },
+            6: { icon: 'icons/billiards.svg' },
+        };
+        let activeInfoWindow = null;
+        places.forEach(place => {
+            let icon = (typeStyles[place.typeId] || { icon: 'icons/default.png' }).icon;
+            if (place.typeId === 1 && place.verified) {
+                icon = 'icons/tennisball_verified.png';
+            }
+            const marker = new google.maps.Marker({
+                position: { lat: place.latitude, lng: place.longitude },
+                map,
+                title: place.name,
+                icon: {
+                    url: icon,
+                    scaledSize: new google.maps.Size(40, 40),
+                    anchor: new google.maps.Point(20, 40)
+                },
+                animation: google.maps.Animation.DROP
+            });
+            if (place.verified) {
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+            }
+            const infoWindow = new google.maps.InfoWindow({
+                content: `
+                    <div style="padding: 10px; max-width: 250px; font-family: 'Arial', sans-serif; color: #333;">
+                        <h3 style="margin: 5px 0; color: #113366;">${place.name}${place.verified ? ' <span title=\"Верифицировано\">✔️</span>' : ''}</h3>
+                        <p style="font-size: 14px; margin: 5px 0;">${place.description || ''}</p>
+                        <p style="font-size: 13px; color: #555;"><strong>Адрес:</strong> ${place.address}<br><strong>Телефон:</strong> <a href="tel:${place.phone}" style="color: #ff9800; text-decoration: none;">${place.phone}</a></p>
+                        <a href="https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}" target="_blank" style="display: inline-block; padding: 5px 10px; margin-top: 5px; font-size: 14px; color: white; background: #113366; text-decoration: none; border-radius: 5px; transition: background 0.3s ease;">📍 Открыть в Google Maps</a>
+                    </div>`
+            });
+            marker.addListener("click", () => {
+                if (activeInfoWindow) activeInfoWindow.close();
+                infoWindow.open(map, marker);
+                activeInfoWindow = infoWindow;
+            });
+            map.addListener("dragstart", () => {
+                if (activeInfoWindow) {
+                    activeInfoWindow.close();
+                    activeInfoWindow = null;
+                }
+            });
+        });
     }
 
-</script>
+    window.initMap = function() {
+        loadPartnersAndMap();
+    };
+
+    document.addEventListener('DOMContentLoaded', loadPartnersAndMap);
+    </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACXRuPpUCJnF_r_tIbkuJxNV_G9JOuSzc&callback=initMap&libraries=marker&v=weekly" async></script>
 
-    <footer>Place&Play – 2025</footer>
+    <footer class="extended-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4 id="footer-about-title">О компании</h4>
+                <p id="footer-about-desc">Place&Play - ведущая платформа для эффективного управления и развития спортивного бизнеса в Узбекистане, объединяющая спорткомплексы и их клиентов.</p>
+            </div>
+            <div class="footer-section">
+                <h4 id="footer-contacts-title">Контакты</h4>
+                <ul>
+                    <li><img src="icons/location.svg" alt="Адрес"><span id="footer-address">г. Ташкент, ул. Амира Темура, 1, 4 этаж</span></li>
+                    <li><img src="icons/phone.svg" alt="Телефон"><span id="footer-phone">+998 99 888-89-31</span></li>
+                    <li><img src="icons/email.svg" alt="Email"><span id="footer-email">business@placeandplay.uz</span></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4 id="footer-social-title">Будьте с нами на связи</h4>
+                <div class="footer-social">
+                    <a href="https://t.me/placeandplay" target="_blank" aria-label="Telegram">
+                        <img src="icons/telegram.svg" alt="Telegram">
+                        <span id="footer-telegram">Telegram</span>
+                    </a>
+                    <a href="https://instagram.com/placeandplay.uz" target="_blank" aria-label="Instagram">
+                        <img src="icons/instagram.svg" alt="Instagram">
+                        <span id="footer-instagram">Instagram</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p id="footer-copyright">© 2025 Place&Play. Все права защищены. Разработано с ❤️</p>
+        </div>
+    </footer>
 
     <script>
     let slideIndex = 1;
@@ -1563,6 +2163,517 @@ places.forEach(place => {
             alert('Произошла ошибка при отправке формы. Пожалуйста, попробуйте позже.');
             console.error('Error:', error);
         }
+    }
+    </script>
+
+    <script>
+    const TRANSLATIONS = {
+        ru: {
+            heroTitle: "Place&Play",
+            promoTitle: "Хотите стать партнёром?",
+            promoDesc: "Оставьте заявку и присоединяйтесь к экосистеме Place&Play!",
+            promoCta: "Оставить заявку",
+            aboutTitle: "О проекте Place&Play",
+            about1: "<strong>Place&Play</strong> – это инновационная платформа, объединяющая любителей спорта и спортивные площадки в одном месте.",
+            about2: "Мы создаем удобную экосистему, где каждый может легко найти партнера для игры, забронировать площадку и организовать спортивное мероприятие.",
+            about3: "С <strong>Place&Play</strong> вы получаете доступ к широкой сети спортивных объектов: теннисным кортам, футбольным полям, спортзалам и многому другому.",
+            storyTitle: "История создания Place&Play",
+            story1: "Идея создания <strong>Place&Play</strong> родилась из личного опыта, когда поиск партнеров для игры в теннис становился настоящим испытанием.",
+            story2: "Мы поняли, что эта проблема актуальна для многих видов спорта, и решили создать универсальное решение, которое объединит спортивное сообщество.",
+            story3: "Сегодня <strong>Place&Play</strong> – это не просто платформа для бронирования, а целое комьюнити единомышленников, увлеченных спортом и активным образом жизни.",
+            goalTitle: "Цели Place&Play",
+            goal1: "Наша главная миссия – сделать спорт доступнее и удобнее для каждого. <strong>Place&Play</strong> стремится создать крупнейшую в регионе экосистему для организации спортивного досуга.",
+            goal2: "Мы работаем над тем, чтобы объединить спортсменов-любителей, профессиональные клубы и спортивные площадки на одной платформе, создавая удобную среду для взаимодействия.",
+            goal3: "В ближайшем будущем <strong>Place&Play</strong> планирует внедрить систему умного подбора партнеров, основанную на уровне игры, расписании и предпочтениях пользователей.",
+            goal4: "Мы верим, что <strong>Place&Play</strong> станет неотъемлемой частью спортивной жизни города, помогая людям находить единомышленников и заниматься любимым спортом.",
+            navAbout: "О проекте",
+            navStory: "История создания",
+            navGoal: "Цель создания",
+            partnersTitle: "Наши бизнес-партнёры",
+            mapTip: "На карте отображены все наши активные партнёры, которые помогают нам развивать спортивную инфраструктуру и делать спортивную жизнь в Узбекистане более разнообразной и удобной.",
+            partnersListTitle: "Спортивные комплексы-партнёры",
+            contactTitle: "Обратная связь",
+            contactName: "Ваше имя",
+            contactEmail: "Ваш email",
+            contactPhone: "Ваш телефон",
+            contactMessage: "Ваше сообщение",
+            contactSubmit: "Отправить",
+            socialTitle: "Мы в социальных сетях",
+            socialTelegram: "Telegram",
+            socialInstagram: "Instagram",
+            scrollTop: "Наверх",
+            footerPolicy: "Политика конфиденциальности",
+            footerOffer: "Публичная оферта",
+            footerEmail: "business@placeandplay.uz",
+            footerCopyright: "© Place&Play, 2025",
+            footerAboutTitle: "О компании",
+            footerAboutDesc: "Place&Play - ведущая платформа для эффективного управления и развития спортивного бизнеса в Узбекистане, объединяющая спорткомплексы и их клиентов.",
+            footerContactsTitle: "Контакты",
+            footerAddress: "г. Ташкент, ул. Амира Темура, 1, 4 этаж",
+            footerPhone: "+998 99 888-89-31",
+            footerEmail: "business@placeandplay.uz",
+            footerSocialTitle: "Будьте с нами на связи",
+            footerTelegram: "Telegram",
+            footerInstagram: "Instagram",
+            headerCta: "Скачать приложение",
+            headerCtaDesc: "Найдите площадку и участников за 1 минуту",
+            faq: [
+                { q: "Как забронировать площадку?", a: "Вы можете забронировать площадку через нашу платформу, выбрав удобное время и дату." },
+                { q: "Какие виды спорта можно найти на Place&Play?", a: "На Place&Play вы можете найти теннис, футбол, баскетбол, волейбол и многое другое." },
+                { q: "Как обеспечивается безопасность на площадках?", a: "Наши площадки оборудованы современными системами безопасности, такими как камеры видеонаблюдения и охранные системы." },
+                { q: "Как получить подтверждение бронирования?", a: "После успешной оплаты вы получите подтверждение бронирования на электронную почту." },
+                { q: "Как отменить бронирование?", a: "Вы можете отменить бронирование в любое время, отправив сообщение на нашу электронную почту." },
+                { q: "Как связаться с администрацией площадки?", a: "Вы можете связаться с администрацией площадки по телефону или электронной почте." }
+            ]
+        },
+        en: {
+            heroTitle: "Place&Play",
+            promoTitle: "Want to become a partner?",
+            promoDesc: "Submit your application and join the Place&Play ecosystem!",
+            promoCta: "Apply now",
+            aboutTitle: "About Place&Play",
+            about1: "<strong>Place&Play</strong> is an innovative platform that brings together sports enthusiasts and venues in one place.",
+            about2: "We create a convenient ecosystem where everyone can easily find a partner, book a venue, and organize a sports event.",
+            about3: "With <strong>Place&Play</strong> you get access to a wide network of sports facilities: tennis courts, football fields, gyms, and more.",
+            storyTitle: "The Story of Place&Play",
+            story1: "The idea for <strong>Place&Play</strong> was born from personal experience, when finding tennis partners was a real challenge.",
+            story2: "We realized this problem is relevant for many sports, so we decided to create a universal solution to unite the sports community.",
+            story3: "Today, <strong>Place&Play</strong> is not just a booking platform, but a whole community of like-minded sports fans.",
+            goalTitle: "Goals of Place&Play",
+            goal1: "Our main mission is to make sports more accessible and convenient for everyone. <strong>Place&Play</strong> aims to create the region's largest ecosystem for organizing sports leisure.",
+            goal2: "We work to unite amateur athletes, professional clubs, and sports venues on one platform, creating a convenient environment for interaction.",
+            goal3: "In the near future, <strong>Place&Play</strong> plans to introduce a smart partner matching system based on skill level, schedule, and user preferences.",
+            goal4: "We believe <strong>Place&Play</strong> will become an integral part of the city's sports life, helping people find like-minded friends and enjoy their favorite sports.",
+            navAbout: "About",
+            navStory: "Story",
+            navGoal: "Goal",
+            partnersTitle: "Our Business Partners",
+            mapTip: "All our active partners are shown on the map, helping us develop sports infrastructure and make sports life in Uzbekistan more diverse and convenient.",
+            partnersListTitle: "Partner Sports Complexes",
+            contactTitle: "Contact Us",
+            contactName: "Your name",
+            contactEmail: "Your email",
+            contactPhone: "Your phone",
+            contactMessage: "Your message",
+            contactSubmit: "Send",
+            socialTitle: "We are on social networks",
+            socialTelegram: "Telegram",
+            socialInstagram: "Instagram",
+            scrollTop: "Up",
+            footerPolicy: "Privacy Policy",
+            footerOffer: "Public Offer",
+            footerEmail: "business@placeandplay.uz",
+            footerCopyright: "© 2025 Place&Play. All rights reserved. Made with ❤️",
+            footerAboutTitle: "About",
+            footerAboutDesc: "Place&Play is the leading platform for efficient management and development of sports business in Uzbekistan, uniting sports complexes and their clients.",
+            footerContactsTitle: "Contacts",
+            footerAddress: "Tashkent, Amir Temur St., 1, 4th floor",
+            footerPhone: "+998 99 888-89-31",
+            footerEmail: "business@placeandplay.uz",
+            footerSocialTitle: "Stay in touch",
+            footerTelegram: "Telegram",
+            footerInstagram: "Instagram",
+            headerCta: "Download the app",
+            headerCtaDesc: "Find a venue and participants in 1 minute",
+            faq: [
+                { q: "How to book a venue?", a: "You can book a venue through our platform by selecting a convenient time and date." },
+                { q: "What sports can I find on Place&Play?", a: "You can find tennis, football, basketball, volleyball, and more on Place&Play." },
+                { q: "How are safety measures ensured at the venues?", a: "Our venues are equipped with modern security systems such as surveillance cameras and alarm systems." },
+                { q: "How do I get booking confirmation?", a: "After successful payment, you will receive booking confirmation via email." },
+                { q: "How can I cancel a booking?", a: "You can cancel a booking at any time by sending an email to our support team." },
+                { q: "How can I contact the venue staff?", a: "You can contact the venue staff by phone or email." }
+            ]
+        },
+        uz: {
+            heroTitle: "Place&Play",
+            promoTitle: "Hamkor bo'lishni xohlaysizmi?",
+            promoDesc: "Arizangizni yuboring va Place&Play ekotizimiga qo'shiling!",
+            promoCta: "Ariza yuborish",
+            aboutTitle: "Place&Play loyihasi haqida",
+            about1: "<strong>Place&Play</strong> – bu sport ixlosmandlari va sport maydonlarini bir joyga jamlagan innovatsion platforma.",
+            about2: "Biz har bir kishi osonlik bilan o'yin uchun hamkor topishi, maydon band qilishi va sport tadbiri tashkil qilishi mumkin bo'lgan ekotizim yaratamiz.",
+            about3: "<strong>Place&Play</strong> orqali siz tennis kortlari, futbol maydonlari, sport zallari va boshqa ko'plab sport obyektlariga ega keng tarmoqdan foydalanasiz.",
+            storyTitle: "Place&Play yaratilish tarixi",
+            story1: "<strong>Place&Play</strong> g'oyasi shaxsiy tajribadan kelib chiqqan, tennis o'ynash uchun hamkor topish haqiqiy muammo bo'lgan paytda.",
+            story2: "Bu muammo ko'plab sport turlari uchun dolzarb ekanini tushunib, sport hamjamiyatini birlashtiradigan universal yechim yaratishga qaror qildik.",
+            story3: "Bugungi kunda <strong>Place&Play</strong> – bu nafaqat bron qilish platformasi, balki sport va faol hayotga oshno bo'lgan hamfikrlar jamoasi.",
+            goalTitle: "Place&Play maqsadlari",
+            goal1: "Bizning asosiy vazifamiz – sportni har bir kishi uchun yanada qulay va ochiq qilish. <strong>Place&Play</strong> mintaqadagi eng yirik sport ekotizimini yaratishga intiladi.",
+            goal2: "Biz havaskor sportchilar, professional klublar va sport maydonlarini bir platformada birlashtirib, qulay muhit yaratamiz.",
+            goal3: "Yaqin orada <strong>Place&Play</strong> foydalanuvchi darajasi, jadvali va afzalliklariga asoslangan aqlli hamkor tanlash tizimini joriy etishni rejalashtirmoqda.",
+            goal4: "Ishonamizki, <strong>Place&Play</strong> shahar sport hayotining ajralmas qismiga aylanadi va odamlar o'ziga o'xshashlarni topib, sevimli sport bilan shug'ullanishadi.",
+            navAbout: "Loyiha haqida",
+            navStory: "Yaratilish tarixi",
+            navGoal: "Maqsad",
+            partnersTitle: "Biznes hamkorlarimiz",
+            mapTip: "Xaritada sport infratuzilmasini rivojlantirishga va O'zbekistonda sport hayotini yanada rang-barang va qulay qilishga yordam berayotgan barcha faol hamkorlarimiz ko'rsatilgan.",
+            partnersListTitle: "Hamkor sport majmualari",
+            contactTitle: "Aloqa uchun",
+            contactName: "Ismingiz",
+            contactEmail: "Email manzilingiz",
+            contactPhone: "Telefon raqamingiz",
+            contactMessage: "Xabaringiz",
+            contactSubmit: "Yuborish",
+            socialTitle: "Biz ijtimoiy tarmoqlardamiz",
+            socialTelegram: "Telegram",
+            socialInstagram: "Instagram",
+            scrollTop: "Yuqoriga",
+            footerPolicy: "Maxfiylik siyosati",
+            footerOffer: "Ommaviy oferta",
+            footerEmail: "business@placeandplay.uz",
+            footerCopyright: "© 2025 Place&Play. Barcha huquqlar himoyalangan. Muhabbat bilan yaratilgan ❤️",
+            footerAboutTitle: "Kompaniya haqida",
+            footerAboutDesc: "Place&Play - O'zbekistonda sport biznesini samarali boshqarish va rivojlantirish uchun yetakchi platforma, sport majmualari va ularning mijozlarini birlashtiradi.",
+            footerContactsTitle: "Aloqa",
+            footerAddress: "Toshkent sh., Amir Temur ko'chasi, 1, 4-qavat",
+            footerPhone: "+998 99 888-89-31",
+            footerEmail: "business@placeandplay.uz",
+            footerSocialTitle: "Biz bilan bog'laning",
+            footerTelegram: "Telegram",
+            footerInstagram: "Instagram",
+            headerCta: "Ilovani yuklab olish",
+            headerCtaDesc: "Maydon va ishtirokchilarni 1 daqiqada toping",
+            faq: [
+                { q: "Maydonni qanday band qilish mumkin?", a: "Siz platformadan qulay vaqt va sanani tanlashingiz mumkin." },
+                { q: "Place&Play da qanday sportlar mavjud?", a: "Place&Play da tennis, futbol, basketbol, volleybol va boshqa sportlar mavjud." },
+                { q: "Maydonlarda qanday xavfsizlik tayyorlangan?", a: "Maydonlarda modern xavfsizlik tizmlari mavjud, masalan, kameraviy nazarlik tizmlari va alarma tizmlari." },
+                { q: "Qanday qabul qilishni olishim mumkin?", a: "To'lov muvaffaqiyatli qabul qilinsa, siz elektron pochtaga qabul qilishni olishingiz mumkin." },
+                { q: "Qanday band qilishni bekor qilishim mumkin?", a: "Siz platformadan elektron pochtaga yuborishingiz yordamida band qilishni bekor qilishingiz mumkin." },
+                { q: "Maydon xodimlariga qanday aloqa qilish mumkin?", a: "Siz maydon xodimlariga telefon yoki elektron pochtaga aloqa qilishingiz mumkin." }
+            ]
+        }
+    };
+    function setLang(lang) {
+        localStorage.setItem('placeplay_lang', lang);
+        const t = TRANSLATIONS[lang] || TRANSLATIONS['ru'];
+        const el = (id) => document.getElementById(id);
+        if (el('current-lang')) el('current-lang').innerHTML = `<img src="/icons/${lang}-flag.svg" class="lang-flag">${lang.toUpperCase()}`;
+        if (el('hero-title')) el('hero-title').textContent = t.heroTitle;
+        if (el('promo-title')) el('promo-title').textContent = t.promoTitle;
+        if (el('promo-desc')) el('promo-desc').textContent = t.promoDesc;
+        if (el('promo-cta')) el('promo-cta').textContent = t.promoCta;
+        if (el('about-title')) el('about-title').innerHTML = t.aboutTitle;
+        if (el('about-1')) el('about-1').innerHTML = t.about1;
+        if (el('about-2')) el('about-2').textContent = t.about2;
+        if (el('about-3')) el('about-3').innerHTML = t.about3;
+        if (el('story-title')) el('story-title').innerHTML = t.storyTitle;
+        if (el('story-1')) el('story-1').innerHTML = t.story1;
+        if (el('story-2')) el('story-2').textContent = t.story2;
+        if (el('story-3')) el('story-3').innerHTML = t.story3;
+        if (el('goal-title')) el('goal-title').innerHTML = t.goalTitle;
+        if (el('goal-1')) el('goal-1').innerHTML = t.goal1;
+        if (el('goal-2')) el('goal-2').textContent = t.goal2;
+        if (el('goal-3')) el('goal-3').innerHTML = t.goal3;
+        if (el('goal-4')) el('goal-4').innerHTML = t.goal4;
+        if (el('nav-about')) el('nav-about').textContent = t.navAbout;
+        if (el('nav-story')) el('nav-story').textContent = t.navStory;
+        if (el('nav-goal')) el('nav-goal').textContent = t.navGoal;
+        if (el('partners-title')) el('partners-title').textContent = t.partnersTitle;
+        if (el('map-tip')) el('map-tip').textContent = t.mapTip;
+        if (el('partners-list-title')) el('partners-list-title').textContent = t.partnersListTitle;
+        if (el('contact-title')) el('contact-title').textContent = t.contactTitle;
+        if (el('contact-name')) el('contact-name').placeholder = t.contactName;
+        if (el('contact-email')) el('contact-email').placeholder = t.contactEmail;
+        if (el('contact-phone')) el('contact-phone').placeholder = t.contactPhone;
+        if (el('contact-message')) el('contact-message').placeholder = t.contactMessage;
+        if (el('contact-submit')) el('contact-submit').textContent = t.contactSubmit;
+        if (el('social-title')) el('social-title').textContent = t.socialTitle;
+        if (el('social-telegram')) el('social-telegram').textContent = t.socialTelegram;
+        if (el('social-instagram')) el('social-instagram').textContent = t.socialInstagram;
+        if (el('scroll-top')) el('scroll-top').textContent = t.scrollTop;
+        if (el('footer-policy')) el('footer-policy').textContent = t.footerPolicy;
+        if (el('footer-offer')) el('footer-offer').textContent = t.footerOffer;
+        if (el('footer-email')) el('footer-email').textContent = t.footerEmail;
+        if (el('footer-copyright')) el('footer-copyright').textContent = t.footerCopyright;
+        if (el('footer-about-title')) el('footer-about-title').textContent = t.footerAboutTitle;
+        if (el('footer-about-desc')) el('footer-about-desc').textContent = t.footerAboutDesc;
+        if (el('footer-contacts-title')) el('footer-contacts-title').textContent = t.footerContactsTitle;
+        if (el('footer-address')) el('footer-address').textContent = t.footerAddress;
+        if (el('footer-phone')) el('footer-phone').textContent = t.footerPhone;
+        if (el('footer-email')) el('footer-email').textContent = t.footerEmail;
+        if (el('footer-social-title')) el('footer-social-title').textContent = t.footerSocialTitle;
+        if (el('footer-telegram')) el('footer-telegram').textContent = t.footerTelegram;
+        if (el('footer-instagram')) el('footer-instagram').textContent = t.footerInstagram;
+        if (el('header-cta')) el('header-cta').textContent = t.headerCta;
+        if (el('header-cta-desc')) el('header-cta-desc').textContent = t.headerCtaDesc;
+        if (el('faq-title')) el('faq-title').textContent = t.faqTitle;
+        if (el('faq-list')) el('faq-list').innerHTML = t.faq.map(item => `<div class='faq-item'><button class='faq-question' type='button'>${item.q}</button><div class='faq-answer'>${item.a}</div></div>`).join('');
+    }
+
+    function getLang() {
+        return localStorage.getItem('placeplay_lang') || 'ru';
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        setLang(getLang());
+        const langBtn = document.getElementById('current-lang');
+        const langDropdown = document.getElementById('lang-dropdown');
+        if (langBtn && langDropdown) {
+            langBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                langDropdown.style.display = langDropdown.style.display === 'block' ? 'none' : 'block';
+                console.log('[lang-switcher] Клик по текущему языку, dropdown:', langDropdown.style.display);
+            });
+            document.addEventListener('click', function() {
+                langDropdown.style.display = 'none';
+            });
+            document.querySelectorAll('.lang-option').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    console.log('[lang-switcher] Клик по языку:', this.dataset.lang);
+                    setLang(this.dataset.lang);
+                    langDropdown.style.display = 'none';
+                });
+            });
+        }
+    });
+    </script>
+
+    <script>
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('.header-container');
+        if (window.scrollY > 10) {
+            header.classList.add('sticky-shadow');
+        } else {
+            header.classList.remove('sticky-shadow');
+        }
+    });
+    </script>
+
+    <script>
+    // Intersection Observer для анимации появления секций
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+      observer.observe(el);
+    });
+    </script>
+
+    <script>
+    function renderFAQ() {
+        const t = TRANSLATIONS[getLang()] || TRANSLATIONS['ru'];
+        const faqList = document.getElementById('faq-list');
+        if (!faqList || !t.faq) return;
+        faqList.innerHTML = '';
+        t.faq.forEach((item, i) => {
+            const div = document.createElement('div');
+            div.className = 'faq-item';
+            div.innerHTML = `<button class='faq-question' type='button'>${item.q}</button><div class='faq-answer'></div>`;
+            div.querySelector('.faq-answer').innerHTML = item.a;
+            faqList.appendChild(div);
+        });
+        // Аккордеон
+        faqList.querySelectorAll('.faq-question').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const item = this.parentElement;
+                const isActive = item.classList.contains('active');
+                faqList.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                if (!isActive) item.classList.add('active');
+            });
+        });
+    }
+    document.addEventListener('DOMContentLoaded', renderFAQ);
+    // FAQ обновлять при смене языка
+    const origSetLang = setLang;
+    setLang = function(lang) {
+        origSetLang(lang);
+        renderFAQ();
+    }
+    </script>
+
+    <script>
+    const HOW_TO_BOOK_HTML = `
+      <div class='how-it-works-steps-faq'>
+        <div class='how-step-faq'>
+          <div class='how-step-desc-faq'><b>1. Выбор площадки:</b> Зарегистрируйтесь в мобильном приложении Place&Play, создайте аккаунт, укажите интересующие виды спорта. Откройте вкладку <b>Карта</b> и выберите подходящее место для игры.</div>
+          <img src='icons/mapOfPlaces.jpg' alt='Карта площадок' class='how-step-img-faq'>
+        </div>
+        <div class='how-step-faq'>
+          <div class='how-step-desc-faq'><b>2. Дата и событие:</b> Выберите дату и время, нажмите <b>Создать событие</b> и заполните форму.</div>
+          <img src='icons/selectEventDate.jpg' alt='Выбор даты' class='how-step-img-faq'>
+        </div>
+        <div class='how-step-faq'>
+          <div class='how-step-desc-faq'><b>3. Подтверждение:</b> После создания события вы получите сообщение об успехе. Ожидайте участников!</div>
+          <img src='icons/successfullyCreatedEvent.jpg' alt='Событие создано' class='how-step-img-faq'>
+        </div>
+        <div class='how-step-faq'>
+          <div class='how-step-desc-faq'><b>4. Ожидание и регистрация:</b> Следите за списком событий — как только появятся участники, вы сможете подтвердить их регистрацию и приступить к игре!</div>
+          <img src='icons/ListOfEvents.jpg' alt='Список событий' class='how-step-img-faq'>
+        </div>
+      </div>
+    `;
+    const HOW_TO_BOOK_HTML_EN = `
+      <div class='how-it-works-steps-faq'>
+        <div class='how-step-faq'>
+          <div class='how-step-desc-faq'><b>1. Choose a venue:</b> Register in the Place&Play mobile app, create your account, select your favorite sports. Open the <b>Map</b> tab and pick a suitable venue for your game.</div>
+          <img src='icons/mapOfPlaces.jpg' alt='Map of venues' class='how-step-img-faq'>
+        </div>
+        <div class='how-step-faq'>
+          <div class='how-step-desc-faq'><b>2. Date & event:</b> Select the desired date and time, click <b>Create event</b> and fill out the form.</div>
+          <img src='icons/selectEventDate.jpg' alt='Select date' class='how-step-img-faq'>
+        </div>
+        <div class='how-step-faq'>
+          <div class='how-step-desc-faq'><b>3. Confirmation:</b> After creating the event, you will receive a success message. Wait for participants!</div>
+          <img src='icons/successfullyCreatedEvent.jpg' alt='Event created' class='how-step-img-faq'>
+        </div>
+        <div class='how-step-faq'>
+          <div class='how-step-desc-faq'><b>4. Waiting & registration:</b> Track the list of events — as soon as participants appear, you can confirm their registration and start playing!</div>
+          <img src='icons/ListOfEvents.jpg' alt='List of events' class='how-step-img-faq'>
+        </div>
+      </div>
+    `;
+    const HOW_TO_BOOK_HTML_UZ = `
+      <div class='how-it-works-steps-faq'>
+        <div class='how-step-faq'>
+          <div class='how-step-desc-faq'><b>1. Maydon tanlash:</b> Place&Play ilovasida ro'yxatdan o'ting, akkaunt yarating va sport turlarini tanlang. <b>Xarita</b> bo'limini oching va o'yin uchun joy tanlang.</div>
+          <img src='icons/mapOfPlaces.jpg' alt='Maydonlar xaritasi' class='how-step-img-faq'>
+        </div>
+        <div class='how-step-faq'>
+          <div class='how-step-desc-faq'><b>2. Sana va tadbir:</b> Sana va vaqtni tanlang, <b>Tadbir yaratish</b> tugmasini bosing va formani to'ldiring.</div>
+          <img src='icons/selectEventDate.jpg' alt='Sana tanlash' class='how-step-img-faq'>
+        </div>
+        <div class='how-step-faq'>
+          <div class='how-step-desc-faq'><b>3. Tasdiqlash:</b> Tadbir yaratilgach, muvaffaqiyatli xabar olasiz. Ishtirokchilarni kuting!</div>
+          <img src='icons/successfullyCreatedEvent.jpg' alt='Tadbir yaratildi' class='how-step-img-faq'>
+        </div>
+        <div class='how-step-faq'>
+          <div class='how-step-desc-faq'><b>4. Kutish va ro'yxatdan o'tish:</b> Tadbirlar ro'yxatini kuzating — ishtirokchilar paydo bo'lgach, ularni tasdiqlab, o'yinni boshlang!</div>
+          <img src='icons/ListOfEvents.jpg' alt='Tadbirlar ro'yxati' class='how-step-img-faq'>
+        </div>
+      </div>
+    `;
+    TRANSLATIONS.ru.faq[0].a = HOW_TO_BOOK_HTML;
+    TRANSLATIONS.en.faq[0].a = HOW_TO_BOOK_HTML_EN;
+    TRANSLATIONS.uz.faq[0].a = HOW_TO_BOOK_HTML_UZ;
+    
+    // Обработка кликов по изображениям в FAQ
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('how-step-img-faq')) {
+            // Добавляем анимацию клика
+            e.target.classList.add('clicked');
+            setTimeout(() => {
+                e.target.classList.remove('clicked');
+            }, 600);
+            
+            // Открываем изображение в модальном окне
+            openImageModal(e.target.src, e.target.alt);
+        }
+    });
+    
+    // Функция открытия модального окна с изображением
+    function openImageModal(src, alt) {
+        // Получаем все изображения в FAQ для навигации
+        const allImages = document.querySelectorAll('.how-step-img-faq');
+        let currentIndex = Array.from(allImages).findIndex(img => img.src === src);
+        
+        // Получаем описания для каждого изображения
+        const descriptions = [
+            "Зарегистрируйтесь в мобильном приложении Place&Play, создайте аккаунт, укажите интересующие виды спорта. Откройте вкладку Карта и выберите подходящее место для игры.",
+            "Выберите дату и время, нажмите Создать событие и заполните форму.",
+            "После создания события вы получите сообщение об успехе. Ожидайте участников!",
+            "Следите за списком событий — как только появятся участники, вы сможете подтвердить их регистрацию и приступить к игре!"
+        ];
+        
+        const descriptionsEN = [
+            "Register in the Place&Play mobile app, create your account, select your favorite sports. Open the Map tab and pick a suitable venue for your game.",
+            "Select the desired date and time, click Create event and fill out the form.",
+            "After creating the event, you will receive a success message. Wait for participants!",
+            "Track the list of events — as soon as participants appear, you can confirm their registration and start playing!"
+        ];
+        
+        const descriptionsUZ = [
+            "Place&Play ilovasida ro'yxatdan o'ting, akkaunt yarating va sport turlarini tanlang. Xarita bo'limini oching va o'yin uchun joy tanlang.",
+            "Sana va vaqtni tanlang, Tadbir yaratish tugmasini bosing va formani to'ldiring.",
+            "Tadbir yaratilgach, muvaffaqiyatli xabar olasiz. Ishtirokchilarni kuting!",
+            "Tadbirlar ro'yxatini kuzating — ishtirokchilar paydo bo'lgach, ularni tasdiqlab, o'yinni boshlang!"
+        ];
+        
+        const currentLang = getLang();
+        const currentDescriptions = currentLang === 'en' ? descriptionsEN : currentLang === 'uz' ? descriptionsUZ : descriptions;
+        
+        // Создаем модальное окно с навигацией
+        const modal = document.createElement('div');
+        modal.className = 'image-modal';
+        modal.innerHTML = `
+            <div class="image-modal-content">
+                <span class="image-modal-close">&times;</span>
+                <button class="image-modal-nav image-modal-prev" ${currentIndex === 0 ? 'disabled' : ''}>&lt;</button>
+                <button class="image-modal-nav image-modal-next" ${currentIndex === allImages.length - 1 ? 'disabled' : ''}>&gt;</button>
+                <div class="image-modal-text">
+                    <p class="image-modal-caption">${alt}</p>
+                    <div class="image-modal-description">${currentDescriptions[currentIndex]}</div>
+                </div>
+                <img src="${src}" alt="${alt}" class="image-modal-img">
+                <div class="image-modal-counter">${currentIndex + 1} / ${allImages.length}</div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Функция для переключения изображений
+        function showImage(index) {
+            const img = allImages[index];
+            const modalImg = modal.querySelector('.image-modal-img');
+            const modalCaption = modal.querySelector('.image-modal-caption');
+            const modalDescription = modal.querySelector('.image-modal-description');
+            const modalCounter = modal.querySelector('.image-modal-counter');
+            const prevBtn = modal.querySelector('.image-modal-prev');
+            const nextBtn = modal.querySelector('.image-modal-next');
+            
+            modalImg.src = img.src;
+            modalImg.alt = img.alt;
+            modalCaption.textContent = img.alt;
+            modalDescription.textContent = currentDescriptions[index];
+            modalCounter.textContent = `${index + 1} / ${allImages.length}`;
+            
+            // Обновляем состояние кнопок
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === allImages.length - 1;
+        }
+        
+        // Обработчики навигации
+        modal.querySelector('.image-modal-prev').addEventListener('click', function() {
+            if (currentIndex > 0) {
+                const newIndex = currentIndex - 1;
+                showImage(newIndex);
+                currentIndex = newIndex;
+            }
+        });
+        
+        modal.querySelector('.image-modal-next').addEventListener('click', function() {
+            if (currentIndex < allImages.length - 1) {
+                const newIndex = currentIndex + 1;
+                showImage(newIndex);
+                currentIndex = newIndex;
+            }
+        });
+        
+        // Закрытие по клику на крестик или вне изображения
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal || e.target.classList.contains('image-modal-close')) {
+                modal.remove();
+            }
+        });
+        
+        // Навигация стрелочками
+        document.addEventListener('keydown', function handleKeys(e) {
+            if (e.key === 'Escape') {
+                modal.remove();
+                document.removeEventListener('keydown', handleKeys);
+            } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                const newIndex = currentIndex - 1;
+                showImage(newIndex);
+                currentIndex = newIndex;
+            } else if (e.key === 'ArrowRight' && currentIndex < allImages.length - 1) {
+                const newIndex = currentIndex + 1;
+                showImage(newIndex);
+                currentIndex = newIndex;
+            }
+        });
     }
     </script>
 </body>
