@@ -5,36 +5,187 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Place&Play — MVP Demo</title>
   <link rel="icon" href="logo.png">
+  <link href="https://fonts.googleapis.com/css?family=Inter:400,500,600,700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --main-bg: #f7f5fa;
+      /* --main-bg задаётся в body/body.dark-mode */
       --main-purple: #7b2ff2;
       --main-pink: #f357a8;
-      --main-dark: #2d1a4a;
+      --main-dark: #23202b;
       --main-white: #fff;
-      --main-gray: #e5e1ef;
+      --main-gray: #f5f5f7;
       --main-gradient: linear-gradient(90deg, #7b2ff2 0%, #f357a8 100%);
-      --modal-bg: rgba(44, 24, 80, 0.32);
-      --modal-bg-dark: rgba(44, 24, 80, 0.55);
-      --main-bg-dark: #1a1424;
-      --main-white-dark: #23202b;
-      --main-dark-dark: #f7f5fa;
-      --main-purple-dark: #a48cff;
-      --main-pink-dark: #f357a8;
-      --main-gradient-dark: linear-gradient(90deg, #a48cff 0%, #f357a8 100%);
+      --main-gradient-soft: linear-gradient(90deg, #ede3fa 0%, #f7f5fa 100%);
+      --main-border: #ececec;
     }
     html, body {
       margin: 0;
       padding: 0;
       background: var(--main-bg);
       color: var(--main-dark);
-      font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+      font-family: 'Inter', 'Segoe UI', 'Roboto', 'Arial', sans-serif;
       min-height: 100vh;
+      height: 100%;
       scroll-behavior: smooth;
+      font-size: 17px;
+      overflow-x: hidden;
+    }
+    body {
+      --main-bg: #fff;
     }
     body.dark-mode {
-      background: #18122B;
+      --main-bg: #18122B;
+      background: var(--main-bg);
+    }
+    /* Header */
+    .modern-header {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px 10px 24px;
+      background: var(--main-bg);
+      /* box-shadow: 0 1px 0 var(--main-border); */
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .modern-header-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .modern-header-logo img {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(123,47,242,0.08);
+      background: var(--main-gradient-soft);
+      object-fit: contain;
+    }
+    .modern-header-title {
+      font-size: 1.25em;
+      font-weight: 700;
+      color: var(--main-purple);
+      letter-spacing: 0.01em;
+    }
+    .modern-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    /* Language Switch Modern */
+    .modern-lang-switch {
+      display: flex;
+      gap: 0;
+      background: var(--main-gray);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--main-border);
+      height: 36px;
+    }
+    .modern-lang-btn {
+      background: none;
+      border: none;
+      color: var(--main-purple);
+      font-weight: 600;
+      font-size: 1em;
+      cursor: pointer;
+      padding: 0 22px;
+      height: 36px;
+      transition: background 0.18s, color 0.18s;
+      outline: none;
+    }
+    .modern-lang-btn.active {
+      background: var(--main-purple);
+      color: #fff;
+    }
+    /* Modern Button */
+    .modern-btn {
+      background: var(--main-purple);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.08em;
+      font-weight: 600;
+      padding: 14px 36px;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(123,47,242,0.08);
+      margin-bottom: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .modern-btn:hover {
+      background: #a48cff;
+      box-shadow: 0 4px 16px rgba(123,47,242,0.12);
+    }
+    /* Demo container modern */
+    .demo-container {
+      max-width: 540px;
+      margin: 40px auto 0 auto;
+      background: var(--main-white);
+      border-radius: 18px;
+      box-shadow: 0 2px 16px rgba(123,47,242,0.04);
+      padding: 32px 24px 28px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeInUp 0.7s;
+      gap: 18px;
+      max-width: 100vw;
+      box-sizing: border-box;
+    }
+    .demo-title {
+      font-size: 1.35em;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-align: center;
+      letter-spacing: 0.01em;
+      color: var(--main-dark);
+    }
+    .demo-desc {
+      font-size: 1.05em;
+      color: #4a3b5e;
+      margin-bottom: 32px;
+      text-align: center;
+      line-height: 1.6;
+    }
+    body.dark-mode .demo-container {
+      background: #23202b;
       color: #e0e0e0;
+    }
+    body.dark-mode .footer {
+      background: #18122B;
+    }
+    body.dark-mode .theme-toggle-btn {
+      background: var(--main-gradient);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      box-shadow: 0 2px 8px rgba(123,47,242,0.13);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    body.dark-mode .theme-toggle-btn svg path {
+      stroke: #a48cff;
+    }
+    body.dark-mode .modern-lang-switch {
+      background: #23202b;
+      border-color: #2d1a4a;
+    }
+    body.dark-mode .modern-lang-btn {
+      color: #a48cff;
+    }
+    body.dark-mode .modern-lang-btn.active {
+      background: #a48cff;
+      color: #fff;
     }
     body.dark-mode .demo-container,
     body.dark-mode .telegram-widget-card {
@@ -81,10 +232,6 @@
     }
     /* Кнопка переключения темы */
     .theme-toggle-btn {
-      position: fixed;
-      top: 18px;
-      right: 18px;
-      z-index: 10050;
       background: var(--main-gradient);
       color: #fff;
       border: none;
@@ -980,7 +1127,7 @@
       position: fixed;
       top: 0;
       right: 0;
-      width: 340px;
+      width: 380px;
       height: 100vh;
       background: #fff;
       box-shadow: -4px 0 24px rgba(123,47,242,0.10);
@@ -989,6 +1136,10 @@
       padding: 18px 10px 18px 10px;
       border-radius: 0 0 0 18px;
       transition: box-shadow 0.2s;
+    }
+    body.dark-mode #telegram-sidebar {
+      background: #23202b;
+      box-shadow: -4px 0 24px rgba(44,24,80,0.22);
     }
     .demo-telegram-block {
       max-width: 320px;
@@ -1296,7 +1447,7 @@
       position: relative;
     }
     body.dark-mode .telegram-widget-card {
-      background: rgba(34, 28, 54, 0.92);
+      background: #23202b;
       color: #e0e0e0;
       box-shadow: 0 4px 32px rgba(44,24,80,0.22);
       backdrop-filter: blur(8px);
@@ -1354,23 +1505,68 @@
     body.dark-mode .show-telegram-btn:hover {
       background: linear-gradient(90deg, #f357a8, #a48cff);
     }
+    body.dark-mode .scroll-to-top-btn {
+      background: #23202b;
+      color: #a48cff;
+      border: 1.5px solid #a48cff;
+    }
+    body.dark-mode .scroll-to-top-btn:hover {
+      background: #a48cff;
+      color: #fff;
+    }
+    .demo-anchor-nav {
+      margin-bottom: 18px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+    .demo-anchor-link {
+      color: var(--main-purple);
+      font-weight: 500;
+      font-size: 1.08em;
+      text-decoration: none;
+      padding: 4px 12px;
+      border-radius: 8px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .demo-anchor-link.active {
+      background: var(--main-gradient);
+      color: #fff;
+    }
+    body.dark-mode .demo-anchor-link {
+      color: #a48cff;
+      background: transparent;
+    }
+    body.dark-mode .demo-anchor-link.active {
+      background: linear-gradient(90deg, #a48cff 0%, #f357a8 100%);
+      color: #fff;
+    }
   </style>
 </head>
 <body>
-  <div class="marquee-bar" id="marquee-bar">
-    <div class="marquee-inner" id="marquee-inner"></div>
+  <div class="modern-header" style="display: flex; align-items: center; justify-content: center;">
+    <div class="modern-header-logo" style="display: flex; align-items: center; gap: 12px;">
+      <img src="logoMVP.jpg" alt="Place&Play logo">
+      <span class="modern-header-title">Place&Play — MVP Demo</span>
+  </div>
+    </div>
+  <div class="modern-lang-theme-group" style="margin: 24px auto 0 auto; max-width: 540px; display: flex; justify-content: center; align-items: center; gap: 12px;">
+    <div class="modern-lang-switch" style="margin:0;">
+      <button class="modern-lang-btn" id="lang-ru" style="display:flex;align-items:center;gap:6px;">
+        <img src="/icons/ru-flag.svg" alt="RU" style="width:20px;height:20px;"> RU
+      </button>
+      <button class="modern-lang-btn" id="lang-en" style="display:flex;align-items:center;gap:6px;">
+        <img src="/icons/en-flag.svg" alt="EN" style="width:20px;height:20px;"> EN
+      </button>
+    </div>
+    <button class="theme-toggle-btn" id="theme-toggle-btn" title="Переключить тему"><svg id="theme-toggle-icon" width="26" height="26" viewBox="0 0 24 24" fill="none"><path id="theme-toggle-icon-path" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
   <div class="demo-container">
-    <img src="logoMVP.jpg" alt="Place&Play logo" class="demo-logo">
-    <div class="demo-lang-switch">
-      <button class="demo-lang-btn active" id="lang-ru">RU</button>
-      <button class="demo-lang-btn" id="lang-en">EN</button>
-    </div>
     <div class="demo-title" id="demo-title"></div>
     <div class="demo-desc" id="demo-desc"></div>
     <div class="demo-btns-block">
-      <button class="demo-btn" id="demo-desc-video-btn"></button>
-      <button class="demo-btn" id="demo-video-btn"></button>
+      <button class="modern-btn" id="demo-desc-video-btn"></button>
+      <button class="modern-btn" id="demo-video-btn"></button>
       <div class="demo-presentation" id="demo-presentation"></div>
     </div>
     <div class="demo-benefits" id="benefits"></div>
@@ -1392,38 +1588,39 @@
       <button class="telegram-hide-btn" id="telegram-hide-btn" title="Скрыть блок">&times;</button>
       <div class="telegram-widget-header">
         <span class="telegram-icon" aria-hidden="true">
-          <svg width="28" height="28" viewBox="0 0 240 240" fill="none"><circle cx="120" cy="120" r="120" fill="#37AEE2"/><path d="M180.5 74.5L156.5 178.5C154.5 186.5 149.5 188.5 142.5 184.5L110.5 160.5L95.5 175.5C93.5 177.5 91.5 179.5 88.5 179.5L91.5 146.5L157.5 87.5C160.5 85 157.5 84 153.5 86.5L75.5 132.5L43.5 122.5C36.5 120.5 36.5 115.5 45.5 112.5L171.5 69.5C177.5 67.5 182.5 71.5 180.5 74.5Z" fill="#fff"/></svg>
+          <svg width="28" height="28" viewBox="0 0 240 240" fill="none"><circle cx="120" cy="120" r="120" fill="#37AEE2"></circle><path d="M180.5 74.5L156.5 178.5C154.5 186.5 149.5 188.5 142.5 184.5L110.5 160.5L95.5 175.5C93.5 177.5 91.5 179.5 88.5 179.5L91.5 146.5L157.5 87.5C160.5 85 157.5 84 153.5 86.5L75.5 132.5L43.5 122.5C36.5 120.5 36.5 115.5 45.5 112.5L171.5 69.5C177.5 67.5 182.5 71.5 180.5 74.5Z" fill="#fff"></path></svg>
         </span>
-        <span class="telegram-widget-title">Наш Telegram-канал</span>
+        <span class="telegram-widget-title" id="telegram-widget-title">Наш Telegram-канал</span>
       </div>
-      <div class="telegram-widget-desc">Следите за новостями, обновлениями и живым сообществом Place&Play!</div>
+      <div class="telegram-widget-desc" id="telegram-widget-desc">Следите за новостями, обновлениями и живым сообществом Place&amp;Play!</div>
       <div class="telegram-widget-posts">
         <script async src="https://telegram.org/js/telegram-widget.js?22"
           data-telegram-post="placeandplay/480"
           data-width="100%"
           data-userpic="true"
-          data-dark="0"></script>
+          data-dark="1"></script>
         <script async src="https://telegram.org/js/telegram-widget.js?22"
           data-telegram-post="placeandplay/464"
           data-width="100%"
           data-userpic="true"
-          data-dark="0"></script>
+          data-dark="1"></script>
         <script async src="https://telegram.org/js/telegram-widget.js?22"
           data-telegram-post="placeandplay/462"
           data-width="100%"
           data-userpic="true"
-          data-dark="0"></script>
+          data-dark="1"></script>
         <script async src="https://telegram.org/js/telegram-widget.js?22"
           data-telegram-post="placeandplay/453"
           data-width="100%"
           data-userpic="true"
-          data-dark="0"></script>
+          data-dark="1"></script>
         <script async src="https://telegram.org/js/telegram-widget.js?22"
           data-telegram-post="placeandplay/448"
           data-width="100%"
           data-userpic="true"
-          data-dark="0"></script>
+          data-dark="1"></script>
       </div>
+      <div class="telegram-widget-caption" id="telegram-widget-caption" style="margin:10px 0 0 0;font-size:0.98em;color:#a48cff;text-align:center;opacity:0.85;"></div>
       <a href="https://t.me/placeandplay" target="_blank" class="telegram-widget-btn">Подписаться ↗</a>
       <div class="telegram-fallback" style="display:none;">
         <div style="color:#7b2ff2;font-weight:600;margin-bottom:6px;">Telegram недоступен?</div>
@@ -1431,7 +1628,6 @@
       </div>
     </div>
   </div>
-  <button class="theme-toggle-btn" id="theme-toggle-btn" title="Переключить тему"><svg id="theme-toggle-icon" width="26" height="26" viewBox="0 0 24 24" fill="none"><path id="theme-toggle-icon-path" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   <button class="show-telegram-btn" id="show-telegram-btn" style="display:none;" title="Показать Telegram">
     <svg width="22" height="22" viewBox="0 0 240 240" fill="none" style="vertical-align:middle;margin-right:6px;">
       <circle cx="120" cy="120" r="120" fill="#37AEE2"/>
@@ -1453,6 +1649,13 @@
           { icon: '🤝', text: 'Лёгкое создание и организация игр' },
           { icon: '👥', text: 'Сообщество единомышленников и новые знакомства' },
           { icon: '🔒', text: 'Безопасные и прозрачные бронирования' },
+          { icon: '📍', text: 'Поиск событий и игроков рядом с вами' },
+          { icon: '📅', text: 'Удобный календарь мероприятий и напоминания' },
+          { icon: '📊', text: 'Статистика активности и участие в рейтингах' },
+          { icon: '💬', text: 'Встроенный чат для общения с участниками игр' },
+          { icon: '🏆', text: 'Соревнования, турниры и специальные ивенты от площадок' },
+          { icon: '🏢', text: 'Возможности для бизнеса: спортивные клубы и площадки могут размещать свои услуги, управлять бронированиями, продвигать мероприятия и привлекать клиентов' },
+          { icon: '📈', text: 'Аналитика и продвижение: организации получают инструменты для роста и взаимодействия с активной аудиторией' },
         ],
         screensTitle: 'Скриншоты приложения',
         screens: [
@@ -1534,6 +1737,13 @@
           { icon: '🤝', text: 'Easy creation and organization of games' },
           { icon: '👥', text: 'Community of like-minded people and new friends' },
           { icon: '🔒', text: 'Safe and transparent bookings' },
+          { icon: '📍', text: 'Find events and players near you' },
+          { icon: '📅', text: 'Convenient event calendar and reminders' },
+          { icon: '📊', text: 'Activity statistics and participation in rankings' },
+          { icon: '💬', text: 'Built-in chat for communicating with game participants' },
+          { icon: '🏆', text: 'Tournaments, competitions, and special events hosted by venues' },
+          { icon: '🏢', text: 'Opportunities for businesses: sports clubs and venues can list their services, manage bookings, promote events, and attract customers' },
+          { icon: '📈', text: 'Analytics and promotion: organizations receive tools for growth and engagement with an active audience' },
         ],
         screensTitle: 'App screenshots',
         screens: [
@@ -1566,7 +1776,7 @@
           ` },
         ],
         contacts: {
-          email: 'info@placeandplay.com',
+          email: 'business@placeandplay.com',
           telegram: '@placeandplay',
           qr: 'assets/qr-demo.png',
           qrLabel: 'Download the app',
@@ -1635,8 +1845,8 @@
       // Если нужен именно этот заголовок:
       // document.querySelector('.demo-telegram-title').innerHTML = DEMO_TEXTS[lang].telegramTitleLast + ' <a href="https://t.me/placeandplay" target="_blank">@placeandplay</a>';
     }
-    document.getElementById('lang-ru').onclick = () => setLang('ru');
-    document.getElementById('lang-en').onclick = () => setLang('en');
+    document.getElementById('lang-ru').onclick = () => { setLang('ru'); localStorage.setItem('lang', 'ru'); };
+    document.getElementById('lang-en').onclick = () => { setLang('en'); localStorage.setItem('lang', 'en'); };
 
     // Модальное окно с видео
     const VIDEO_SRC = '/assets/demo.mp4'; // Легко заменить путь
@@ -1896,7 +2106,8 @@
 
     // Инициализация
     document.addEventListener('DOMContentLoaded', function() {
-      setLang('ru');
+      let savedLang = localStorage.getItem('lang') || 'ru';
+      setLang(savedLang);
     });
 
     // При открытии модалки запрещаю scroll/touch на body
@@ -2177,18 +2388,21 @@
       if (dark) {
         document.body.classList.add('dark-mode');
         themeIcon.setAttribute('d', 'M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79Z'); // moon
+        localStorage.setItem('theme', 'dark');
       } else {
         document.body.classList.remove('dark-mode');
         themeIcon.setAttribute('d', 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Z'); // sun
+        localStorage.setItem('theme', 'light');
       }
+      reloadTelegramWidgets(dark);
     }
-    let dark = false;
+    // Инициализация темы при загрузке
+    let dark = localStorage.getItem('theme') === 'dark';
+    setTheme(dark);
     themeBtn.onclick = function() {
       dark = !dark;
       setTheme(dark);
     };
-    // Можно запоминать тему в localStorage, если нужно
-    setTheme(false);
 
     // Marquee (бегущая строка)
     const MARQUEE_TEXTS = {
@@ -2260,6 +2474,65 @@
         updateShowBtnText();
       };
     });
+
+    // --- Telegram widgets reload for dark/light theme ---
+    function reloadTelegramWidgets(isDark) {
+      const posts = document.querySelector('.telegram-widget-posts');
+      if (!posts) return;
+      posts.innerHTML = '';
+      const postIds = [480, 464, 462, 453, 448];
+      postIds.forEach(id => {
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = 'https://telegram.org/js/telegram-widget.js?22';
+        script.setAttribute('data-telegram-post', `placeandplay/${id}`);
+        script.setAttribute('data-width', '100%');
+        script.setAttribute('data-userpic', 'true');
+        script.setAttribute('data-dark', isDark ? '1' : '0');
+        posts.appendChild(script);
+      });
+    }
+
+    // JS: мультиязычный заголовок и описание Telegram-канала
+    const TELEGRAM_TEXTS = {
+      ru: {
+        title: 'Наш Telegram-канал',
+        desc: 'Следите за новостями, обновлениями и живым сообществом Place&Play!',
+        caption: 'Посты отображаются на языке Telegram-канала'
+      },
+      en: {
+        title: 'Our Telegram channel',
+        desc: 'Follow news, updates, and the vibrant Place&Play community!',
+        caption: 'Posts are shown in the original channel language'
+      }
+    };
+    function setTelegramHeader(lang) {
+      document.getElementById('telegram-widget-title').textContent = TELEGRAM_TEXTS[lang].title;
+      document.getElementById('telegram-widget-desc').textContent = TELEGRAM_TEXTS[lang].desc;
+      document.getElementById('telegram-widget-caption').textContent = TELEGRAM_TEXTS[lang].caption;
+    }
+    // Гарантируем вызов setTelegramHeader при смене языка:
+    const origSetLangTelegram = setLang;
+    setLang = function(lang) {
+      origSetLangTelegram(lang);
+      setTelegramHeader(lang);
+    };
+    document.addEventListener('DOMContentLoaded', function() {
+      setTelegramHeader(currentLang);
+    });
+
+    // Универсальная обёртка для setLang
+    (function() {
+      const origSetLang = setLang;
+      setLang = function(lang) {
+        localStorage.setItem('lang', lang); // сохраняем всегда!
+        origSetLang(lang);
+        setMarqueeText && setMarqueeText(lang);
+        setTelegramHeader && setTelegramHeader(lang);
+        if (typeof updateShowBtnText === 'function') updateShowBtnText();
+        reloadTelegramWidgets && reloadTelegramWidgets(document.body.classList.contains('dark-mode'));
+      };
+    })();
   </script>
 </body>
 </html> 
