@@ -4,18 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация для бизнеса - Place&Play</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="logo.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Montserrat', sans-serif;
-            background: url('https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80') fixed;
-            background-size: cover;
-            background-position: center;
-            color: #333;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1a1a1a;
             line-height: 1.6;
             margin: 0;
             padding: 20px;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
         }
 
         body::before {
@@ -25,51 +33,92 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(247, 198, 199, 0.9), rgba(161, 196, 253, 0.9));
-            backdrop-filter: blur(8px);
-            z-index: -1;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: rotate 30s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         .registration-container {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 80%;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 60px 50px;
+            border-radius: 24px;
+            box-shadow: 0 25px 60px rgba(102, 126, 234, 0.3);
+            width: 90%;
             max-width: 1200px;
             margin: 0 auto;
             position: relative;
+            z-index: 10;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .registration-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 80px rgba(102, 126, 234, 0.4);
         }
 
         .registration-container h2 {
-            margin-bottom: 20px;
-            font-weight: 700;
-            color: #113366;
+            margin-bottom: 30px;
+            font-weight: 800;
+            color: #1a1a1a;
+            font-size: 2.4em;
+            letter-spacing: -0.02em;
+            text-align: center;
         }
 
         .registration-container input, .registration-container textarea, .registration-container select {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 16px 18px;
+            margin-bottom: 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
             font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #f8f9fa;
+            color: #1a1a1a;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        .registration-container input:focus, .registration-container textarea:focus, .registration-container select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
         }
 
         .registration-container button {
             width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: #fff;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: 700;
+            font-weight: 600;
             font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .registration-container button:hover {
-            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .registration-container button:active {
+            transform: translateY(0);
         }
 
         .step {
@@ -84,36 +133,56 @@
         }
 
         .alert {
-            color: #d9534f;
-            font-size: 0.9em;
-            margin-bottom: 20px;
-            background-color: #f8d7da;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #f5c6cb;
+            color: #721c24;
+            font-size: 1em;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            border: none;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            text-align: center;
+            font-weight: 500;
+            line-height: 1.5;
         }
 
         .progress {
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: space-between;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 20px 30px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .progress span {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 1.1em;
         }
 
         .step-indicator {
             display: flex;
-            gap: 5px;
-            margin-left: 10px;
+            gap: 8px;
         }
 
         .step-dot {
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
-            background-color: #ddd;
+            background-color: #e1e5e9;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
 
         .step-dot.active {
-            background-color: #007bff;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: scale(1.2);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
 
         .working-hours {
@@ -202,21 +271,42 @@
             display: flex;
             flex-direction: column;
             gap: 30px;
+            margin-bottom: 30px;
         }
 
         .org-info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
             margin-bottom: 30px;
         }
 
         .attribute-item {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: transform 0.2s, box-shadow 0.2s;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .attribute-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .attribute-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.25);
         }
 
         /* Стили для маленьких атрибутов */
@@ -239,14 +329,15 @@
         }
 
         .attribute-item label {
-            margin: 0 0 20px 0;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e9ecef;
-            color: #113366;
-            font-size: 1.3em;
+            margin: 0 0 25px 0;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+            color: #2d3748;
+            font-size: 1.4em;
             position: relative;
             display: block;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
         .attribute-item label::after {
@@ -254,28 +345,33 @@
             position: absolute;
             bottom: -2px;
             left: 0;
-            width: 50px;
-            height: 2px;
-            background: linear-gradient(to right, #4a90e2, #113366);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
         }
 
         /* Обновленные стили для удобств */
         .facilities-container {
             width: 100%;
-            padding: 15px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
         }
 
         .facility-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .facility-group-title {
-            color: #113366;
-            font-size: 1.1em;
-            margin-bottom: 10px;
-            padding-bottom: 5px;
-            border-bottom: 2px solid #e9ecef;
+            color: #2d3748;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.1);
             position: relative;
+            font-weight: 600;
         }
 
         .facility-group-title::after {
@@ -283,35 +379,72 @@
             position: absolute;
             bottom: -2px;
             left: 0;
-            width: 40px;
-            height: 2px;
-            background: linear-gradient(to right, #4a90e2, #113366);
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
         }
 
         .facility-group-items {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
         }
 
         .facility-item {
-            background: white;
-            border-radius: 8px;
-            transition: all 0.2s ease;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .facility-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .facility-item.active::before {
+            opacity: 1;
+        }
+
+        .facility-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .facility-item.active:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(21, 87, 36, 0.3);
         }
 
         .facility-label {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
+            gap: 12px;
+            padding: 16px 20px;
             cursor: pointer;
             width: 100%;
-            transition: background-color 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 12px;
+            position: relative;
         }
 
         .facility-label:hover {
-            background-color: #f8f9fa;
+            background-color: rgba(102, 126, 234, 0.08);
+            transform: translateX(2px);
+        }
+
+        .facility-item.active .facility-label:hover {
+            background-color: rgba(21, 87, 36, 0.1);
         }
 
         .facility-checkbox {
@@ -321,151 +454,233 @@
         }
 
         .facility-icon {
-            font-size: 1.2em;
+            font-size: 1.3em;
             display: flex;
             align-items: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
         }
 
         .facility-name {
             font-weight: 500;
             color: #495057;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1.05em;
         }
 
         .facility-item.active .facility-label {
-            background: linear-gradient(45deg, #d4edda, #c3e6cb);
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            box-shadow: 0 4px 15px rgba(21, 87, 36, 0.2);
+            transform: translateY(-2px);
+            border: 2px solid rgba(21, 87, 36, 0.3);
+        }
+
+        .facility-item.active .facility-name {
+            font-weight: 600;
             color: #155724;
         }
 
+        .facility-item.active .facility-icon {
+            color: #155724;
+            transform: scale(1.1);
+        }
+
         .facility-item.inactive .facility-label {
-            background: linear-gradient(45deg, #f8d7da, #f5c6cb);
-            color: #721c24;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #6c757d;
+            border: 2px solid rgba(108, 117, 125, 0.2);
+        }
+
+        .facility-item.inactive .facility-name {
+            color: #6c757d;
+            font-weight: 400;
+        }
+
+        .facility-item.inactive .facility-icon {
+            color: #6c757d;
+            opacity: 0.7;
         }
 
         /* Стили для чекбокса */
         .facility-checkbox {
             appearance: none;
             -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
+            width: 24px;
+            height: 24px;
+            border: 3px solid #e1e5e9;
+            border-radius: 6px;
             outline: none;
             cursor: pointer;
             position: relative;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .facility-checkbox:checked {
-            background-color: #007bff;
-            border-color: #007bff;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transform: scale(1.05);
         }
 
         .facility-checkbox:checked::after {
             content: '✓';
             position: absolute;
             color: white;
-            font-size: 14px;
+            font-size: 16px;
+            font-weight: bold;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .facility-checkbox:hover {
-            border-color: #007bff;
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .facility-checkbox:checked:hover {
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+            transform: scale(1.08);
+        }
+
+        .facility-checkbox:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
         }
 
         .dynamic-price-container {
             width: 100%;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
         }
 
         .time-range-item {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.1);
             display: grid;
             grid-template-columns: 1fr 1fr 2fr auto;
             gap: 20px;
             align-items: center;
-            margin-bottom: 15px;
-            transition: transform 0.2s;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            position: relative;
+        }
+
+        .time-range-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px 16px 0 0;
         }
 
         .time-range-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.2);
         }
 
         .time-range {
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: #f8f9fa;
-            padding: 8px 15px;
-            border-radius: 20px;
+            gap: 12px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 12px 18px;
+            border-radius: 25px;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .time-separator {
-            color: #666;
-            font-weight: 500;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 1.1em;
         }
 
         .price-value {
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: #d4edda;
-            padding: 8px 15px;
-            border-radius: 20px;
+            gap: 12px;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            padding: 12px 18px;
+            border-radius: 25px;
             color: #155724;
+            border: 1px solid rgba(21, 87, 36, 0.2);
+            box-shadow: 0 2px 8px rgba(21, 87, 36, 0.1);
         }
 
         .currency {
             color: #155724;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 0.9em;
         }
 
         .price-description {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            padding: 12px 18px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 193, 7, 0.2);
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.1);
         }
 
         .delete-range {
-            background: #dc3545;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
         }
 
         .delete-range:hover {
-            background: #c82333;
+            background: linear-gradient(135deg, #ee5a52 0%, #d63031 100%);
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
         }
 
         .add-time-range {
-            background: linear-gradient(45deg, #007bff, #0056b3);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 8px;
-            padding: 15px;
+            border-radius: 12px;
+            padding: 16px 24px;
             cursor: pointer;
             font-weight: 600;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            transition: transform 0.2s;
+            gap: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            font-size: 1.1em;
         }
 
         .add-time-range:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
         }
 
         .add-icon {
@@ -538,25 +753,67 @@
         .button-group {
             display: flex;
             gap: 20px;
-            margin-top: 30px;
+            margin-top: 40px;
         }
 
         .button-group button {
-            padding: 15px 30px;
+            flex: 1;
+            padding: 16px 24px;
             font-size: 16px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
 
         .button-back {
-            background-color: #6c757d !important;
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important;
+            color: white;
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.3);
         }
 
         .button-back:hover {
-            background-color: #5a6268 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(108, 117, 125, 0.4);
         }
 
         @media (max-width: 768px) {
+            .registration-container {
+                width: 95%;
+                padding: 40px 30px;
+                margin: 10px auto;
+            }
+
+            .registration-container h2 {
+                font-size: 2em;
+            }
+
+            .progress {
+                padding: 15px 20px;
+                margin-bottom: 30px;
+            }
+
+            .progress span {
+                font-size: 1em;
+            }
+
+            .alert {
+                padding: 15px;
+                font-size: 0.95em;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .button-group button {
+                width: 100%;
+            }
+
             .org-info-grid {
                 grid-template-columns: 1fr;
             }
@@ -579,6 +836,178 @@
             .facilities-grid {
                 grid-template-columns: 1fr;
             }
+
+            /* Responsive design for 3rd page */
+            .time-range-item {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                padding: 20px;
+            }
+
+            .time-range,
+            .price-value,
+            .price-description {
+                padding: 10px 15px;
+            }
+
+            .facilities-container {
+                padding: 15px;
+            }
+
+            .attribute-item {
+                padding: 20px;
+            }
+
+            /* Responsive improvements for boolean elements */
+            .facility-checkbox {
+                width: 22px;
+                height: 22px;
+            }
+
+            .facility-label {
+                padding: 14px 16px;
+                gap: 10px;
+            }
+
+            .facility-icon {
+                font-size: 1.2em;
+            }
+
+            .facility-name {
+                font-size: 1em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .registration-container {
+                width: 98%;
+                padding: 30px 20px;
+            }
+
+            .registration-container h2 {
+                font-size: 1.8em;
+            }
+
+            .progress {
+                padding: 12px 15px;
+                margin-bottom: 25px;
+            }
+
+            .progress span {
+                font-size: 0.9em;
+            }
+
+            .alert {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+
+            .registration-container input, 
+            .registration-container textarea, 
+            .registration-container select {
+                padding: 14px 16px;
+                font-size: 16px; /* Предотвращает зум на iOS */
+            }
+
+            .button-group button {
+                padding: 14px 20px;
+                font-size: 0.95em;
+            }
+
+            /* Additional responsive design for 3rd page on small screens */
+            .time-range-item {
+                padding: 15px;
+            }
+
+            .time-range,
+            .price-value,
+            .price-description {
+                padding: 8px 12px;
+            }
+
+            .facilities-container {
+                padding: 12px;
+            }
+
+            .attribute-item {
+                padding: 15px;
+            }
+
+            /* Responsive improvements for boolean elements on small screens */
+            .facility-checkbox {
+                width: 20px;
+                height: 20px;
+            }
+
+            .facility-label {
+                padding: 12px 14px;
+                gap: 8px;
+            }
+
+            .facility-icon {
+                font-size: 1.1em;
+            }
+
+            .facility-name {
+                font-size: 0.95em;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .registration-container {
+                padding: 25px 15px;
+            }
+
+            .registration-container h2 {
+                font-size: 1.6em;
+            }
+
+            .progress {
+                padding: 10px 12px;
+            }
+
+            .progress span {
+                font-size: 0.85em;
+            }
+
+            /* Additional responsive improvements for boolean elements on very small screens */
+            .facility-checkbox {
+                width: 18px;
+                height: 18px;
+            }
+
+            .facility-label {
+                padding: 10px 12px;
+                gap: 6px;
+            }
+
+            .facility-icon {
+                font-size: 1em;
+            }
+
+            .facility-name {
+                font-size: 0.9em;
+            }
+
+            .facility-item {
+                margin-bottom: 8px;
+            }
+        }
+
+        /* Анимация появления */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .registration-container {
+            animation: fadeInUp 0.6s ease-out;
         }
 
         /* Анимация при переключении */
@@ -739,17 +1168,27 @@
         </div>
 
         <div class="step" id="step2">
-            <select id="sportType" required onchange="loadAttributes()">
-                <option value="">Выберите вид спорта и тип организации</option>
-            </select>
+            <div class="input-group">
+                <select id="sportType" required onchange="loadAttributes()">
+                    <option value="">Выберите вид спорта и тип организации</option>
+                </select>
+                <div class="input-error"></div>
+            </div>
             
-            <input type="text" id="orgType" placeholder="Тип организации (например: Теннисные корты)" required>
+            <div class="input-group">
+                <input type="text" id="orgType" placeholder="Тип организации (например: Теннисные корты)" required>
+                <div class="input-error"></div>
+            </div>
             
-            <textarea id="address" placeholder="Адрес" required></textarea>
+            <div class="input-group">
+                <textarea id="address" placeholder="Адрес" required></textarea>
+                <div class="input-error"></div>
+            </div>
             
             <div class="input-group">
                 <textarea id="description" placeholder="Описание организации" required></textarea>
                 <div class="input-hint">Подробно опишите вашу организацию, предоставляемые услуги и особенности</div>
+                <div class="input-error"></div>
             </div>
             
             <div class="coordinates-container">
@@ -760,16 +1199,21 @@
                     <div class="input-group">
                         <input type="number" id="latitude" placeholder="Широта" step="any" required>
                         <div class="input-hint">Например: 41.2995</div>
+                        <div class="input-error"></div>
                     </div>
                     
                     <div class="input-group">
                         <input type="number" id="longitude" placeholder="Долгота" step="any" required>
                         <div class="input-hint">Например: 69.2401</div>
+                        <div class="input-error"></div>
                     </div>
                 </div>
             </div>
             
-            <input type="text" id="orgName" placeholder="Название организации" required>
+            <div class="input-group">
+                <input type="text" id="orgName" placeholder="Название организации" required>
+                <div class="input-error"></div>
+            </div>
             
             <div class="button-group">
                 <button class="button-back" onclick="prevStep(1)">Назад</button>
@@ -1144,12 +1588,22 @@
             const timeRanges = document.getElementById(`${key}_ranges`);
             const rangeItem = document.createElement('div');
             rangeItem.className = 'time-range-item';
+            rangeItem.setAttribute('data-attribute', key);
 
             rangeItem.innerHTML = `
-                <input type="time" class="time-start" value="09:00" required>
-                <input type="time" class="time-end" value="22:00" required>
-                <div class="price-description">
+                <div class="time-range">
+                    <span class="time-icon">🕒</span>
+                    <input type="time" class="time-start" value="09:00" required>
+                    <span class="time-separator">—</span>
+                    <input type="time" class="time-end" value="22:00" required>
+                </div>
+                <div class="price-value">
+                    <span class="price-icon">💰</span>
                     <input type="number" class="price" placeholder="Цена" required>
+                    <span class="currency">сум</span>
+                </div>
+                <div class="price-description">
+                    <span class="desc-icon">📝</span>
                     <input type="text" class="description" placeholder="Описание тарифа" required>
                 </div>
                 <button type="button" class="delete-range" onclick="deleteTimeRange(this)">✕</button>
@@ -1201,7 +1655,7 @@
 
             switch(step) {
                 case 1:
-                    let isValid = true;
+                    let step1Valid = true;
                     const email = document.getElementById('email').value;
                     const password = document.getElementById('password').value;
                     const phone = document.getElementById('phone').value;
@@ -1210,24 +1664,24 @@
                     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                     if (!emailRegex.test(email)) {
                         showError('email', 'Введите корректный email адрес');
-                        isValid = false;
+                        step1Valid = false;
                     }
 
                     // Валидация пароля
                     const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
                     if (!passwordRegex.test(password)) {
                         showError('password', 'Пароль должен содержать минимум 6 символов, включая заглавную букву и цифру');
-                        isValid = false;
+                        step1Valid = false;
                     }
 
                     // Валидация телефона
                     const phoneRegex = /^\+998[0-9]{9}$/;
                     if (!phoneRegex.test(phone)) {
                         showError('phone', 'Введите корректный номер телефона в формате +998XXXXXXXXX');
-                        isValid = false;
+                        step1Valid = false;
                     }
 
-                    return isValid;
+                    return step1Valid;
                 case 2:
                     const sportType = document.getElementById('sportType').value;
                     const orgType = document.getElementById('orgType').value;
@@ -1237,29 +1691,54 @@
                     const longitude = document.getElementById('longitude').value;
                     const orgName = document.getElementById('orgName').value;
 
-                    if (!sportType || !orgType || !address || !description || !latitude || !longitude || !orgName) {
-                        alert('Пожалуйста, заполните все поля');
-                        return false;
+                    let step2Valid = true;
+
+                    // Проверяем каждое поле отдельно и показываем соответствующие ошибки
+                    if (!sportType) {
+                        showError('sportType', 'Пожалуйста, выберите вид спорта');
+                        step2Valid = false;
                     }
 
-                    // Валидация координат
-                    if (isNaN(latitude) || latitude < -90 || latitude > 90) {
-                        showError('latitude', 'Широта должна быть в диапазоне от -90 до 90');
-                        return false;
+                    if (!orgType) {
+                        showError('orgType', 'Пожалуйста, укажите тип организации');
+                        step2Valid = false;
                     }
 
-                    if (isNaN(longitude) || longitude < -180 || longitude > 180) {
-                        showError('longitude', 'Долгота должна быть в диапазоне от -180 до 180');
-                        return false;
+                    if (!address) {
+                        showError('address', 'Пожалуйста, укажите адрес');
+                        step2Valid = false;
                     }
 
-                    // Валидация описания
-                    if (description.trim().length < 10) {
+                    if (!description) {
+                        showError('description', 'Пожалуйста, укажите описание');
+                        step2Valid = false;
+                    } else if (description.trim().length < 10) {
                         showError('description', 'Описание должно содержать не менее 10 символов');
-                        return false;
+                        step2Valid = false;
                     }
 
-                    return true;
+                    if (!latitude) {
+                        showError('latitude', 'Пожалуйста, укажите широту');
+                        step2Valid = false;
+                    } else if (isNaN(latitude) || latitude < -90 || latitude > 90) {
+                        showError('latitude', 'Широта должна быть в диапазоне от -90 до 90');
+                        step2Valid = false;
+                    }
+
+                    if (!longitude) {
+                        showError('longitude', 'Пожалуйста, укажите долготу');
+                        step2Valid = false;
+                    } else if (isNaN(longitude) || longitude < -180 || longitude > 180) {
+                        showError('longitude', 'Долгота должна быть в диапазоне от -180 до 180');
+                        step2Valid = false;
+                    }
+
+                    if (!orgName) {
+                        showError('orgName', 'Пожалуйста, укажите название организации');
+                        step2Valid = false;
+                    }
+
+                    return step2Valid;
                 case 3:
                     // Здесь можно добавить валидацию атрибутов
                     return true;
@@ -1430,7 +1909,7 @@
             
             console.log('Отправляемые данные:', formData);
 
-            fetch('/PlaceAndPlay/api/organizations/registration', {
+            fetch('/PlaceAndPlay/api/auth/organizations/registration', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1606,6 +2085,24 @@
                 const group = this.closest('.input-group');
                 group.classList.remove('error');
                 group.querySelector('.input-error').textContent = '';
+            });
+
+            // Добавляем обработчики для полей шага 2
+            const step2Fields = ['sportType', 'orgType', 'address', 'description', 'latitude', 'longitude', 'orgName'];
+            step2Fields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.addEventListener('input', function() {
+                        const group = this.closest('.input-group');
+                        if (group) {
+                            group.classList.remove('error');
+                            const errorElement = group.querySelector('.input-error');
+                            if (errorElement) {
+                                errorElement.textContent = '';
+                            }
+                        }
+                    });
+                }
             });
         });
     </script>
