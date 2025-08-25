@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attribute Model Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .test-section {
+            margin-bottom: 40px;
+        }
+
+        .test-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #4a90e2;
+            padding-bottom: 10px;
+        }
+
+        .attribute-item {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .attribute-item:hover {
+            border-color: #4a90e2;
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.2);
+        }
+
+        .attribute-item label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Boolean field styles */
+        .boolean-field {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .boolean-field.active {
+            border-color: #4a90e2;
+            background: #e3f2fd;
+        }
+
+        .boolean-field.inactive {
+            border-color: #ddd;
+            background: white;
+        }
+
+        .boolean-checkbox {
+            display: none;
+        }
+
+        .boolean-icon {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-right: 12px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .boolean-field.active .boolean-icon {
+            background: #4a90e2;
+            border-color: #4a90e2;
+        }
+
+        .boolean-field.active .boolean-icon::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .boolean-label {
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* Boolean group styles */
+        .boolean-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .boolean-group-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            grid-column: 1 / -1;
+        }
+
+        /* Multiselect styles */
+        .multiselect-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .multiselect-option {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .multiselect-option:hover {
+            background: #f8f9fa;
+            border-color: #4a90e2;
+        }
+
+        .multiselect-option input[type="checkbox"] {
+            margin-right: 12px;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #4a90e2;
+        }
+
+        .multiselect-option input[type="checkbox"]:checked {
+            background-color: #4a90e2;
+            border-color: #4a90e2;
+        }
+
+        .multiselect-option label {
+            margin: 0;
+            cursor: pointer;
+            flex: 1;
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* Input styles */
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        /* Dynamic time price styles */
+        .time-price-container {
+            margin-top: 15px;
+        }
+
+        .time-price-item {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: white;
+        }
+
+        .time-price-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .time-price-price {
+            font-weight: bold;
+            color: #4a90e2;
+            font-size: 1.1rem;
+        }
+
+        .time-price-time {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .time-price-description {
+            color: #333;
+            font-style: italic;
+        }
+
+        /* JSON display styles */
+        .json-display {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* Button styles */
+        .btn {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .boolean-group {
+                grid-template-columns: 1fr;
+            }
+
+            .time-price-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+        }
+
+        /* Attributes section styles */
+        .attributes-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            background: #f8f9fa;
+        }
+
+        .attributes-section-title {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Тестирование модели атрибутов</h1>
+            <p>Проверка отображения различных типов атрибутов</p>
+        </div>
+
+        <div class="content">
+            <div class="test-section">
+                <h2>Управление тестом</h2>
+                <button class="btn" onclick="loadTestData()">Загрузить тестовые данные</button>
+                <button class="btn btn-secondary" onclick="clearDisplay()">Очистить</button>
+                <button class="btn" onclick="getAttributeValues()">Получить значения</button>
+            </div>
+
+            <div id="attributesContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // Test data
+        const testAttributes = {
+            "safety": {
+                "name": {
+                    "en": "Safety measures",
+                    "ru": "Меры безопасности",
+                    "uz": "Xavfsizlik choralari"
+                },
+                "input": "boolean_group",
+                "value": {
+                    "referee": true,
+                    "briefing": true,
+                    "firstAid": true
+                }
+            },
+            "fieldType": {
+                "name": {
+                    "en": "Field type",
+                    "ru": "Тип площадки",
+                    "uz": "Maydon turi"
+                },
+                "input": "multiselect",
+                "value": [1, 2],
+                "options": [
+                    {
+                        "id": 1,
+                        "name": {
+                            "en": "Indoor",
+                            "ru": "В помещении",
+                            "uz": "Ichki"
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "name": {
+                            "en": "Outdoor",
+                            "ru": "На открытом воздухе",
+                            "uz": "Tashqi"
+                        }
+                    },
+                    {
+                        "id": 3,
+                        "name": {
+                            "en": "Mixed",
+                            "ru": "Смешанный",
+                            "uz": "Aralash"
+                        }
+                    }
+                ]
+            },
+            "gameModes": {
+                "name": {
+                    "en": "Game modes",
+                    "ru": "Режимы игры",
+                    "uz": "O'yin rejimlari"
+                },
+                "input": "multiselect",
+                "value": [1, 2, 3],
+                "options": [
+                    {
+                        "id": 1,
+                        "name": {
+                            "en": "Capture the Flag",
+                            "ru": "Захват флага",
+                            "uz": "Bayroqni olish"
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "name": {
+                            "en": "Team Deathmatch",
+                            "ru": "Командный бой",
+                            "uz": "Jamoaviy jang"
+                        }
+                    },
+                    {
+                        "id": 3,
+                        "name": {
+                            "en": "Building Assault",
+                            "ru": "Штурм здания",
+                            "uz": "Bino hujumi"
+                        }
+                    }
+                ]
+            },
+            "openHours": {
+                "name": {
+                    "en": "Open hours",
+                    "ru": "Часы работы",
+                    "uz": "Ish vaqti"
+                },
+                "input": "json",
+                "value": {
+                    "active": true,
+                    "schedule": {
+                        "friday": {
+                            "end": "23:00",
+                            "start": "09:00",
+                            "isWorking": true
+                        },
+                        "monday": {
+                            "end": "21:00",
+                            "start": "09:00",
+                            "isWorking": true
+                        },
+                        "sunday": {
+                            "end": "21:00",
+                            "start": "09:00",
+                            "isWorking": true
+                        },
+                        "tuesday": {
+                            "end": "21:00",
+                            "start": "09:00",
+                            "isWorking": true
+                        },
+                        "saturday": {
+                            "end": "23:00",
+                            "start": "09:00",
+                            "isWorking": true
+                        },
+                        "thursday": {
+                            "end": "21:00",
+                            "start": "09:00",
+                            "isWorking": true
+                        },
+                        "wednesday": {
+                            "end": "21:00",
+                            "start": "09:00",
+                            "isWorking": true
+                        }
+                    }
+                }
+            },
+            "maxPlayers": {
+                "name": {
+                    "en": "Max players per game",
+                    "ru": "Максимум игроков в игре",
+                    "uz": "O'yindagi maksimal o'yinchilar soni"
+                },
+                "input": "int",
+                "value": 20
+            },
+            "tournaments": {
+                "name": {
+                    "en": "Tournaments available",
+                    "ru": "Доступные турниры",
+                    "uz": "Turnirlar mavjud"
+                },
+                "input": "boolean",
+                "value": true
+            },
+            "gameDuration": {
+                "name": {
+                    "en": "Game duration (minutes)",
+                    "ru": "Длительность игры (минуты)",
+                    "uz": "O'yin davomiyligi (daqiqa)"
+                },
+                "input": "int",
+                "value": 15
+            },
+            "pricePerHour": {
+                "name": {
+                    "en": "Price per hour",
+                    "ru": "Цена за час игры",
+                    "uz": "Bir soat narxi"
+                },
+                "input": "dynamic_time_price",
+                "value": [
+                    {
+                        "price": 80000,
+                        "timeRange": {
+                            "end": "14:00",
+                            "start": "09:00"
+                        },
+                        "description": {
+                            "en": "Morning price",
+                            "ru": "Утренний тариф",
+                            "uz": "Ertalabki narx"
+                        }
+                    },
+                    {
+                        "price": 100000,
+                        "timeRange": {
+                            "end": "18:00",
+                            "start": "14:00"
+                        },
+                        "description": {
+                            "en": "Afternoon price",
+                            "ru": "Дневной тариф",
+                            "uz": "Kunduzi narx"
+                        }
+                    },
+                    {
+                        "price": 120000,
+                        "timeRange": {
+                            "end": "23:00",
+                            "start": "18:00"
+                        },
+                        "description": {
+                            "en": "Evening price",
+                            "ru": "Вечерний тариф",
+                            "uz": "Kechki narx"
+                        }
+                    }
+                ]
+            },
+            "hireInstructor": {
+                "name": {
+                    "en": "Possibility to hire an instructor",
+                    "ru": "Возможность нанять инструктора",
+                    "uz": "Instruktor yollash imkoniyati"
+                },
+                "input": "boolean",
+                "value": true
+            },
+            "equipmentRental": {
+                "name": {
+                    "en": "Equipment rental",
+                    "ru": "Прокат оборудования",
+                    "uz": "Jihoz ijarasi"
+                },
+                "input": "boolean_group",
+                "value": {
+                    "gunRental": true,
+                    "maskRental": true,
+                    "vestRental": true,
+                    "ammoPurchase": true
+                }
+            },
+            "sportType": {
+                "name": {
+                    "en": "Sport type",
+                    "ru": "Тип спорта",
+                    "uz": "Sport turi"
+                },
+                "input": "select",
+                "value": 1,
+                "options": [
+                    {
+                        "id": 1,
+                        "name": {
+                            "en": "Airsoft",
+                            "ru": "Страйкболл",
+                            "uz": "Airsoft"
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "name": {
+                            "en": "Paintball",
+                            "ru": "Пейнтболл",
+                            "uz": "Paintball"
+                        }
+                    }
+                ]
+            },
+            "description": {
+                "name": {
+                    "en": "Description",
+                    "ru": "Описание",
+                    "uz": "Tavsif"
+                },
+                "input": "text",
+                "value": "Описание спортивного объекта"
+            }
+        };
+
+        // Helper function to get translation
+        function getTranslation(translations, language = 'ru') {
+            if (translations && translations[language]) {
+                return translations[language];
+            }
+            return translations?.en || translations?.ru || translations?.uz || 'Unknown';
+        }
+
+        // Create attribute input based on type
+        function createAttributeInput(key, attribute) {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'attribute-item';
+
+            const label = document.createElement('label');
+            label.textContent = getTranslation(attribute.name);
+            itemDiv.appendChild(label);
+
+            switch (attribute.input) {
+                case 'boolean':
+                    const booleanField = document.createElement('div');
+                    booleanField.className = `boolean-field ${attribute.value ? 'active' : 'inactive'}`;
+
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.className = 'boolean-checkbox';
+                    checkbox.checked = attribute.value;
+                    checkbox.id = key;
+
+                    const icon = document.createElement('div');
+                    icon.className = 'boolean-icon';
+
+                    const booleanLabel = document.createElement('span');
+                    booleanLabel.className = 'boolean-label';
+                    booleanLabel.textContent = getTranslation(attribute.name);
+
+                    booleanField.appendChild(checkbox);
+                    booleanField.appendChild(icon);
+                    booleanField.appendChild(booleanLabel);
+
+                    booleanField.addEventListener('click', function() {
+                        checkbox.checked = !checkbox.checked;
+                        booleanField.classList.toggle('active', checkbox.checked);
+                        booleanField.classList.toggle('inactive', !checkbox.checked);
+                    });
+
+                    itemDiv.appendChild(booleanField);
+                    break;
+
+                case 'boolean_group':
+                    const booleanGroupContainer = document.createElement('div');
+                    booleanGroupContainer.className = 'boolean-group';
+
+                    Object.entries(attribute.value).forEach(([subKey, value]) => {
+                        const subItemDiv = document.createElement('div');
+                        subItemDiv.className = 'attribute-item';
+
+                        const subLabel = document.createElement('label');
+                        subLabel.textContent = subKey;
+                        subItemDiv.appendChild(subLabel);
+
+                        const booleanField = document.createElement('div');
+                        booleanField.className = `boolean-field ${value ? 'active' : 'inactive'}`;
+
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.className = 'boolean-checkbox';
+                        checkbox.checked = value;
+                        checkbox.id = `${key}_${subKey}`;
+
+                        const icon = document.createElement('div');
+                        icon.className = 'boolean-icon';
+
+                        const booleanLabel = document.createElement('span');
+                        booleanLabel.className = 'boolean-label';
+                        booleanLabel.textContent = subKey;
+
+                        booleanField.appendChild(checkbox);
+                        booleanField.appendChild(icon);
+                        booleanField.appendChild(booleanLabel);
+
+                        booleanField.addEventListener('click', function() {
+                            checkbox.checked = !checkbox.checked;
+                            booleanField.classList.toggle('active', checkbox.checked);
+                            booleanField.classList.toggle('inactive', !checkbox.checked);
+                        });
+
+                        subItemDiv.appendChild(booleanField);
+                        booleanGroupContainer.appendChild(subItemDiv);
+                    });
+
+                    itemDiv.appendChild(booleanGroupContainer);
+                    break;
+
+                case 'multiselect':
+                    const multiselectContainer = document.createElement('div');
+                    multiselectContainer.className = 'multiselect-container';
+
+                    attribute.options.forEach(option => {
+                        const optionDiv = document.createElement('div');
+                        optionDiv.className = 'multiselect-option';
+
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.id = `${key}_${option.id}`;
+                        checkbox.checked = attribute.value.includes(option.id);
+
+                        const optionLabel = document.createElement('label');
+                        optionLabel.htmlFor = `${key}_${option.id}`;
+                        optionLabel.textContent = getTranslation(option.name);
+
+                        optionDiv.appendChild(checkbox);
+                        optionDiv.appendChild(optionLabel);
+                        multiselectContainer.appendChild(optionDiv);
+                    });
+
+                    itemDiv.appendChild(multiselectContainer);
+                    break;
+
+                case 'select':
+                    const select = document.createElement('select');
+                    select.id = key;
+
+                    attribute.options.forEach(option => {
+                        const optionElement = document.createElement('option');
+                        optionElement.value = option.id;
+                        optionElement.textContent = getTranslation(option.name);
+                        optionElement.selected = option.id === attribute.value;
+                        select.appendChild(optionElement);
+                    });
+
+                    itemDiv.appendChild(select);
+                    break;
+
+                case 'int':
+                    const intInput = document.createElement('input');
+                    intInput.type = 'number';
+                    intInput.id = key;
+                    intInput.value = attribute.value;
+                    itemDiv.appendChild(intInput);
+                    break;
+
+                case 'text':
+                    const textArea = document.createElement('textarea');
+                    textArea.id = key;
+                    textArea.value = attribute.value;
+                    textArea.rows = 4;
+                    itemDiv.appendChild(textArea);
+                    break;
+
+                case 'json':
+                    const jsonDisplay = document.createElement('div');
+                    jsonDisplay.className = 'json-display';
+                    jsonDisplay.textContent = JSON.stringify(attribute.value, null, 2);
+                    itemDiv.appendChild(jsonDisplay);
+                    break;
+
+                case 'dynamic_time_price':
+                    const timePriceContainer = document.createElement('div');
+                    timePriceContainer.className = 'time-price-container';
+
+                    attribute.value.forEach((item, index) => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'time-price-item';
+
+                        const header = document.createElement('div');
+                        header.className = 'time-price-header';
+
+                        const price = document.createElement('div');
+                        price.className = 'time-price-price';
+                        price.textContent = `${item.price} сум`;
+
+                        const time = document.createElement('div');
+                        time.className = 'time-price-time';
+                        time.textContent = `${item.timeRange.start} - ${item.timeRange.end}`;
+
+                        const description = document.createElement('div');
+                        description.className = 'time-price-description';
+                        description.textContent = getTranslation(item.description);
+
+                        header.appendChild(price);
+                        header.appendChild(time);
+                        itemDiv.appendChild(header);
+                        itemDiv.appendChild(description);
+                        timePriceContainer.appendChild(itemDiv);
+                    });
+
+                    itemDiv.appendChild(timePriceContainer);
+                    break;
+
+                default:
+                    const defaultInput = document.createElement('input');
+                    defaultInput.type = 'text';
+                    defaultInput.id = key;
+                    defaultInput.value = attribute.value || '';
+                    itemDiv.appendChild(defaultInput);
+                    break;
+            }
+
+            return itemDiv;
+        }
+
+        // Load attributes into the display
+        function loadAttributes(attributes) {
+            const container = document.getElementById('attributesContainer');
+            container.innerHTML = '';
+
+            // Group attributes by type
+            const booleanAttributes = [];
+            const booleanGroupAttributes = [];
+            const otherAttributes = [];
+            const specialAttributes = [];
+
+            Object.entries(attributes).forEach(([key, attribute]) => {
+                if (key === 'openHours' || key === 'pricePerHour') {
+                    specialAttributes.push({ key, attribute });
+                } else if (attribute.input === 'boolean') {
+                    booleanAttributes.push({ key, attribute });
+                } else if (attribute.input === 'boolean_group') {
+                    booleanGroupAttributes.push({ key, attribute });
+                } else {
+                    otherAttributes.push({ key, attribute });
+                }
+            });
+
+            // Boolean attributes section
+            if (booleanAttributes.length > 0) {
+                const booleanSection = document.createElement('div');
+                booleanSection.className = 'attributes-section';
+
+                const booleanTitle = document.createElement('h3');
+                booleanTitle.className = 'attributes-section-title';
+                booleanTitle.textContent = 'Булевы атрибуты';
+                booleanSection.appendChild(booleanTitle);
+
+                booleanAttributes.forEach(({ key, attribute }) => {
+                    const itemDiv = createAttributeInput(key, attribute);
+                    booleanSection.appendChild(itemDiv);
+                });
+
+                container.appendChild(booleanSection);
+            }
+
+            // Boolean group attributes section
+            if (booleanGroupAttributes.length > 0) {
+                const booleanGroupSection = document.createElement('div');
+                booleanGroupSection.className = 'attributes-section';
+
+                const booleanGroupTitle = document.createElement('h3');
+                booleanGroupTitle.className = 'attributes-section-title';
+                booleanGroupTitle.textContent = 'Группы настроек';
+                booleanGroupSection.appendChild(booleanGroupTitle);
+
+                booleanGroupAttributes.forEach(({ key, attribute }) => {
+                    const itemDiv = createAttributeInput(key, attribute);
+                    booleanGroupSection.appendChild(itemDiv);
+                });
+
+                container.appendChild(booleanGroupSection);
+            }
+
+            // Other attributes section
+            if (otherAttributes.length > 0) {
+                const otherSection = document.createElement('div');
+                otherSection.className = 'attributes-section';
+
+                const otherTitle = document.createElement('h3');
+                otherTitle.className = 'attributes-section-title';
+                otherTitle.textContent = 'Другие атрибуты';
+                otherSection.appendChild(otherTitle);
+
+                otherAttributes.forEach(({ key, attribute }) => {
+                    const itemDiv = createAttributeInput(key, attribute);
+                    otherSection.appendChild(itemDiv);
+                });
+
+                container.appendChild(otherSection);
+            }
+
+            // Special attributes section
+            if (specialAttributes.length > 0) {
+                const specialSection = document.createElement('div');
+                specialSection.className = 'attributes-section';
+
+                const specialTitle = document.createElement('h3');
+                specialTitle.className = 'attributes-section-title';
+                specialTitle.textContent = 'Специальные атрибуты';
+                specialSection.appendChild(specialTitle);
+
+                specialAttributes.forEach(({ key, attribute }) => {
+                    const itemDiv = createAttributeInput(key, attribute);
+                    specialSection.appendChild(itemDiv);
+                });
+
+                container.appendChild(specialSection);
+            }
+        }
+
+        // Get attribute values from the form
+        function getAttributeValue(key, attribute) {
+            switch (attribute.input) {
+                case 'boolean':
+                    const checkbox = document.getElementById(key);
+                    return checkbox ? checkbox.checked : attribute.value;
+
+                case 'boolean_group':
+                    const result = {};
+                    Object.keys(attribute.value).forEach(subKey => {
+                        const subCheckbox = document.getElementById(`${key}_${subKey}`);
+                        result[subKey] = subCheckbox ? subCheckbox.checked : attribute.value[subKey];
+                    });
+                    return result;
+
+                case 'multiselect':
+                    const selectedValues = [];
+                    attribute.options.forEach(option => {
+                        const checkbox = document.getElementById(`${key}_${option.id}`);
+                        if (checkbox && checkbox.checked) {
+                            selectedValues.push(option.id);
+                        }
+                    });
+                    return selectedValues;
+
+                case 'select':
+                    const select = document.getElementById(key);
+                    return select ? parseInt(select.value) : attribute.value;
+
+                case 'int':
+                    const intInput = document.getElementById(key);
+                    return intInput ? parseInt(intInput.value) : attribute.value;
+
+                case 'text':
+                    const textArea = document.getElementById(key);
+                    return textArea ? textArea.value : attribute.value;
+
+                default:
+                    const input = document.getElementById(key);
+                    return input ? input.value : attribute.value;
+            }
+        }
+
+        // Load test data
+        function loadTestData() {
+            loadAttributes(testAttributes);
+        }
+
+        // Clear display
+        function clearDisplay() {
+            document.getElementById('attributesContainer').innerHTML = '';
+        }
+
+        // Get all attribute values
+        function getAttributeValues() {
+            const values = {};
+            Object.entries(testAttributes).forEach(([key, attribute]) => {
+                values[key] = getAttributeValue(key, attribute);
+            });
+            console.log('Attribute values:', values);
+            alert('Значения атрибутов выведены в консоль');
+        }
+
+        // Load test data on page load
+        window.addEventListener('load', loadTestData);
+    </script>
+</body>
+</html>
+
+
+
