@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link rel="dns-prefetch" href="https://fonts.googleapis.com"/>
 <link rel="dns-prefetch" href="https://fonts.gstatic.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=Poppins:wght@300;400;500;600;700;800;900&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=Poppins:wght@300;400;500;600;700;800;900&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Montserrat:wght@300;400;500;600;700;800;900&amp;family=Open+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js" defer></script>
 <meta content="website" property="og:type"/>
 <meta content="Place&amp;Play - Где рождаются игры и дружба" property="og:title"/>
@@ -887,6 +887,159 @@
 </main>
 <button id="scrollTopBtn" onclick="scrollToTop()">⬆ <span id="scroll-top">Наверх</span></button>
 <script>
+// Оптимизированный централизованный обработчик прокрутки
+class ScrollManager {
+    constructor() {
+        this.ticking = false;
+        this.lastScrollY = 0;
+        this.scrollCallbacks = [];
+        this.init();
+    }
+
+    init() {
+        // Используем passive: true для лучшей производительности
+        window.addEventListener('scroll', this.handleScroll.bind(this), { passive: true });
+        
+        // Инициализируем все обработчики
+        this.initScrollTopButton();
+        this.initActiveNavigation();
+        this.initHeaderScroll();
+        this.initScrollProgress();
+        this.initParallaxEffects();
+    }
+
+    handleScroll() {
+        if (!this.ticking) {
+            requestAnimationFrame(() => {
+                this.updateScroll();
+                this.ticking = false;
+            });
+            this.ticking = true;
+        }
+    }
+
+    updateScroll() {
+        const scrollY = window.pageYOffset;
+        const deltaY = scrollY - this.lastScrollY;
+        
+        // Выполняем все обработчики прокрутки
+        this.scrollCallbacks.forEach(callback => {
+            try {
+                callback(scrollY, deltaY);
+            } catch (error) {
+                console.warn('Scroll callback error:', error);
+            }
+        });
+        
+        this.lastScrollY = scrollY;
+    }
+
+    addScrollCallback(callback) {
+        this.scrollCallbacks.push(callback);
+    }
+
+    // Обработчик кнопки "Наверх"
+    initScrollTopButton() {
+        const scrollTopBtn = document.getElementById("scrollTopBtn");
+        if (!scrollTopBtn) return;
+
+        this.addScrollCallback((scrollY) => {
+            scrollTopBtn.style.display = scrollY > 300 ? "block" : "none";
+        });
+    }
+
+    // Обработчик активной навигации
+    initActiveNavigation() {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        if (!sections.length || !navLinks.length) return;
+
+        this.addScrollCallback((scrollY) => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.offsetHeight;
+                if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    }
+
+    // Обработчик скролла хедера
+    initHeaderScroll() {
+        const header = document.querySelector('.header');
+        const headerContainer = document.querySelector('.header-container');
+        
+        if (!header && !headerContainer) return;
+
+        this.addScrollCallback((scrollY) => {
+            if (header) {
+                if (scrollY > 10) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            }
+            
+            if (headerContainer) {
+                if (scrollY > 10) {
+                    headerContainer.classList.add('sticky-shadow');
+                } else {
+                    headerContainer.classList.remove('sticky-shadow');
+                }
+            }
+        });
+    }
+
+    // Обработчик индикатора прогресса прокрутки
+    initScrollProgress() {
+        const scrollProgress = document.getElementById('scrollProgress');
+        if (!scrollProgress) return;
+
+        this.addScrollCallback((scrollY) => {
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollY / docHeight) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
+        });
+    }
+
+    // Оптимизированные параллакс-эффекты
+    initParallaxEffects() {
+        const shapes = document.querySelectorAll('.floating-shapes .shape');
+        const parallaxElements = document.querySelectorAll('.floating-shapes .shape');
+        
+        if (!shapes.length && !parallaxElements.length) return;
+
+        this.addScrollCallback((scrollY) => {
+            // Параллакс для форм
+            shapes.forEach((shape, index) => {
+                const speed = 0.5 + (index * 0.1);
+                const yPos = -(scrollY * speed);
+                shape.style.transform = `translateY(${yPos}px) rotate(${scrollY * 0.1}deg)`;
+            });
+
+            // Параллакс для других элементов
+            parallaxElements.forEach((element, index) => {
+                const speed = 0.5 + (index * 0.1);
+                const yPos = -(scrollY * speed);
+                element.style.transform = `translateY(${yPos}px)`;
+            });
+        });
+    }
+}
+
+// Инициализация менеджера прокрутки
+let scrollManager;
+
 // Плавная прокрутка к разделам
 document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', function(e) {
@@ -894,7 +1047,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
         const targetId = this.getAttribute('href').substring(1);
         const targetSection = document.getElementById(targetId);
         if (targetSection) {
-            const headerHeight = document.querySelector('.header').offsetHeight;
+            const headerHeight = document.querySelector('.header')?.offsetHeight || 0;
             const targetPosition = targetSection.offsetTop - headerHeight - 20;
             window.scrollTo({
                 top: targetPosition,
@@ -904,35 +1057,14 @@ document.querySelectorAll('.nav-link').forEach(link => {
     });
 });
 
-// Активное состояние навигации при прокрутке
-window.addEventListener('scroll', function() {
-    const scrollTopBtn = document.getElementById("scrollTopBtn");
-    scrollTopBtn.style.display = window.scrollY > 300 ? "block" : "none";
-    
-    // Определяем активный раздел
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-link');
-    
-    let current = '';
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop - 100;
-        const sectionHeight = section.offsetHeight;
-        if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
-            current = section.getAttribute('id');
-        }
-    });
-    
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === '#' + current) {
-            link.classList.add('active');
-        }
-    });
-});
-
 function scrollToTop() {
     window.scrollTo({ top: 0, behavior: "smooth" });
 }
+
+// Инициализация при загрузке DOM
+document.addEventListener('DOMContentLoaded', function() {
+    scrollManager = new ScrollManager();
+});
 </script>
 <script>
     async function loadPartnersAndMap() {
@@ -1561,60 +1693,113 @@ function scrollToTop() {
     });
     </script>
 <script>
-    window.addEventListener('scroll', function() {
-        const header = document.querySelector('.header-container');
-        if (window.scrollY > 10) {
-            header.classList.add('sticky-shadow');
-        } else {
-            header.classList.remove('sticky-shadow');
-        }
-    });
+    // Обработчик скролла хедера теперь управляется ScrollManager
     </script>
 <script>
-    // Улучшенный Intersection Observer для плавных анимаций
-    const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          // Добавляем небольшую задержку для более плавного эффекта
-          setTimeout(() => {
-            entry.target.classList.add('visible');
-          }, 100);
-          
-          // Не отключаем наблюдение сразу, чтобы анимация могла повториться
-          // obs.unobserve(entry.target);
-        } else {
-          // Опционально: убираем класс visible при выходе из области видимости
-          // entry.target.classList.remove('visible');
+    // Оптимизированный Intersection Observer для всех анимаций
+    class AnimationManager {
+        constructor() {
+            this.observers = new Map();
+            this.init();
         }
-      });
-    }, { 
-      threshold: 0.1, // Более чувствительный порог
-      rootMargin: '0px 0px -50px 0px' // Анимация срабатывает немного раньше
-    });
-    
-    // Наблюдаем за всеми элементами с классом animate-on-scroll
-    document.querySelectorAll('.animate-on-scroll').forEach(el => {
-      observer.observe(el);
-    });
-    
-    // Дополнительная анимация для элементов внутри секций
-    const innerObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-          }, 200);
+
+        init() {
+            // Основной observer для секций
+            this.createObserver('sections', {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            }, (entry) => {
+                setTimeout(() => {
+                    entry.target.classList.add('visible');
+                }, 100);
+            });
+
+            // Observer для внутренних элементов
+            this.createObserver('inner', {
+                threshold: 0.3
+            }, (entry) => {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }, 200);
+            });
+
+            // Observer для проблем и решений
+            this.createObserver('problems', {
+                threshold: 0.3
+            }, (entry, index) => {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateX(0)';
+                }, index * 200);
+            });
+
+            // Observer для решений
+            this.createObserver('solutions', {
+                threshold: 0.3
+            }, (entry, index) => {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateX(0)';
+                }, index * 200);
+            });
+
+            // Наблюдаем за элементами
+            this.observeElements();
         }
-      });
-    }, { threshold: 0.3 });
-    
-    // Наблюдаем за внутренними элементами
-    document.querySelectorAll('.feature-card, .problem-content, .solution-content').forEach(el => {
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(30px)';
-      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-      innerObserver.observe(el);
+
+        createObserver(name, options, callback) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry, index) => {
+                    if (entry.isIntersecting) {
+                        callback(entry, index);
+                    }
+                });
+            }, options);
+            
+            this.observers.set(name, observer);
+        }
+
+        observeElements() {
+            // Секции
+            const sections = document.querySelectorAll('.animate-on-scroll');
+            sections.forEach(el => {
+                this.observers.get('sections')?.observe(el);
+            });
+
+            // Внутренние элементы
+            const innerElements = document.querySelectorAll('.feature-card, .problem-content, .solution-content');
+            innerElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                this.observers.get('inner')?.observe(el);
+            });
+
+            // Проблемы
+            const problemItems = document.querySelectorAll('.problem-item');
+            problemItems.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateX(-30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                this.observers.get('problems')?.observe(el);
+            });
+
+            // Решения
+            const solutionItems = document.querySelectorAll('.solution-item');
+            solutionItems.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateX(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                this.observers.get('solutions')?.observe(el);
+            });
+        }
+    }
+
+    // Инициализация менеджера анимаций
+    let animationManager;
+    document.addEventListener('DOMContentLoaded', function() {
+        animationManager = new AnimationManager();
     });
     
     // Дополнительная анимация для плавной прокрутки
@@ -1916,9 +2101,9 @@ function scrollToTop() {
     });
     </script>
 <script>
-    // Modal для "Как это работает" - СОВРЕМЕННАЯ ВЕРСИЯ
+    // Modal для "Как это работает" - ПРАКТИЧНАЯ ВЕРСИЯ БЕЗ АНИМАЦИЙ
     function openHowItWorksModal() {
-        console.log('Opening modern modal...');
+        console.log('Opening practical modal...');
         
         // Проверяем, не открыто ли уже модальное окно
         const existingModal = document.querySelector('.how-it-works-modal');
@@ -1933,7 +2118,11 @@ function scrollToTop() {
             <div class="modal-overlay">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h2>🚀 Как это работает</h2>
+                        <div class="modal-title-section">
+                            <div class="modal-icon">🚀</div>
+                            <h2 style="font-family: 'Montserrat', 'Poppins', sans-serif; font-size: 36px; font-weight: 900; letter-spacing: -0.04em; margin: 0 0 8px 0; color: white; text-shadow: 0 2px 4px rgba(0,0,0,0.1);">Как это работает</h2>
+                            <p class="modal-subtitle" style="font-family: 'Open Sans', 'Inter', sans-serif; font-size: 20px; font-weight: 600; margin: 0; color: rgba(255, 255, 255, 0.95); letter-spacing: 0.02em;">Простой и понятный процесс для всех</p>
+                        </div>
                         <button class="modal-close" type="button" aria-label="Закрыть">
                             <svg viewBox="0 0 24 24" fill="none">
                                 <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -1941,61 +2130,123 @@ function scrollToTop() {
                             </svg>
                         </button>
                     </div>
+                    
                     <div class="modal-body">
-                        <div class="user-partner-tabs">
-                            <button class="tab-button active" data-tab="users">
-                                <span class="tab-icon">👤</span>
-                                <span class="tab-text">Для пользователей</span>
+                        <div class="user-partner-tabs" style="display: flex; gap: 12px; margin-bottom: 32px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); padding: 10px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+                            <button class="tab-button active" data-tab="users" style="flex: 1; background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%); border: none; padding: 16px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 12px; color: #667eea; font-weight: 600; font-family: 'Inter', sans-serif; box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2); transform: translateY(-1px);">
+                                <div class="tab-icon" style="font-size: 26px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3); color: white;">👤</div>
+                                <div class="tab-content">
+                                    <span class="tab-title" style="font-size: 20px; font-weight: 800; display: block; margin-bottom: 4px; font-family: 'Montserrat', 'Poppins', sans-serif; letter-spacing: -0.02em;">👤 Клиенты</span>
+                                    <span class="tab-desc" style="font-size: 16px; opacity: 0.9; display: block; font-family: 'Open Sans', 'Inter', sans-serif; font-weight: 600; letter-spacing: 0.01em;">Спортсмены, ищущие партнёров и площадки</span>
+                                </div>
                             </button>
-                            <button class="tab-button" data-tab="partners">
-                                <span class="tab-icon">🏢</span>
-                                <span class="tab-text">Для партнёров</span>
+                            <button class="tab-button" data-tab="partners" style="flex: 1; background: none; border: none; padding: 16px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 12px; color: #64748b; font-weight: 600; font-family: 'Inter', sans-serif;">
+                                <div class="tab-icon" style="font-size: 26px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); border-radius: 10px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);">🏢</div>
+                                <div class="tab-content">
+                                    <span class="tab-title" style="font-size: 20px; font-weight: 800; display: block; margin-bottom: 4px; font-family: 'Montserrat', 'Poppins', sans-serif; letter-spacing: -0.02em;">🏢 Организации</span>
+                                    <span class="tab-desc" style="font-size: 16px; opacity: 0.9; display: block; font-family: 'Open Sans', 'Inter', sans-serif; font-weight: 600; letter-spacing: 0.01em;">Спортивные площадки и клубы</span>
+                                </div>
                             </button>
                         </div>
                         
                         <div class="tab-content active" id="users">
                             <div class="how-it-works-steps">
-                                <div class="step" data-step="1">
-                                    <div class="step-number">1</div>
-                                    <div class="step-content">
-                                        <h3>🎯 Зарегистрируйся</h3>
-                                        <p>Создай свой спортивный профиль и расскажи, что любишь — футбол, теннис, бег? Мы подберем идеальных партнёров именно для тебя!</p>
-                                        <div class="step-features">
-                                            <span class="feature-tag">Быстрая регистрация</span>
-                                            <span class="feature-tag">Умный профиль</span>
+                                <div class="step" data-step="1" style="display: flex; align-items: flex-start; gap: 24px; padding: 28px; background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%); border-radius: 18px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06); transition: all 0.3s ease; position: relative; margin-bottom: 24px;">
+                                    <div class="step-header" style="display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 80px;">
+                                        <div class="step-number" style="width: 56px; height: 56px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; flex-shrink: 0; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); position: relative; font-family: 'Poppins', 'Inter', sans-serif;">1</div>
+                                        <div class="step-icon" style="font-size: 36px; width: 64px; height: 64px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 2px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">📱</div>
+                                    </div>
+                                    <div class="step-content" style="flex: 1;">
+                                        <h3 style="margin: 0 0 12px 0; font-size: 26px; font-weight: 800; color: #1f2937; letter-spacing: -0.03em; font-family: 'Montserrat', 'Poppins', sans-serif; text-shadow: 0 1px 2px rgba(0,0,0,0.05);">Регистрация и профиль</h3>
+                                        <p style="margin: 0 0 20px 0; color: #4b5563; line-height: 1.8; font-size: 17px; font-weight: 600; font-family: 'Open Sans', 'Inter', sans-serif; letter-spacing: 0.01em;">Создайте аккаунт в мобильном приложении Place&Play за 30 секунд. Укажите любимые виды спорта, уровень игры и удобное время для тренировок. Наша система создаст для вас персонализированный профиль.</p>
+                                        <div class="step-features" style="display: flex; flex-direction: column; gap: 12px;">
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">⚡</span>
+                                                <span style="font-size: 16px; font-weight: 700; color: #1f2937; font-family: 'Montserrat', 'Inter', sans-serif; letter-spacing: 0.01em;">Быстрая регистрация за 30 секунд</span>
+                                            </div>
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">🎯</span>
+                                                <span style="font-size: 16px; font-weight: 700; color: #1f2937; font-family: 'Montserrat', 'Inter', sans-serif; letter-spacing: 0.01em;">Умный профиль с предпочтениями</span>
+                                            </div>
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">🔒</span>
+                                                <span style="font-size: 16px; font-weight: 700; color: #1f2937; font-family: 'Montserrat', 'Inter', sans-serif; letter-spacing: 0.01em;">Безопасность данных</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="step" data-step="2">
-                                    <div class="step-number">2</div>
-                                    <div class="step-content">
-                                        <h3>🔍 Найди свою игру</h3>
-                                        <p>Подбери площадку или партнёра по интересам — всё рядом, всё удобно. Наша карта покажет тебе лучшие места для игры!</p>
-                                        <div class="step-features">
-                                            <span class="feature-tag">Умный поиск</span>
-                                            <span class="feature-tag">Карта площадок</span>
+                                
+                                <div class="step" data-step="2" style="display: flex; align-items: flex-start; gap: 24px; padding: 28px; background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%); border-radius: 18px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06); transition: all 0.3s ease; position: relative; margin-bottom: 24px;">
+                                    <div class="step-header" style="display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 80px;">
+                                        <div class="step-number" style="width: 56px; height: 56px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; flex-shrink: 0; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); position: relative; font-family: 'Poppins', 'Inter', sans-serif;">2</div>
+                                        <div class="step-icon" style="font-size: 36px; width: 64px; height: 64px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 2px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">🗺️</div>
+                                    </div>
+                                    <div class="step-content" style="flex: 1;">
+                                        <h3 style="margin: 0 0 12px 0; font-size: 26px; font-weight: 800; color: #1f2937; letter-spacing: -0.03em; font-family: 'Montserrat', 'Poppins', sans-serif; text-shadow: 0 1px 2px rgba(0,0,0,0.05);">Поиск площадок и партнёров</h3>
+                                        <p style="margin: 0 0 20px 0; color: #4b5563; line-height: 1.8; font-size: 17px; font-weight: 600; font-family: 'Open Sans', 'Inter', sans-serif; letter-spacing: 0.01em;">Откройте интерактивную карту и найдите ближайшие спортивные площадки. Просматривайте доступные события или создавайте свои собственные. Наша система поможет найти идеальных партнёров для игры.</p>
+                                        <div class="step-features" style="display: flex; flex-direction: column; gap: 12px;">
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">📍</span>
+                                                <span style="font-size: 16px; font-weight: 700; color: #1f2937; font-family: 'Montserrat', 'Inter', sans-serif; letter-spacing: 0.01em;">Интерактивная карта площадок</span>
+                                            </div>
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">👥</span>
+                                                <span style="font-size: 16px; font-weight: 700; color: #1f2937; font-family: 'Montserrat', 'Inter', sans-serif; letter-spacing: 0.01em;">Умный поиск по уровню игры</span>
+                                            </div>
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">⏰</span>
+                                                <span style="font-size: 16px; font-weight: 700; color: #1f2937; font-family: 'Montserrat', 'Inter', sans-serif; letter-spacing: 0.01em;">Фильтр по времени и дате</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="step" data-step="3">
-                                    <div class="step-number">3</div>
-                                    <div class="step-content">
-                                        <h3>⚡ Создай событие</h3>
-                                        <p>Хочешь собрать команду? Создай ивент — и участники присоединятся сами! Организуй турниры и стань звездой спортивного сообщества!</p>
-                                        <div class="step-features">
-                                            <span class="feature-tag">Создание событий</span>
-                                            <span class="feature-tag">Командные игры</span>
+                                
+                                <div class="step" data-step="3" style="display: flex; align-items: flex-start; gap: 24px; padding: 28px; background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%); border-radius: 18px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06); transition: all 0.3s ease; position: relative; margin-bottom: 24px;">
+                                    <div class="step-header" style="display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 80px;">
+                                        <div class="step-number" style="width: 56px; height: 56px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; flex-shrink: 0; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); position: relative; font-family: 'Poppins', 'Inter', sans-serif;">3</div>
+                                        <div class="step-icon" style="font-size: 36px; width: 64px; height: 64px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 2px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">🎮</div>
+                                    </div>
+                                    <div class="step-content" style="flex: 1;">
+                                        <h3 style="margin: 0 0 12px 0; font-size: 22px; font-weight: 700; color: #1f2937; letter-spacing: -0.02em; font-family: 'Poppins', 'Inter', sans-serif;">Создание и участие в событиях</h3>
+                                        <p style="margin: 0 0 20px 0; color: #6b7280; line-height: 1.7; font-size: 16px; font-weight: 500; font-family: 'Inter', sans-serif;">Создайте событие с указанием времени, места и количества участников за несколько кликов. Или присоединитесь к существующим играм и турнирам.</p>
+                                        <div class="step-features" style="display: flex; flex-direction: column; gap: 12px;">
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">➕</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Создание событий за 2 клика</span>
+                                            </div>
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">📢</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Автоматические уведомления</span>
+                                            </div>
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">🏆</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Участие в турнирах</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="step" data-step="4">
-                                    <div class="step-number">4</div>
-                                    <div class="step-content">
-                                        <h3>🏆 Играй и кайфуй</h3>
-                                        <p>Выходи на площадку, играй на полную, заводи новые знакомства и просто наслаждайся моментом! Делись достижениями и расти вместе с сообществом!</p>
-                                        <div class="step-features">
-                                            <span class="feature-tag">Новые знакомства</span>
-                                            <span class="feature-tag">Достижения</span>
+                                
+                                <div class="step" data-step="4" style="display: flex; align-items: flex-start; gap: 24px; padding: 28px; background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%); border-radius: 18px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06); transition: all 0.3s ease; position: relative;">
+                                    <div class="step-header" style="display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 80px;">
+                                        <div class="step-number" style="width: 56px; height: 56px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; flex-shrink: 0; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); position: relative; font-family: 'Poppins', 'Inter', sans-serif;">4</div>
+                                        <div class="step-icon" style="font-size: 36px; width: 64px; height: 64px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 2px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">🎯</div>
+                                    </div>
+                                    <div class="step-content" style="flex: 1;">
+                                        <h3 style="margin: 0 0 12px 0; font-size: 22px; font-weight: 700; color: #1f2937; letter-spacing: -0.02em; font-family: 'Poppins', 'Inter', sans-serif;">Игра и развитие</h3>
+                                        <p style="margin: 0 0 20px 0; color: #6b7280; line-height: 1.7; font-size: 16px; font-weight: 500; font-family: 'Inter', sans-serif;">Встречайтесь на площадке, играйте и развивайтесь вместе с сообществом. Получайте достижения, следите за прогрессом и поднимайтесь в рейтинге.</p>
+                                        <div class="step-features" style="display: flex; flex-direction: column; gap: 12px;">
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">🤝</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Новые знакомства и друзья</span>
+                                            </div>
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">📈</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Отслеживание прогресса и статистики</span>
+                                            </div>
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">⭐</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Система рейтингов и достижений</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -2004,50 +2255,122 @@ function scrollToTop() {
                         
                         <div class="tab-content" id="partners">
                             <div class="how-it-works-steps">
-                                <div class="step" data-step="1">
-                                    <div class="step-number">1</div>
-                                    <div class="step-content">
-                                        <h3>🏢 Создайте аккаунт</h3>
-                                        <p>Присоединяйтесь к Place&Play и станьте частью спортивной экосистемы. Мы поможем вам привлечь новых клиентов и увеличить доходы!</p>
-                                        <div class="step-features">
-                                            <span class="feature-tag">Быстрое подключение</span>
-                                            <span class="feature-tag">Поддержка 24/7</span>
+                                <div class="step" data-step="1" style="display: flex; align-items: flex-start; gap: 24px; padding: 28px; background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%); border-radius: 18px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06); transition: all 0.3s ease; position: relative; margin-bottom: 24px;">
+                                    <div class="step-header" style="display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 80px;">
+                                        <div class="step-number" style="width: 56px; height: 56px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; flex-shrink: 0; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); position: relative; font-family: 'Poppins', 'Inter', sans-serif;">1</div>
+                                        <div class="step-icon" style="font-size: 36px; width: 64px; height: 64px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 2px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">🏢</div>
+                                    </div>
+                                    <div class="step-content" style="flex: 1;">
+                                        <h3 style="margin: 0 0 12px 0; font-size: 26px; font-weight: 800; color: #1f2937; letter-spacing: -0.03em; font-family: 'Montserrat', 'Poppins', sans-serif; text-shadow: 0 1px 2px rgba(0,0,0,0.05);">Регистрация и подключение</h3>
+                                        <p style="margin: 0 0 20px 0; color: #4b5563; line-height: 1.8; font-size: 17px; font-weight: 600; font-family: 'Open Sans', 'Inter', sans-serif; letter-spacing: 0.01em;">Зарегистрируйте свою спортивную площадку в системе Place&Play и получите доступ к тысячам потенциальных клиентов. Наша команда поможет вам настроить профиль и начать работу уже через 24 часа.</p>
+                                        <div class="step-features" style="display: flex; flex-direction: column; gap: 12px;">
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">⚡</span>
+                                                <span style="font-size: 16px; font-weight: 700; color: #1f2937; font-family: 'Montserrat', 'Inter', sans-serif; letter-spacing: 0.01em;">Быстрое подключение за 1 день</span>
+                                            </div>
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">🛠️</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Персональный менеджер и поддержка 24/7</span>
+                                            </div>
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">📱</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Удобное мобильное приложение для управления</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="step" data-step="2">
-                                    <div class="step-number">2</div>
-                                    <div class="step-content">
-                                        <h3>📈 Привлекайте клиентов</h3>
-                                        <p>Получайте новых игроков, идеально подходящих под вашу площадку. Наша система автоматически направляет к вам заинтересованных спортсменов!</p>
-                                        <div class="step-features">
-                                            <span class="feature-tag">Умное продвижение</span>
-                                            <span class="feature-tag">Целевая аудитория</span>
+                                
+                                <div class="step" data-step="2" style="display: flex; align-items: flex-start; gap: 24px; padding: 28px; background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%); border-radius: 18px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06); transition: all 0.3s ease; position: relative; margin-bottom: 24px;">
+                                    <div class="step-header" style="display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 80px;">
+                                        <div class="step-number" style="width: 56px; height: 56px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; flex-shrink: 0; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); position: relative; font-family: 'Poppins', 'Inter', sans-serif;">2</div>
+                                        <div class="step-icon" style="font-size: 36px; width: 64px; height: 64px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 2px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">📈</div>
+                                    </div>
+                                    <div class="step-content" style="flex: 1;">
+                                        <h3 style="margin: 0 0 12px 0; font-size: 22px; font-weight: 700; color: #1f2937; letter-spacing: -0.02em; font-family: 'Poppins', 'Inter', sans-serif;">Привлечение клиентов</h3>
+                                        <p style="margin: 0 0 20px 0; color: #6b7280; line-height: 1.7; font-size: 16px; font-weight: 500; font-family: 'Inter', sans-serif;">Получайте заявки от игроков, которые ищут именно вашу площадку. Наша система автоматически направляет к вам заинтересованных спортсменов и помогает увеличить загрузку площадки.</p>
+                                        <div class="step-features" style="display: flex; flex-direction: column; gap: 12px;">
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">🎯</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Целевая аудитория по видам спорта</span>
+                                            </div>
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">📊</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Детальная аналитика и отчеты</span>
+                                            </div>
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">📢</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Продвижение площадки в приложении</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="step" data-step="3">
-                                    <div class="step-number">3</div>
-                                    <div class="step-content">
-                                        <h3>💳 Управляйте бронированиями</h3>
-                                        <p>Управляйте заявками на игры и подтверждайте бронирования в пару кликов. Получайте оплату автоматически и ведите подробную аналитику!</p>
-                                        <div class="step-features">
-                                            <span class="feature-tag">Автоматические платежи</span>
-                                            <span class="feature-tag">Аналитика</span>
+                                
+                                <div class="step" data-step="3" style="display: flex; align-items: flex-start; gap: 24px; padding: 28px; background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%); border-radius: 18px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06); transition: all 0.3s ease; position: relative; margin-bottom: 24px;">
+                                    <div class="step-header" style="display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 80px;">
+                                        <div class="step-number" style="width: 56px; height: 56px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; flex-shrink: 0; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); position: relative; font-family: 'Poppins', 'Inter', sans-serif;">3</div>
+                                        <div class="step-icon" style="font-size: 36px; width: 64px; height: 64px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 2px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">💳</div>
+                                    </div>
+                                    <div class="step-content" style="flex: 1;">
+                                        <h3 style="margin: 0 0 12px 0; font-size: 22px; font-weight: 700; color: #1f2937; letter-spacing: -0.02em; font-family: 'Poppins', 'Inter', sans-serif;">Управление бронированиями</h3>
+                                        <p style="margin: 0 0 20px 0; color: #6b7280; line-height: 1.7; font-size: 16px; font-weight: 500; font-family: 'Inter', sans-serif;">Подтверждайте заявки, управляйте расписанием и получайте оплату автоматически. Ведите подробную статистику и аналитику в реальном времени.</p>
+                                        <div class="step-features" style="display: flex; flex-direction: column; gap: 12px;">
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">✅</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Простое подтверждение заявок</span>
+                                            </div>
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">💰</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Автоматические платежи и выручка</span>
+                                            </div>
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">📋</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Умное управление расписанием</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="step" data-step="4">
-                                    <div class="step-number">4</div>
-                                    <div class="step-content">
-                                        <h3>🌟 Станьте проводником игр</h3>
-                                        <p>Организуйте мероприятия, создавайте спортивную атмосферу и привлекайте постоянных гостей! Стройте сильное спортивное сообщество вместе с нами!</p>
-                                        <div class="step-features">
-                                            <span class="feature-tag">Организация турниров</span>
-                                            <span class="feature-tag">Сообщество</span>
+                                
+                                <div class="step" data-step="4" style="display: flex; align-items: flex-start; gap: 24px; padding: 28px; background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%); border-radius: 18px; border: 1px solid #e5e7eb; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06); transition: all 0.3s ease; position: relative;">
+                                    <div class="step-header" style="display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 80px;">
+                                        <div class="step-number" style="width: 56px; height: 56px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; flex-shrink: 0; box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3); position: relative; font-family: 'Poppins', 'Inter', sans-serif;">4</div>
+                                        <div class="step-icon" style="font-size: 36px; width: 64px; height: 64px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; border: 2px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">🌟</div>
+                                    </div>
+                                    <div class="step-content" style="flex: 1;">
+                                        <h3 style="margin: 0 0 12px 0; font-size: 22px; font-weight: 700; color: #1f2937; letter-spacing: -0.02em; font-family: 'Poppins', 'Inter', sans-serif;">Развитие бизнеса</h3>
+                                        <p style="margin: 0 0 20px 0; color: #6b7280; line-height: 1.7; font-size: 16px; font-weight: 500; font-family: 'Inter', sans-serif;">Организуйте турниры, создавайте спортивные сообщества и увеличивайте доходы. Станьте центром спортивной жизни района с помощью наших инструментов.</p>
+                                        <div class="step-features" style="display: flex; flex-direction: column; gap: 12px;">
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">🏆</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Организация турниров и событий</span>
+                                            </div>
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">👥</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Построение лояльного сообщества</span>
+                                            </div>
+                                            <div class="feature-item" style="display: flex; align-items: center; gap: 14px; padding: 14px 18px; background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%); border-radius: 10px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                                                <span class="feature-icon" style="font-size: 20px; width: 36px; height: 36px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);">📈</span>
+                                                <span style="font-size: 15px; font-weight: 600; color: #374151; font-family: 'Inter', sans-serif;">Стабильный рост доходов</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer" style="padding: 30px; background: #f8fafc; border-top: 1px solid #e5e7eb; border-radius: 0 0 20px 20px;">
+                        <div class="modal-cta" style="text-align: center;">
+                            <h3 style="margin: 0 0 8px 0; font-size: 32px; font-weight: 900; color: #1f2937; font-family: 'Montserrat', 'Poppins', sans-serif; letter-spacing: -0.04em; text-shadow: 0 1px 2px rgba(0,0,0,0.05);">Готовы начать?</h3>
+                            <p style="margin: 0 0 24px 0; color: #4b5563; font-size: 20px; line-height: 1.7; font-family: 'Open Sans', 'Inter', sans-serif; font-weight: 600; letter-spacing: 0.02em;">Присоединяйтесь к Place&Play и откройте для себя новый способ заниматься спортом</p>
+                            <div class="modal-buttons" style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                                <button class="modal-btn primary" onclick="window.open('/mvp-demo.html', '_blank')" style="padding: 18px 32px; border: none; border-radius: 14px; font-size: 18px; font-weight: 800; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 12px; text-decoration: none; color: white; font-family: 'Montserrat', 'Inter', sans-serif; letter-spacing: 0.02em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);">
+                                    <span class="btn-icon" style="font-size: 20px;">🚀</span>
+                                    <span>Попробовать сейчас</span>
+                                </button>
+                                <button class="modal-btn secondary" onclick="window.open('/business.html', '_blank')" style="padding: 18px 32px; border: 2px solid #667eea; border-radius: 14px; font-size: 18px; font-weight: 800; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 12px; text-decoration: none; color: #667eea; font-family: 'Montserrat', 'Inter', sans-serif; letter-spacing: 0.02em; background: #ffffff;">
+                                    <span class="btn-icon" style="font-size: 20px;">💼</span>
+                                    <span>Стать партнёром</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -2056,34 +2379,52 @@ function scrollToTop() {
         `;
         
         document.body.appendChild(modal);
-        console.log('Modern modal added to DOM');
+        console.log('Practical modal added to DOM');
         
-        // Анимация появления с задержкой
-        setTimeout(() => {
-            modal.classList.add('show');
-            console.log('Modal shown with animation');
-            
-            // Добавляем интерактивные эффекты для шагов
-            const steps = modal.querySelectorAll('.step');
-            steps.forEach((step, index) => {
-                step.addEventListener('mouseenter', () => {
-                    step.style.transform = 'translateX(15px) translateY(-8px) scale(1.02)';
-                });
+        // Показываем модальное окно
+        modal.classList.add('show');
+        
+        // Обработчики для табов
+        const tabButtons = modal.querySelectorAll('.tab-button');
+        const tabContents = modal.querySelectorAll('.tab-content');
+        
+        console.log('Found tab buttons:', tabButtons.length);
+        console.log('Found tab contents:', tabContents.length);
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 
-                step.addEventListener('mouseleave', () => {
-                    step.style.transform = 'translateX(0) translateY(0) scale(1)';
-                });
+                const targetTab = button.getAttribute('data-tab');
+                console.log('Tab clicked:', targetTab);
                 
-                // Добавляем клик для дополнительной анимации
-                step.addEventListener('click', () => {
-                    const number = step.querySelector('.step-number');
-                    number.style.transform = 'scale(1.3) rotate(15deg)';
-                    setTimeout(() => {
-                        number.style.transform = 'scale(1.15) rotate(8deg)';
-                    }, 200);
+                // Убираем активный класс со всех кнопок и контента
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.style.background = 'none';
+                    btn.style.color = '#64748b';
+                    btn.style.transform = 'translateY(0)';
+                    btn.style.boxShadow = 'none';
                 });
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Добавляем активный класс к выбранной кнопке и контенту
+                button.classList.add('active');
+                button.style.background = 'linear-gradient(135deg, #ffffff 0%, #fafbfc 100%)';
+                button.style.color = '#667eea';
+                button.style.transform = 'translateY(-1px)';
+                button.style.boxShadow = '0 4px 16px rgba(102, 126, 234, 0.2)';
+                
+                const targetContent = document.getElementById(targetTab);
+                if (targetContent) {
+                    targetContent.classList.add('active');
+                    console.log('Tab content activated:', targetTab);
+                } else {
+                    console.error('Target tab content not found:', targetTab);
+                }
             });
-        }, 50);
+        });
         
         // Закрытие по клику вне модала
         modal.addEventListener('click', (e) => {
@@ -2113,57 +2454,10 @@ function scrollToTop() {
         };
         document.addEventListener('keydown', handleEscape);
         
-        // Улучшенная логика переключения вкладок
-        const tabButtons = modal.querySelectorAll('.tab-button');
-        const tabContents = modal.querySelectorAll('.tab-content');
-        
-        tabButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const targetTab = button.getAttribute('data-tab');
-                
-                // Анимация переключения
-                tabButtons.forEach(btn => {
-                    btn.classList.remove('active');
-                    btn.style.transform = 'scale(0.95)';
-                });
-                tabContents.forEach(content => {
-                    content.classList.remove('active');
-                    content.style.opacity = '0';
-                    content.style.transform = 'translateY(20px)';
-                });
-                
-                // Активируем выбранную вкладку
-                button.classList.add('active');
-                button.style.transform = 'scale(1.05)';
-                
-                setTimeout(() => {
-                    button.style.transform = 'scale(1)';
-                }, 200);
-                
-                const targetContent = modal.querySelector(`#${targetTab}`);
-                if (targetContent) {
-                    targetContent.classList.add('active');
-                    setTimeout(() => {
-                        targetContent.style.opacity = '1';
-                        targetContent.style.transform = 'translateY(0)';
-                    }, 100);
-                }
-            });
-        });
-        
-        // Добавляем звуковые эффекты (опционально)
-        const addSoundEffects = () => {
-            const steps = modal.querySelectorAll('.step');
-            steps.forEach(step => {
-                step.addEventListener('click', () => {
-                    // Здесь можно добавить звуковой эффект
-                    console.log('Step clicked with sound effect');
-                });
-            });
-        };
-        
-        // Инициализируем звуковые эффекты
-        setTimeout(addSoundEffects, 500);
+        // Инициализируем звуковые эффекты (если функция существует)
+        if (typeof addSoundEffects === 'function') {
+            setTimeout(addSoundEffects, 500);
+        }
         
         // Добавляем дополнительные интерактивные эффекты
         const addInteractiveEffects = () => {
@@ -2260,7 +2554,15 @@ function scrollToTop() {
     });
     </script>
 <style>
-    /* Стили для модала "Как это работает" */
+    /* Отключение всех анимаций для лучшей производительности */
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    /* Стили для модала "Как это работает" - ПРАКТИЧНАЯ ВЕРСИЯ */
     .how-it-works-modal {
         position: fixed;
         top: 0;
@@ -2270,6 +2572,7 @@ function scrollToTop() {
         z-index: 10000;
         opacity: 0;
         transition: opacity 0.3s ease;
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .how-it-works-modal.show {
@@ -2282,8 +2585,8 @@ function scrollToTop() {
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(8px);
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(10px);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -2291,247 +2594,408 @@ function scrollToTop() {
     }
 
     .modal-content {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%);
-        border-radius: 25px;
-        box-shadow: 0 25px 80px rgba(102, 126, 234, 0.2);
-        backdrop-filter: blur(15px);
-        border: 2px solid rgba(102, 126, 234, 0.1);
-        max-width: 700px;
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 800px;
         width: 100%;
         max-height: 90vh;
         overflow-y: auto;
-        transform: translateY(20px);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
-    }
-
-    .modal-content::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        border-radius: 25px 25px 0 0;
-    }
-
-    .how-it-works-modal.show .modal-content {
-        transform: translateY(0);
+        border: 1px solid #e5e7eb;
     }
 
     .modal-header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
         padding: 30px 30px 20px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        border-bottom: 2px solid #f3f4f6;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .modal-title-section {
+        flex: 1;
+    }
+
+    .modal-icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+        display: block;
     }
 
     .modal-header h2 {
-        margin: 0;
+        margin: 0 0 8px 0;
         font-size: 32px;
-        font-weight: 700;
-        color: #1a202c;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        letter-spacing: -0.02em;
-        position: relative;
+        font-weight: 800;
+        color: white;
+        letter-spacing: -0.03em;
+        font-family: 'Poppins', 'Inter', sans-serif;
     }
 
-    .modal-header h2::after {
-        content: '';
-        position: absolute;
-        bottom: -5px;
-        left: 0;
-        width: 60px;
-        height: 3px;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        border-radius: 2px;
+    .modal-subtitle {
+        margin: 0;
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
+        font-family: 'Inter', sans-serif;
     }
 
     .modal-close {
-        background: none;
+        background: rgba(255, 255, 255, 0.2);
         border: none;
         cursor: pointer;
-        padding: 8px;
+        padding: 12px;
         border-radius: 50%;
         transition: all 0.3s ease;
-        color: #666;
+        color: white;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .modal-close:hover {
-        background: rgba(0, 0, 0, 0.1);
-        color: #333;
-        transform: rotate(90deg);
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
     }
 
     .modal-close svg {
-        width: 24px;
-        height: 24px;
+        width: 20px;
+        height: 20px;
     }
 
     .modal-body {
         padding: 30px;
     }
 
+    .user-partner-tabs {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 32px;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        padding: 10px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .tab-button {
+        flex: 1;
+        background: none;
+        border: none;
+        padding: 16px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #64748b;
+        font-weight: 600;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .tab-button.active {
+        background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+        color: #667eea;
+        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
+        transform: translateY(-1px);
+    }
+
+    .tab-icon {
+        font-size: 26px;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .tab-button.active .tab-icon {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .tab-title {
+        font-size: 18px;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 4px;
+        font-family: 'Poppins', 'Inter', sans-serif;
+    }
+
+    .tab-desc {
+        font-size: 15px;
+        opacity: 0.8;
+        display: block;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+    }
+
     .how-it-works-steps {
         display: flex;
         flex-direction: column;
-        gap: 30px;
+        gap: 25px;
     }
 
     .step {
         display: flex;
         align-items: flex-start;
-        gap: 20px;
-        padding: 25px;
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.8) 100%);
-        border-radius: 20px;
-        border: 2px solid rgba(102, 126, 234, 0.1);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        gap: 24px;
+        padding: 28px;
+        background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+        border-radius: 18px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s ease;
         position: relative;
-        overflow: hidden;
-    }
-
-    .step::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-        transition: left 0.6s ease;
     }
 
     .step:hover {
-        transform: translateX(15px) translateY(-5px);
-        box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
-        border-color: rgba(102, 126, 234, 0.3);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        border-color: #667eea;
+        transform: translateY(-2px);
     }
 
-    .step:hover::before {
-        left: 100%;
+    .step-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        min-width: 80px;
     }
 
     .step-number {
-        width: 60px;
-        height: 60px;
+        width: 56px;
+        height: 56px;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px;
-        font-weight: 700;
+        font-size: 22px;
+        font-weight: 800;
         flex-shrink: 0;
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         position: relative;
-        overflow: hidden;
-        transition: all 0.3s ease;
+        font-family: 'Poppins', 'Inter', sans-serif;
     }
 
-    .step-number::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
-        transform: translateX(-100%);
-        transition: transform 0.6s ease;
+    .step-icon {
+        font-size: 36px;
+        width: 64px;
+        height: 64px;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #e2e8f0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
-    .step:hover .step-number {
-        transform: scale(1.1) rotate(5deg);
-        box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
-    }
-
-    .step:hover .step-number::before {
-        transform: translateX(100%);
+    .step-content {
+        flex: 1;
     }
 
     .step-content h3 {
         margin: 0 0 12px 0;
         font-size: 22px;
         font-weight: 700;
-        color: #1a202c;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        letter-spacing: -0.01em;
-        transition: all 0.3s ease;
-    }
-
-    .step:hover .step-content h3 {
-        transform: translateX(5px);
+        color: #1f2937;
+        letter-spacing: -0.02em;
+        font-family: 'Poppins', 'Inter', sans-serif;
     }
 
     .step-content p {
-        margin: 0;
-        color: #4a5568;
+        margin: 0 0 20px 0;
+        color: #6b7280;
         line-height: 1.7;
         font-size: 16px;
         font-weight: 500;
-        transition: all 0.3s ease;
+        font-family: 'Inter', sans-serif;
     }
 
-    .step:hover .step-content p {
-        color: #2d3748;
-        transform: translateX(5px);
-    }
-
-    /* Стили для вкладок */
-    .user-partner-tabs {
+    .step-features {
         display: flex;
-        gap: 10px;
-        margin-bottom: 30px;
-        border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-        padding-bottom: 20px;
+        flex-direction: column;
+        gap: 12px;
     }
 
-    .tab-button {
-        background: none;
-        border: 2px solid rgba(102, 126, 234, 0.2);
-        padding: 15px 30px;
-        border-radius: 30px;
-        cursor: pointer;
-        font-size: 16px;
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 18px;
+        background: linear-gradient(135deg, #f9fafb 0%, #f8fafc 100%);
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .feature-icon {
+        font-size: 20px;
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+    }
+
+    .feature-item span:last-child {
+        font-size: 15px;
         font-weight: 600;
-        color: #4a5568;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        position: relative;
-        overflow: hidden;
+        color: #374151;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .modal-footer {
+        padding: 30px;
+        background: #f8fafc;
+        border-top: 1px solid #e5e7eb;
+        border-radius: 0 0 20px 20px;
+    }
+
+    .modal-cta {
+        text-align: center;
+    }
+
+    .modal-cta h3 {
+        margin: 0 0 8px 0;
+        font-size: 28px;
+        font-weight: 800;
+        color: #1f2937;
+        font-family: 'Poppins', 'Inter', sans-serif;
+        letter-spacing: -0.02em;
+    }
+
+    .modal-cta p {
+        margin: 0 0 24px 0;
+        color: #6b7280;
+        font-size: 18px;
+        line-height: 1.6;
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+    }
+
+    .modal-buttons {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .modal-btn {
+        padding: 16px 28px;
+        border: none;
+        border-radius: 12px;
+        font-size: 17px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        color: white;
+        font-family: 'Inter', sans-serif;
         letter-spacing: 0.01em;
     }
 
-    .tab-button::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
-        transition: left 0.6s ease;
+    .modal-btn.primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
     }
 
-    .tab-button:hover {
-        color: #1a202c;
-        background: rgba(102, 126, 234, 0.08);
-        border-color: rgba(102, 126, 234, 0.4);
+    .modal-btn.primary:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
     }
 
-    .tab-button:hover::before {
-        left: 100%;
+    .modal-btn.secondary {
+        background: #ffffff;
+        color: #667eea;
+        border: 2px solid #667eea;
+    }
+
+    .modal-btn.secondary:hover {
+        background: #667eea;
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .btn-icon {
+        font-size: 18px;
+    }
+
+    @media (max-width: 768px) {
+        .modal-content {
+            margin: 10px;
+            max-height: 95vh;
+        }
+
+        .modal-header {
+            padding: 20px 20px 15px;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .user-partner-tabs {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tab-button {
+            padding: 12px 16px;
+        }
+
+        .step {
+            flex-direction: column;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .step-header {
+            flex-direction: row;
+            justify-content: center;
+            min-width: auto;
+        }
+
+        .modal-buttons {
+            flex-direction: column;
+        }
+
+        .modal-btn {
+            width: 100%;
+            justify-content: center;
+        }
     }
 
     .tab-button.active {
@@ -2555,6 +3019,13 @@ function scrollToTop() {
     .tab-content.active {
         display: block;
         opacity: 1;
+    }
+    
+    .tab-button.active {
+        background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%) !important;
+        color: #667eea !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2) !important;
     }
 
     @media (max-width: 768px) {
@@ -2590,7 +3061,7 @@ function scrollToTop() {
 
         .step:hover { transform: translateY(-3px); }
 
-        .step-number { width: 46px; height: 46px; font-size: 18px; }
+        .step-number { width: 48px; height: 48px; font-size: 20px; }
         .step-content h3 { font-size: 18px; margin-bottom: 6px; }
         .step-content p { font-size: 15px; line-height: 1.5; }
 
@@ -3205,10 +3676,11 @@ function scrollToTop() {
         document.addEventListener('DOMContentLoaded', function() {
             try { window.dataLayer = window.dataLayer || []; } catch(_) {}
             createParticles();
-            window.addEventListener('scroll', handleHeaderScroll);
             
             // Initial header state
-            handleHeaderScroll();
+            if (scrollManager) {
+                scrollManager.updateScroll();
+            }
         });
         
         // Smooth scroll for anchor links
@@ -3255,43 +3727,7 @@ function scrollToTop() {
             const wowCards = document.querySelectorAll('.wow-card');
             const transformationArrow = document.querySelector('.transformation-arrow');
 
-            // Animate problem items on scroll
-            const problemObserver = new IntersectionObserver((entries) => {
-                entries.forEach((entry, index) => {
-                    if (entry.isIntersecting) {
-                        setTimeout(() => {
-                            entry.target.style.opacity = '1';
-                            entry.target.style.transform = 'translateX(0)';
-                        }, index * 200);
-                    }
-                });
-            }, { threshold: 0.3 });
-
-            problemItems.forEach(item => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateX(-30px)';
-                item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                problemObserver.observe(item);
-            });
-
-            // Animate solution items on scroll
-            const solutionObserver = new IntersectionObserver((entries) => {
-                entries.forEach((entry, index) => {
-                    if (entry.isIntersecting) {
-                        setTimeout(() => {
-                            entry.target.style.opacity = '1';
-                            entry.target.style.transform = 'translateX(0)';
-                        }, index * 200);
-                    }
-                });
-            }, { threshold: 0.3 });
-
-            solutionItems.forEach(item => {
-                item.style.opacity = '0';
-                item.style.transform = 'translateX(30px)';
-                item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-                solutionObserver.observe(item);
-            });
+            // Анимация проблем и решений теперь управляется AnimationManager
 
             // Animate cards on hover
             wowCards.forEach(card => {
@@ -3347,15 +3783,7 @@ function scrollToTop() {
                 arrowObserver.observe(transformationArrow);
             }
 
-            // Parallax effect for floating shapes
-            const shapes = document.querySelectorAll('.shape');
-            window.addEventListener('scroll', () => {
-                const scrolled = window.pageYOffset;
-                shapes.forEach((shape, index) => {
-                    const speed = 0.5 + (index * 0.1);
-                    shape.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`;
-                });
-            });
+            // Parallax effect for floating shapes теперь управляется ScrollManager
 
             // Interactive CTA buttons
             const ctaButtons = document.querySelectorAll('.cta-btn');
@@ -3409,12 +3837,13 @@ function scrollToTop() {
         // Initialize WOW effects when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             createParticles();
-            window.addEventListener('scroll', handleHeaderScroll);
             initWowEffects();
             initHeaderInteractions();
             
             // Initial header state
-            handleHeaderScroll();
+            if (scrollManager) {
+                scrollManager.updateScroll();
+            }
         });
 
         // Header Interactions
@@ -3676,19 +4105,7 @@ function scrollToTop() {
                 requestAnimationFrame(updateCounter);
             }
 
-            // Parallax effect for background elements
-            function initParallaxEffects() {
-                window.addEventListener('scroll', () => {
-                    const scrolled = window.pageYOffset;
-                    const parallaxElements = document.querySelectorAll('.floating-shapes .shape');
-                    
-                    parallaxElements.forEach((element, index) => {
-                        const speed = 0.5 + (index * 0.1);
-                        const yPos = -(scrolled * speed);
-                        element.style.transform = `translateY(${yPos}px)`;
-                    });
-                });
-            }
+            // Parallax effect for background elements теперь управляется ScrollManager
 
             // Enhanced button hover effects
             function initEnhancedButtons() {
@@ -3712,7 +4129,6 @@ function scrollToTop() {
                 initHeroAnimations();
                 initFloatingCards();
                 initStatCounters();
-                initParallaxEffects();
                 initEnhancedButtons();
                 
                 // Show first slide by default
@@ -3726,23 +4142,7 @@ function scrollToTop() {
                 }, 100);
             });
 
-            // Scroll progress indicator
-            function initScrollProgress() {
-                const scrollProgress = document.getElementById('scrollProgress');
-                
-                window.addEventListener('scroll', () => {
-                    const scrollTop = window.pageYOffset;
-                    const docHeight = document.body.scrollHeight - window.innerHeight;
-                    const scrollPercent = (scrollTop / docHeight) * 100;
-                    
-                    if (scrollProgress) {
-                        scrollProgress.style.width = scrollPercent + '%';
-                    }
-                });
-            }
-
-            // Initialize scroll progress
-            initScrollProgress();
+            // Scroll progress indicator теперь управляется ScrollManager
         }
     </script>
 </body>

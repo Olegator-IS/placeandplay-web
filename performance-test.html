@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тест производительности Place&Play</title>
+    <style>
+        /* Отключение всех анимаций для лучшей производительности */
+        *, *::before, *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        .performance-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .metric {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .metric-label {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Тест производительности Place&Play</h1>
+        
+        <div class="test-section">
+            <h2>Метрики производительности</h2>
+            <div class="performance-metrics">
+                <div class="metric">
+                    <div class="metric-value" id="fps">0</div>
+                    <div class="metric-label">FPS</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="memory">0</div>
+                    <div class="metric-label">Память (MB)</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="scroll-events">0</div>
+                    <div class="metric-label">События прокрутки</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="render-time">0</div>
+                    <div class="metric-label">Время рендера (ms)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Тесты</h2>
+            <button class="test-button" onclick="testScrollPerformance()">Тест прокрутки</button>
+            <button class="test-button" onclick="testMemoryUsage()">Тест памяти</button>
+            <button class="test-button" onclick="openWelcomePage()">Открыть welcome.html</button>
+        </div>
+
+        <div class="test-section">
+            <h2>Результаты</h2>
+            <div class="result" id="results">Нажмите кнопки выше для запуска тестов...</div>
+        </div>
+    </div>
+
+    <script>
+        let scrollEventCount = 0;
+        let lastTime = performance.now();
+        let frameCount = 0;
+
+        // Мониторинг FPS
+        function updateFPS() {
+            frameCount++;
+            const currentTime = performance.now();
+            
+            if (currentTime - lastTime >= 1000) {
+                const fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+                document.getElementById('fps').textContent = fps;
+                frameCount = 0;
+                lastTime = currentTime;
+            }
+            
+            requestAnimationFrame(updateFPS);
+        }
+
+        // Мониторинг памяти
+        function updateMemory() {
+            if (performance.memory) {
+                const memoryMB = Math.round(performance.memory.usedJSHeapSize / 1024 / 1024);
+                document.getElementById('memory').textContent = memoryMB;
+            }
+        }
+
+        // Обновление метрик каждую секунду
+        setInterval(updateMemory, 1000);
+        updateFPS();
+
+        // Тест производительности прокрутки
+        function testScrollPerformance() {
+            const results = document.getElementById('results');
+            results.innerHTML = 'Тестирование прокрутки...';
+            
+            let startTime = performance.now();
+            let scrollCount = 0;
+            
+            const testScroll = () => {
+                scrollCount++;
+                document.getElementById('scroll-events').textContent = scrollCount;
+                
+                if (scrollCount < 100) {
+                    window.scrollBy(0, 10);
+                    requestAnimationFrame(testScroll);
+                } else {
+                    const endTime = performance.now();
+                    const duration = endTime - startTime;
+                    const scrollsPerSecond = Math.round((scrollCount / duration) * 1000);
+                    
+                    results.innerHTML = `
+                        <strong>Тест прокрутки завершен:</strong><br>
+                        - Количество событий прокрутки: ${scrollCount}<br>
+                        - Время выполнения: ${duration.toFixed(2)}ms<br>
+                        - Скорость: ${scrollsPerSecond} событий/сек<br>
+                        - Среднее время на событие: ${(duration / scrollCount).toFixed(2)}ms
+                    `;
+                }
+            };
+            
+            testScroll();
+        }
+
+        // Тест использования памяти
+        function testMemoryUsage() {
+            const results = document.getElementById('results');
+            results.innerHTML = 'Тестирование памяти...';
+            
+            const initialMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
+            const objects = [];
+            
+            // Создаем много объектов для тестирования памяти
+            for (let i = 0; i < 10000; i++) {
+                objects.push({
+                    id: i,
+                    data: new Array(100).fill(Math.random()),
+                    timestamp: Date.now()
+                });
+            }
+            
+            setTimeout(() => {
+                const finalMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
+                const memoryUsed = finalMemory - initialMemory;
+                const memoryMB = Math.round(memoryUsed / 1024 / 1024);
+                
+                results.innerHTML = `
+                    <strong>Тест памяти завершен:</strong><br>
+                    - Создано объектов: ${objects.length}<br>
+                    - Использовано памяти: ${memoryMB}MB<br>
+                    - Объектов на MB: ${Math.round(objects.length / memoryMB)}<br>
+                    - Текущее использование памяти: ${Math.round(finalMemory / 1024 / 1024)}MB
+                `;
+                
+                // Очищаем память
+                objects.length = 0;
+            }, 1000);
+        }
+
+        // Открытие welcome.html
+        function openWelcomePage() {
+            window.open('/welcome.html', '_blank');
+        }
+
+        // Мониторинг времени рендера
+        let renderStartTime = 0;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            renderStartTime = performance.now();
+        });
+        
+        window.addEventListener('load', () => {
+            const renderTime = performance.now() - renderStartTime;
+            document.getElementById('render-time').textContent = Math.round(renderTime);
+        });
+    </script>
+</body>
+</html> 

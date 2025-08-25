@@ -7,7 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <script src="/js/eventFilters.js"></script>
+    <!-- TODO: Раскомментировать фильтры по просьбе -->
+    <!-- <script src="/js/eventFilters.js"></script> -->
     <style>
         * {
             margin: 0;
@@ -1790,10 +1791,11 @@
             document.querySelector('.tab.active').classList.remove('active');
             document.querySelector('.tab:nth-child(2)').classList.add('active');
 
+            // TODO: Раскомментировать фильтры по просьбе
             // Инициализируем фильтры при первом показе вкладки событий
-            if (!eventFilters) {
-                eventFilters = new EventFilters();
-            }
+            // if (!eventFilters) {
+            //     eventFilters = new EventFilters();
+            // }
 
             loadEvents(currentPage);
             
@@ -1818,7 +1820,8 @@
                 const language = 'ru';
                 
                 // Using the new static URL provided by the user
-                const eventsUrl = '/PlaceAndPlay/api/v1/events/organization/11/events?statuses=CONFIRMED,PENDING_APPROVAL&sort=date_time,desc';
+                const orgId = localStorage.getItem('orgId');
+                const eventsUrl = `/PlaceAndPlay/api/v1/events/organization/${orgId}/events?statuses=CONFIRMED,PENDING_APPROVAL&sort=date_time,desc`;
 
                 console.log('Отправляем запрос на получение событий:', eventsUrl);
 
